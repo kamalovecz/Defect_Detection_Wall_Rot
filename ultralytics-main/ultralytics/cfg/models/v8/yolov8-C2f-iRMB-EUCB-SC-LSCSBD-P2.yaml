@@ -1,0 +1,71 @@
+# Ultralytics YOLO 🚀, AGPL-3.0 license
+# YOLOv8 P2-P5配置：C2f_iRMB + EUCB_SC + Detect_LSCSBD
+# 
+# 这是P2-P5版本（4个检测头），相比P3-P5版本有更高的精度，但推理速度略慢
+# 适用于对精度要求较高的场景
+#
+# 模块说明同optimized版本，区别在于使用4个检测头（P2, P3, P4, P5）
+
+# Parameters
+nc: 6  # number of classes (请根据实际数据集修改)
+scales: # model compound scaling constants
+  # [depth, width, max_channels]
+  n: [0.33, 0.25, 1024]  # seamless depth/width scaling
+  s: [0.33, 0.50, 1024]  # seamless depth/width scaling
+  m: [0.67, 0.75, 768]   # seamless depth/width scaling
+  l: [1.00, 1.00, 512]   # seamless depth/width scaling
+  x: [1.00, 1.25, 512]   # seamless depth/width scaling
+
+# YOLOv8 Backbone with C2f_iRMB
+backbone:
+  # [from, repeats, module, args]
+  # args: [c2, kernel_size, se_ratio, use_channel_attn, window_size]
+  - [-1, 1, Conv, [64, 3, 2]]  # 0-P1/2
+  - [-1, 1, Conv, [128, 3, 2]]  # 1-P2/4
+  # P2层：浅层特征，使用较小kernel和通道注意力
+  - [-1, 3, C2f, [128, True]]  # 2
+  - [-1, 1, Conv, [256, 3, 2]]  # 3-P3/8
+  # P3层：中等特征，使用较大kernel以捕获更多上下文
+  - [-1, 6, C2f, [256, True]]  # 4
+  
+  - [-1, 1, Conv, [512, 3, 2]]  # 5-P4/16
+  # P4层：深层特征，使用较大kernel和较小se_ratio以平衡精度和速度
+  - [-1, 6, C2f_iRMB, [512, 7, 0.125, True, 7]]  # 6
+  
+  - [-1, 1, Conv, [1024, 3, 2]]  # 7-P5/32
+  # P5层：最深特征，关闭通道注意力以提升速度
+  - [-1, 3, C2f_iRMB, [1024, 7, 0.125, False, 7]]  # 8
+  
+  - [-1, 1, SPPF, [1024, 5]]  # 9
+
+# YOLOv8 Head with EUCB_SC upsampling (P2-P5配置)
+head:
+  # FPN上采样路径（使用EUCB_SC替代标准Upsample）
+  - [-1, 1, EUCB_SC, []]  # 10: 上采样P5到P4尺度
+  - [[-1, 6], 1, Concat, [1]]  # 11: cat backbone P4
+  - [-1, 3, C2f_iRMB, [512, 5, 0.25, True, 7]]  # 12 (P4/16-medium)
+  
+  - [-1, 1, EUCB_SC, []]  # 13: 上采样到P3尺度
+  - [[-1, 4], 1, Concat, [1]]  # 14: cat backbone P3
+  - [-1, 3, C2f_iRMB, [256, 5, 0.25, True, 7]]  # 15 (P3/8-small)
+
+  - [-1, 1, EUCB_SC, []]  # 16: 上采样到P2尺度
+  - [[-1, 2], 1, Concat, [1]]  # 17: cat backbone P2
+  - [-1, 3, C2f, [128, True]]  # 18 (P2/4-tiny)
+  
+  # PAN下采样路径
+  - [-1, 1, Conv, [128, 3, 2]]  # 19: 下采样P2到P3尺度
+  - [[-1, 15], 1, Concat, [1]]  # 20: cat head P3
+  - [-1, 3, C2f, [256, True]]  # 21 (P3/8-small)
+  
+  - [-1, 1, Conv, [256, 3, 2]]  # 22: 下采样P3到P4尺度
+  - [[-1, 12], 1, Concat, [1]]  # 23: cat head P4
+  - [-1, 3, C2f_iRMB, [512, 7, 0.125, True, 7]]  # 24 (P4/16-medium)
+  
+  - [-1, 1, Conv, [512, 3, 2]]  # 25: 下采样P4到P5尺度
+  - [[-1, 9], 1, Concat, [1]]  # 26: cat head P5
+  - [-1, 3, C2f_iRMB, [1024, 7, 0.125, False, 7]]  # 27 (P5/32-large)
+  
+  # 检测头：Detect_LSCSBD (P2-P5配置，4个检测头)
+  - [[18, 21, 24, 27], 1, Detect_LSCSBD, [nc, 256]]  # Detect(P2, P3, P4, P5)
+

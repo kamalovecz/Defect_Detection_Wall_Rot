@@ -1,0 +1,91 @@
+# Ultralytics YOLO 🚀, AGPL-3.0 license
+# YOLOv8 object detection model with P3-P5 outputs. For Usage examples see https://docs.ultralytics.com/tasks/detect
+
+# Parameters
+nc: 6  # number of classes
+scales: # model compound scaling constants, i.e. 'model=yolov8n.yaml' will call yolov8.yaml with scale 'n'
+  # [depth, width, max_channels]
+  n: [0.33, 0.25, 1024]  # YOLOv8n summary: 225 layers,  3157200 parameters,  3157184 gradients,   8.9 GFLOPs
+  s: [0.33, 0.50, 1024]  # YOLOv8s summary: 225 layers, 11166560 parameters, 11166544 gradients,  28.8 GFLOPs
+  m: [0.67, 0.75, 768]   # YOLOv8m summary: 295 layers, 25902640 parameters, 25902624 gradients,  79.3 GFLOPs
+  l: [1.00, 1.00, 512]   # YOLOv8l summary: 365 layers, 43691520 parameters, 43691504 gradients, 165.7 GFLOPs
+  x: [1.00, 1.25, 512]   # YOLOv8x summary: 365 layers, 68229648 parameters, 68229632 gradients, 258.5 GFLOPs
+
+# YOLOv8.0n backbone
+backbone:
+  # ---- P1/2 ----
+  - [-1, 1, Conv, [64, 3, 2]]          # 0: s=2
+  - [-1, 1, Conv, [128, 3, 2]]         # 1: s=4  -> P2 输入通道
+  - [-1, 3, C2f, [128, True]]          # 2: P2 (保持原生C2f以保锐)
+  # ---- P3/8 ----
+  - [-1, 1, Conv, [256, 3, 2]]         # 3: s=8
+  - [-1, 6, C2f_iRMB_DRB, [256, 5, False, 1, 0.5]]   # 4: P3  DRB, dw_ks=5
+  # ---- P4/16 ---
+  - [-1, 1, Conv, [512, 3, 2]]         # 5: s=16
+  - [-1, 6, C2f_iRMB_SWC, [512, 21, False, 1, 0.5]]  # 6: P4  SWC, 大核21
+  # ---- P5/32 ---
+  - [-1, 1, Conv, [1024, 3, 2]]        # 7: s=32
+  - [-1, 3, C2f_iRMB_SWC, [1024, 31, False, 1, 0.5]] # 8: P5  SWC, 大核31
+  - [-1, 1, SPPF, [1024, 5]]           # 9
+
+# YOLOv8.0n head
+head:
+#FPN：自上而下
+  - [9,   1, Conv, [512, 1, 1]]        # 10
+  - [-1,  1, nn.Upsample, [None, 2, 'nearest']]   # 11
+  - [[-1, 6], 1, Concat, [1]]          # 12  与 P4
+  - [-1,  3, C2f, [512]]               # 13
+  - [-1,  1, Conv, [256, 1, 1]]        # 14
+  - [-1,  1, nn.Upsample, [None, 2, 'nearest']]   # 15
+  - [[-1, 4], 1, Concat, [1]]          # 16  与 P3
+  - [-1,  3, C2f, [256]]               # 17
+  - [-1,  1, Conv, [128, 1, 1]]        # 18
+  - [-1,  1, nn.Upsample, [None, 2, 'nearest']]   # 19
+  - [[-1, 2], 1, Concat, [1]]          # 20  与 P2
+  - [-1,  3, C2f, [128]]               # 21  -> P2 输出
+
+# PAN：自下而上
+  - [21,  1, Conv, [128, 3, 2]]        # 22  P2 -> P3
+  - [[-1, 17], 1, Concat, [1]]         # 23
+  - [-1,  3, C2f, [256]]               # 24  -> P3 输出
+  - [24,  1, Conv, [256, 3, 2]]        # 25  P3 -> P4
+  - [[-1, 13], 1, Concat, [1]]         # 26
+  - [-1,  3, C2f, [512]]               # 27  -> P4 输出
+  - [27,  1, Conv, [512, 3, 2]]        # 28  P4 -> P5
+  - [[-1, 10], 1, Concat, [1]]         # 29
+  - [-1,  3, C2f, [1024]]              # 30  -> P5 输出
+
+# Detect检测头
+  - [[21, 24, 27, 30], 1, Detect, [nc]]
+
+  # hyp_microcrack.yaml —— 小目标/细纹理友好
+lr0: 0.005
+lrf: 0.2
+momentum: 0.9
+weight_decay: 0.0005
+warmup_epochs: 3.0
+warmup_momentum: 0.8
+warmup_bias_lr: 0.05
+
+box: 7.5          # 加强回归
+cls: 0.25         # 弱化分类（降FP）
+dfl: 1.6          # DFL 提权
+
+hsv_h: 0.005
+hsv_s: 0.5
+hsv_v: 0.3
+degrees: 2.0
+translate: 0.05
+scale: 0.4
+shear: 1.0
+perspective: 0.0
+flipud: 0.0
+fliplr: 0.2
+
+mosaic: 0.5       # 前半程开，后半程关（见回调）
+mixup: 0.05
+copy_paste: 0.0   # 对裂纹不友好，关
+close_mosaic: 40  # 训练后40轮自动关闭强增强
+
+# Assigner 偏好（Ultralytics v8 支持在 args/代码中设置）
+# 建议配合回调里调整：topk=20, pos_radius=2.5

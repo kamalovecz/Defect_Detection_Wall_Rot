@@ -1,0 +1,65 @@
+[
+  {
+    "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe training_project\\verify_registry.py",
+    "start": "2026-07-14T18:42:49.567374",
+    "end": "2026-07-14T18:42:50.797373",
+    "exit_code": 0,
+    "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\01_verify_registry.log"
+  },
+  {
+    "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe training_project\\verify_tasks_import_boundary.py",
+    "start": "2026-07-14T18:42:50.797867",
+    "end": "2026-07-14T18:42:53.233374",
+    "exit_code": 0,
+    "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\02_verify_tasks_import_boundary.log"
+  },
+  {
+    "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe training_project\\verify_external_blocks.py",
+    "start": "2026-07-14T18:42:53.233873",
+    "end": "2026-07-14T18:42:57.952215",
+    "exit_code": 0,
+    "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\03_verify_external_blocks.log"
+  },
+  {
+    "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe training_project\\verify_pt_load.py",
+    "start": "2026-07-14T18:42:57.956716",
+    "end": "2026-07-14T18:43:00.426716",
+    "exit_code": 0,
+    "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\04_verify_pt_load.log"
+  },
+  {
+    "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe training_project\\verify_ruleloss_activation.py",
+    "start": "2026-07-14T18:43:00.427209",
+    "end": "2026-07-14T18:43:03.784522",
+    "exit_code": 0,
+    "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\05_verify_ruleloss_activation.log"
+  },
+  {
+    "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe training_project\\inspect_checkpoint_dependencies.py",
+    "start": "2026-07-14T18:43:03.785022",
+    "end": "2026-07-14T18:43:06.811780",
+    "exit_code": 0,
+    "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\06_inspect_checkpoint_dependencies.log"
+  },
+  {
+    "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe training_project\\verify_canonical_checkpoint.py",
+    "start": "2026-07-14T18:43:06.812280",
+    "end": "2026-07-14T18:43:06.850280",
+    "exit_code": 2,
+    "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\07_verify_canonical_checkpoint.log"
+  },
+  {
+    "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe export_pipeline\\export_onnx.py",
+    "start": "2026-07-14T18:43:06.850280",
+    "end": "2026-07-14T18:43:06.886779",
+    "exit_code": 2,
+    "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\08_export_onnx.log"
+  },
+  {
+    "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe export_pipeline\\verify_onnx_consistency.py",
+    "start": "2026-07-14T18:43:06.886779",
+    "end": "2026-07-14T18:43:06.920789",
+    "exit_code": 2,
+    "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\09_verify_onnx_consistency.log"
+  }
+]

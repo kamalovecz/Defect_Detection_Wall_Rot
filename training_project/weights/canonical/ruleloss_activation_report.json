@@ -1,0 +1,113 @@
+{
+  "status": "RULELOSS_NOT_ACTIVE",
+  "missing_connection": "RULE_LOSS_ENABLE is false by default and training_project/train.py does not enable it or call set_rule_epoch().",
+  "criterion_class": "defect_modules.loss.v8DetectionLoss",
+  "criterion_file": "D:\\defect_detection\\defect_modules\\loss.py",
+  "ruleloss_instance_type": "defect_modules.loss.v8DetectionLoss",
+  "rule_loss_enable": false,
+  "rule_loss_version": "v2",
+  "rule_updates_after_forward": 0,
+  "rule_weight_builder_call_count": 2,
+  "rule_active_call_count": 0,
+  "ruleloss_input_records": [
+    {
+      "lambda_rule": 0.0,
+      "batch_img_shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "target_bboxes_shape": [
+        1,
+        8400,
+        4
+      ],
+      "fg_mask_shape": [
+        1,
+        8400
+      ],
+      "fg_mask_positive": 10,
+      "weights": null
+    },
+    {
+      "lambda_rule": 0.0,
+      "batch_img_shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "target_bboxes_shape": [
+        1,
+        8400,
+        4
+      ],
+      "fg_mask_shape": [
+        1,
+        8400
+      ],
+      "fg_mask_positive": 10,
+      "weights": null
+    }
+  ],
+  "active_loss": 14.083234786987305,
+  "active_loss_items": [
+    2.6625397205352783,
+    6.489958763122559,
+    4.930736541748047
+  ],
+  "base_loss_with_rule_disabled": 14.083234786987305,
+  "base_loss_items_with_rule_disabled": [
+    2.6625397205352783,
+    6.489958763122559,
+    4.930736541748047
+  ],
+  "ruleloss_changed_base_loss": false,
+  "sample_image": "D:\\defect_detection\\ultralytics-main\\dataset\\processed\\processed_dataset\\images\\train\\train_1.jpg",
+  "sample_label": "D:\\defect_detection\\ultralytics-main\\dataset\\processed\\processed_dataset\\labels\\train\\train_1.txt",
+  "class_names": {
+    "0": "Rust",
+    "1": "Cracks",
+    "2": "Paint Wear",
+    "3": "Scratches",
+    "4": "Pitting"
+  },
+  "patch_result": {
+    "registered": [
+      "CSPStage",
+      "RepHFE",
+      "RuleLoss"
+    ],
+    "yaml_blocks": [
+      "CSPStage",
+      "RepHFE"
+    ],
+    "loss_objects": [
+      "RuleLoss"
+    ],
+    "legacy_aliases_enabled": false,
+    "pickle_compat_enabled": false,
+    "targets": [
+      "ultralytics.nn.modules",
+      "ultralytics.nn.tasks"
+    ],
+    "import_errors": {},
+    "loss_targets": [
+      "ultralytics.utils.loss",
+      "ultralytics.nn.tasks"
+    ],
+    "legacy_rephfe_module": null,
+    "legacy_prune_module": null
+  },
+  "answers": {
+    "is_subclass_or_copy_of_ultralytics_v8DetectionLoss": "copy/bridge: defect_modules.loss.v8DetectionLoss is an externalized copy-style implementation, not a subclass of ultralytics.utils.loss.v8DetectionLoss.",
+    "where_ruleloss_called": "_build_rule_anchor_weights() is called from compute_loss() and compute_loss_aux(); __call__ routes to those functions.",
+    "what_loss_is_modified": "It builds per-anchor weights from target area and image contrast. Those weights multiply classification raw loss and target_scores passed into BboxLoss, so classification is directly weighted and box/DFL are indirectly affected through target_scores_rule.",
+    "extra_inputs_needed": "Uses batch['img'], target_bboxes, fg_mask, and schedule state from env/update or epoch settings.",
+    "trainer_passes_required_info": "The trainer passes normal batch tensors including img/cls/bboxes, but current training_project/train.py does not enable RULE_LOSS_ENABLE or set rule epochs."
+  },
+  "hard_sample_weight_min": null,
+  "hard_sample_weight_max": null,
+  "hard_sample_weight_mean": null
+}

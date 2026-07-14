@@ -1,0 +1,83 @@
+﻿{
+    "created_at":  "2026-07-14T20:18:08",
+    "source_root":  "D:\\defect_detection",
+    "staging_root":  "D:\\defect_detection\\repo_staging",
+    "build_root":  "D:\\defect_detection\\repo_staging_build_20260714_201750",
+    "repository_staging_status":  "PASSED",
+    "functional_canonical_onnx_status":  "FAILED_OR_SKIPPED_CASE_C",
+    "included":  [
+                     "defect_modules",
+                     "training_project without runs/logs/weights artifacts",
+                     "export_pipeline without binary artifacts",
+                     "minimal ultralytics-main source package",
+                     "minimal prune_distill_exp pickle compatibility files",
+                     "validation/status docs"
+                 ],
+    "excluded":  [
+                     "datasets and image/label folders",
+                     "training runs",
+                     ".pt/.pth weights",
+                     ".onnx/.rknn/.engine exports",
+                     "full prune_distill_exp tree",
+                     "protected D:\\defect_detection\\ultralytics directory"
+                 ],
+    "current_truth":  {
+                          "ruleloss":  "RULELOSS_NOT_ACTIVE",
+                          "topology_case":  "CASE_C",
+                          "onnx":  "SKIPPED_CASE_C; no ONNX artifact",
+                          "protected_ultralytics":  "not copied; external drift existed before this staging step"
+                      },
+    "validation":  {
+                       "syntax":  "syntax_ok files=23",
+                       "commands":  [
+                                        {
+                                            "name":  "verify_registry",
+                                            "exit_code":  0,
+                                            "expected_exit_code":  0,
+                                            "passed":  true,
+                                            "output_tail":  "    \"RuleLoss\"\n  ],\n  \"pickle_compat_paths\": [\n    \"ultralytics.nn.extra_modules.prune_module\",\n    \"ultralytics.nn.extra_modules.rephfe\"\n  ],\n  \"legacy_aliases\": [\n    \"A_GFPN\",\n    \"SADH\"\n  ],\n  \"prune_module_in_yaml\": false\n}"
+                                        },
+                                        {
+                                            "name":  "verify_tasks_import_boundary",
+                                            "exit_code":  0,
+                                            "expected_exit_code":  0,
+                                            "passed":  true,
+                                            "output_tail":  "    ],\n    \"import_errors\": {},\n    \"loss_targets\": [\n      \"ultralytics.utils.loss\",\n      \"ultralytics.nn.tasks\"\n    ],\n    \"legacy_rephfe_module\": null,\n    \"legacy_prune_module\": null\n  },\n  \"CSPStage_module\": \"defect_modules.blocks\",\n  \"RepHFE_module\": \"defect_modules.blocks\"\n}"
+                                        },
+                                        {
+                                            "name":  "verify_external_blocks",
+                                            "exit_code":  0,
+                                            "expected_exit_code":  0,
+                                            "passed":  true,
+                                            "output_tail":  "    {\n      \"name\": \"CSPStage\",\n      \"module\": \"defect_modules.blocks\",\n      \"file\": \"D:\\\\defect_detection\\\\repo_staging_build_20260714_201750\\\\defect_modules\\\\blocks.py\"\n    },\n    {\n      \"name\": \"CSPStage\",\n      \"module\": \"defect_modules.blocks\",\n      \"file\": \"D:\\\\defect_detection\\\\repo_staging_build_20260714_201750\\\\defect_modules\\\\blocks.py\"\n    }\n  ]\n}"
+                                        }
+                                    ]
+                   },
+    "file_count":  1720,
+    "artifact_scan":  "no .pt/.pth/.onnx/.rknn/.engine/.torchscript files under staging",
+    "final_validation":  [
+                             {
+                                 "name":  "verify_registry",
+                                 "exit_code":  0,
+                                 "passed":  true,
+                                 "output_tail":  "  \"pickle_compat_paths\": [\n    \"ultralytics.nn.extra_modules.prune_module\",\n    \"ultralytics.nn.extra_modules.rephfe\"\n  ],\n  \"legacy_aliases\": [\n    \"A_GFPN\",\n    \"SADH\"\n  ],\n  \"prune_module_in_yaml\": false\n}"
+                             },
+                             {
+                                 "name":  "verify_tasks_import_boundary",
+                                 "exit_code":  0,
+                                 "passed":  true,
+                                 "output_tail":  "    \"loss_targets\": [\n      \"ultralytics.utils.loss\",\n      \"ultralytics.nn.tasks\"\n    ],\n    \"legacy_rephfe_module\": null,\n    \"legacy_prune_module\": null\n  },\n  \"CSPStage_module\": \"defect_modules.blocks\",\n  \"RepHFE_module\": \"defect_modules.blocks\"\n}"
+                             },
+                             {
+                                 "name":  "verify_external_blocks",
+                                 "exit_code":  0,
+                                 "passed":  true,
+                                 "output_tail":  "      \"module\": \"defect_modules.blocks\",\n      \"file\": \"D:\\\\defect_detection\\\\repo_staging\\\\defect_modules\\\\blocks.py\"\n    },\n    {\n      \"name\": \"CSPStage\",\n      \"module\": \"defect_modules.blocks\",\n      \"file\": \"D:\\\\defect_detection\\\\repo_staging\\\\defect_modules\\\\blocks.py\"\n    }\n  ]\n}"
+                             }
+                         ],
+    "final_artifact_scan":  "clean",
+    "final_tasks_wildcard_import_scan":  "clean",
+    "finalized_at":  "2026-07-14T20:19:39",
+    "final_size_mb":  16.51,
+    "final_file_count":  1721
+}

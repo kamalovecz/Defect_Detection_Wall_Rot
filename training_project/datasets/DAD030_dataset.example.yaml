@@ -1,0 +1,12 @@
+﻿# DAD030 dataset config example.
+# Keep actual images/labels outside Git, then update path before training.
+path: /absolute/path/to/DAD030_processed_dataset
+train: images/train
+val: images/val
+test: images/test
+names:
+  0: Rust
+  1: Cracks
+  2: Paint Wear
+  3: Scratches
+  4: Pitting

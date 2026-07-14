@@ -1,0 +1,3542 @@
+{
+  "source_checkpoint": "D:\\defect_detection\\training_project\\weights\\DAD030_best_target.pt",
+  "source_sha256": "BA5CC233EEA726226B3EFCED7200018F799CB702DB4A7F688BD8B06212B71656",
+  "model_yaml": "D:\\defect_detection\\training_project\\models\\B4_A-GFPN_RepHFE_target.yaml",
+  "model_yaml_sha256": "32C400D0A2EE4D6619EAEEABF638A1BB5BA2BD6682AFFE5CCA1577AF6C56B4E2",
+  "checkpoint_top_level_fields": [
+    "date",
+    "version",
+    "license",
+    "docs",
+    "epoch",
+    "best_fitness",
+    "model",
+    "ema",
+    "updates",
+    "optimizer",
+    "train_args",
+    "train_metrics",
+    "train_results"
+  ],
+  "model_type": "ultralytics.nn.tasks.DetectionModel",
+  "ema_type": null,
+  "optimizer_exists": false,
+  "train_args_exists": true,
+  "epoch": -1,
+  "best_fitness": "None",
+  "model_parameter_count": 7927270,
+  "state_dict_key_count": 403,
+  "custom_module_types": [
+    {
+      "module_path": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+      "class_name": "C2f_v2",
+      "instance_count": 8,
+      "class_file": "D:\\defect_detection\\prune_distill_exp\\ultralytics-prune-20240726\\ultralytics-prune\\ultralytics\\nn\\extra_modules\\prune_module.py",
+      "from_defect_modules": false,
+      "from_extra_modules": true,
+      "from_prune_module": true,
+      "belongs_to_model_structure": true,
+      "belongs_only_to_training_state": false,
+      "replaceable_by_state_dict": false
+    }
+  ],
+  "loaded_extra_modules": [
+    "ultralytics.nn.extra_modules",
+    "ultralytics.nn.extra_modules.block",
+    "ultralytics.nn.extra_modules.prune_module",
+    "ultralytics.nn.extra_modules.rephfe"
+  ],
+  "comparison": {
+    "topology_case": "CASE_C",
+    "source_layer_count": 23,
+    "target_layer_count": 25,
+    "source_parameter_count": 7927270,
+    "target_parameter_count": 2308655,
+    "source_state_dict_key_count": 403,
+    "target_state_dict_key_count": 465,
+    "missing_keys": [
+      "model.10.bn.bias",
+      "model.10.bn.num_batches_tracked",
+      "model.10.bn.running_mean",
+      "model.10.bn.running_var",
+      "model.10.bn.weight",
+      "model.10.conv.weight",
+      "model.11.bn.bias",
+      "model.11.bn.num_batches_tracked",
+      "model.11.bn.running_mean",
+      "model.11.bn.running_var",
+      "model.11.bn.weight",
+      "model.11.conv.weight",
+      "model.13.conv1.bn.bias",
+      "model.13.conv1.bn.num_batches_tracked",
+      "model.13.conv1.bn.running_mean",
+      "model.13.conv1.bn.running_var",
+      "model.13.conv1.bn.weight",
+      "model.13.conv1.conv.weight",
+      "model.13.conv2.bn.bias",
+      "model.13.conv2.bn.num_batches_tracked",
+      "model.13.conv2.bn.running_mean",
+      "model.13.conv2.bn.running_var",
+      "model.13.conv2.bn.weight",
+      "model.13.conv2.conv.weight",
+      "model.13.conv3.bn.bias",
+      "model.13.conv3.bn.num_batches_tracked",
+      "model.13.conv3.bn.running_mean",
+      "model.13.conv3.bn.running_var",
+      "model.13.conv3.bn.weight",
+      "model.13.conv3.conv.weight",
+      "model.13.convs.0.conv1.bn.bias",
+      "model.13.convs.0.conv1.bn.num_batches_tracked",
+      "model.13.convs.0.conv1.bn.running_mean",
+      "model.13.convs.0.conv1.bn.running_var",
+      "model.13.convs.0.conv1.bn.weight",
+      "model.13.convs.0.conv1.conv.weight",
+      "model.13.convs.0.conv2.conv1.bn.bias",
+      "model.13.convs.0.conv2.conv1.bn.num_batches_tracked",
+      "model.13.convs.0.conv2.conv1.bn.running_mean",
+      "model.13.convs.0.conv2.conv1.bn.running_var",
+      "model.13.convs.0.conv2.conv1.bn.weight",
+      "model.13.convs.0.conv2.conv1.conv.weight",
+      "model.13.convs.0.conv2.conv2.bn.bias",
+      "model.13.convs.0.conv2.conv2.bn.num_batches_tracked",
+      "model.13.convs.0.conv2.conv2.bn.running_mean",
+      "model.13.convs.0.conv2.conv2.bn.running_var",
+      "model.13.convs.0.conv2.conv2.bn.weight",
+      "model.13.convs.0.conv2.conv2.conv.weight",
+      "model.14.bn2.bias",
+      "model.14.bn2.num_batches_tracked",
+      "model.14.bn2.running_mean",
+      "model.14.bn2.running_var",
+      "model.14.bn2.weight",
+      "model.14.pwc.weight",
+      "model.14.rep_dwc.rbr_1x1.0.weight",
+      "model.14.rep_dwc.rbr_1x1.1.bias",
+      "model.14.rep_dwc.rbr_1x1.1.num_batches_tracked",
+      "model.14.rep_dwc.rbr_1x1.1.running_mean",
+      "model.14.rep_dwc.rbr_1x1.1.running_var",
+      "model.14.rep_dwc.rbr_1x1.1.weight",
+      "model.14.rep_dwc.rbr_dense.0.weight",
+      "model.14.rep_dwc.rbr_dense.1.bias",
+      "model.14.rep_dwc.rbr_dense.1.num_batches_tracked",
+      "model.14.rep_dwc.rbr_dense.1.running_mean",
+      "model.14.rep_dwc.rbr_dense.1.running_var",
+      "model.14.rep_dwc.rbr_dense.1.weight",
+      "model.14.rep_dwc.rbr_identity.bias",
+      "model.14.rep_dwc.rbr_identity.num_batches_tracked",
+      "model.14.rep_dwc.rbr_identity.running_mean",
+      "model.14.rep_dwc.rbr_identity.running_var",
+      "model.14.rep_dwc.rbr_identity.weight",
+      "model.14.rep_dwc.rbr_reparam.bias",
+      "model.14.rep_dwc.rbr_reparam.weight",
+      "model.15.bn.bias",
+      "model.15.bn.num_batches_tracked",
+      "model.15.bn.running_mean",
+      "model.15.bn.running_var",
+      "model.15.bn.weight",
+      "model.15.conv.weight",
+      "model.17.conv1.bn.bias",
+      "model.17.conv1.bn.num_batches_tracked",
+      "model.17.conv1.bn.running_mean",
+      "model.17.conv1.bn.running_var",
+      "model.17.conv1.bn.weight",
+      "model.17.conv1.conv.weight",
+      "model.17.conv2.bn.bias",
+      "model.17.conv2.bn.num_batches_tracked",
+      "model.17.conv2.bn.running_mean",
+      "model.17.conv2.bn.running_var",
+      "model.17.conv2.bn.weight",
+      "model.17.conv2.conv.weight",
+      "model.17.conv3.bn.bias",
+      "model.17.conv3.bn.num_batches_tracked",
+      "model.17.conv3.bn.running_mean",
+      "model.17.conv3.bn.running_var",
+      "model.17.conv3.bn.weight",
+      "model.17.conv3.conv.weight",
+      "model.17.convs.0.conv1.bn.bias",
+      "model.17.convs.0.conv1.bn.num_batches_tracked",
+      "model.17.convs.0.conv1.bn.running_mean",
+      "model.17.convs.0.conv1.bn.running_var",
+      "model.17.convs.0.conv1.bn.weight",
+      "model.17.convs.0.conv1.conv.weight",
+      "model.17.convs.0.conv2.conv1.bn.bias",
+      "model.17.convs.0.conv2.conv1.bn.num_batches_tracked",
+      "model.17.convs.0.conv2.conv1.bn.running_mean",
+      "model.17.convs.0.conv2.conv1.bn.running_var",
+      "model.17.convs.0.conv2.conv1.bn.weight",
+      "model.17.convs.0.conv2.conv1.conv.weight",
+      "model.17.convs.0.conv2.conv2.bn.bias",
+      "model.17.convs.0.conv2.conv2.bn.num_batches_tracked",
+      "model.17.convs.0.conv2.conv2.bn.running_mean",
+      "model.17.convs.0.conv2.conv2.bn.running_var",
+      "model.17.convs.0.conv2.conv2.bn.weight",
+      "model.17.convs.0.conv2.conv2.conv.weight",
+      "model.18.bn2.bias",
+      "model.18.bn2.num_batches_tracked",
+      "model.18.bn2.running_mean",
+      "model.18.bn2.running_var",
+      "model.18.bn2.weight",
+      "model.18.pwc.weight",
+      "model.18.rep_dwc.rbr_1x1.0.weight",
+      "model.18.rep_dwc.rbr_1x1.1.bias",
+      "model.18.rep_dwc.rbr_1x1.1.num_batches_tracked",
+      "model.18.rep_dwc.rbr_1x1.1.running_mean",
+      "model.18.rep_dwc.rbr_1x1.1.running_var",
+      "model.18.rep_dwc.rbr_1x1.1.weight",
+      "model.18.rep_dwc.rbr_dense.0.weight",
+      "model.18.rep_dwc.rbr_dense.1.bias",
+      "model.18.rep_dwc.rbr_dense.1.num_batches_tracked",
+      "model.18.rep_dwc.rbr_dense.1.running_mean",
+      "model.18.rep_dwc.rbr_dense.1.running_var",
+      "model.18.rep_dwc.rbr_dense.1.weight",
+      "model.18.rep_dwc.rbr_identity.bias",
+      "model.18.rep_dwc.rbr_identity.num_batches_tracked",
+      "model.18.rep_dwc.rbr_identity.running_mean",
+      "model.18.rep_dwc.rbr_identity.running_var",
+      "model.18.rep_dwc.rbr_identity.weight",
+      "model.18.rep_dwc.rbr_reparam.bias",
+      "model.18.rep_dwc.rbr_reparam.weight",
+      "model.20.conv1.bn.bias",
+      "model.20.conv1.bn.num_batches_tracked",
+      "model.20.conv1.bn.running_mean",
+      "model.20.conv1.bn.running_var",
+      "model.20.conv1.bn.weight",
+      "model.20.conv1.conv.weight",
+      "model.20.conv2.bn.bias",
+      "model.20.conv2.bn.num_batches_tracked",
+      "model.20.conv2.bn.running_mean",
+      "model.20.conv2.bn.running_var",
+      "model.20.conv2.bn.weight",
+      "model.20.conv2.conv.weight",
+      "model.20.conv3.bn.bias",
+      "model.20.conv3.bn.num_batches_tracked",
+      "model.20.conv3.bn.running_mean",
+      "model.20.conv3.bn.running_var",
+      "model.20.conv3.bn.weight",
+      "model.20.conv3.conv.weight",
+      "model.20.convs.0.conv1.bn.bias",
+      "model.20.convs.0.conv1.bn.num_batches_tracked",
+      "model.20.convs.0.conv1.bn.running_mean",
+      "model.20.convs.0.conv1.bn.running_var",
+      "model.20.convs.0.conv1.bn.weight",
+      "model.20.convs.0.conv1.conv.weight",
+      "model.20.convs.0.conv2.conv1.bn.bias",
+      "model.20.convs.0.conv2.conv1.bn.num_batches_tracked",
+      "model.20.convs.0.conv2.conv1.bn.running_mean",
+      "model.20.convs.0.conv2.conv1.bn.running_var",
+      "model.20.convs.0.conv2.conv1.bn.weight",
+      "model.20.convs.0.conv2.conv1.conv.weight",
+      "model.20.convs.0.conv2.conv2.bn.bias",
+      "model.20.convs.0.conv2.conv2.bn.num_batches_tracked",
+      "model.20.convs.0.conv2.conv2.bn.running_mean",
+      "model.20.convs.0.conv2.conv2.bn.running_var",
+      "model.20.convs.0.conv2.conv2.bn.weight",
+      "model.20.convs.0.conv2.conv2.conv.weight",
+      "model.21.bn.bias",
+      "model.21.bn.num_batches_tracked",
+      "model.21.bn.running_mean",
+      "model.21.bn.running_var",
+      "model.21.bn.weight",
+      "model.21.conv.weight",
+      "model.23.conv1.bn.bias",
+      "model.23.conv1.bn.num_batches_tracked",
+      "model.23.conv1.bn.running_mean",
+      "model.23.conv1.bn.running_var",
+      "model.23.conv1.bn.weight",
+      "model.23.conv1.conv.weight",
+      "model.23.conv2.bn.bias",
+      "model.23.conv2.bn.num_batches_tracked",
+      "model.23.conv2.bn.running_mean",
+      "model.23.conv2.bn.running_var",
+      "model.23.conv2.bn.weight",
+      "model.23.conv2.conv.weight",
+      "model.23.conv3.bn.bias",
+      "model.23.conv3.bn.num_batches_tracked",
+      "model.23.conv3.bn.running_mean",
+      "model.23.conv3.bn.running_var",
+      "model.23.conv3.bn.weight",
+      "model.23.conv3.conv.weight",
+      "model.23.convs.0.conv1.bn.bias",
+      "model.23.convs.0.conv1.bn.num_batches_tracked",
+      "model.23.convs.0.conv1.bn.running_mean",
+      "model.23.convs.0.conv1.bn.running_var",
+      "model.23.convs.0.conv1.bn.weight",
+      "model.23.convs.0.conv1.conv.weight",
+      "model.23.convs.0.conv2.conv1.bn.bias",
+      "model.23.convs.0.conv2.conv1.bn.num_batches_tracked",
+      "model.23.convs.0.conv2.conv1.bn.running_mean",
+      "model.23.convs.0.conv2.conv1.bn.running_var",
+      "model.23.convs.0.conv2.conv1.bn.weight",
+      "model.23.convs.0.conv2.conv1.conv.weight",
+      "model.23.convs.0.conv2.conv2.bn.bias",
+      "model.23.convs.0.conv2.conv2.bn.num_batches_tracked",
+      "model.23.convs.0.conv2.conv2.bn.running_mean",
+      "model.23.convs.0.conv2.conv2.bn.running_var",
+      "model.23.convs.0.conv2.conv2.bn.weight",
+      "model.23.convs.0.conv2.conv2.conv.weight",
+      "model.24.cv2.0.0.bn.bias",
+      "model.24.cv2.0.0.bn.num_batches_tracked",
+      "model.24.cv2.0.0.bn.running_mean",
+      "model.24.cv2.0.0.bn.running_var",
+      "model.24.cv2.0.0.bn.weight",
+      "model.24.cv2.0.0.conv.weight",
+      "model.24.cv2.0.1.bn.bias",
+      "model.24.cv2.0.1.bn.num_batches_tracked",
+      "model.24.cv2.0.1.bn.running_mean",
+      "model.24.cv2.0.1.bn.running_var",
+      "model.24.cv2.0.1.bn.weight",
+      "model.24.cv2.0.1.conv.weight",
+      "model.24.cv2.0.2.bias",
+      "model.24.cv2.0.2.weight",
+      "model.24.cv2.1.0.bn.bias",
+      "model.24.cv2.1.0.bn.num_batches_tracked",
+      "model.24.cv2.1.0.bn.running_mean",
+      "model.24.cv2.1.0.bn.running_var",
+      "model.24.cv2.1.0.bn.weight",
+      "model.24.cv2.1.0.conv.weight",
+      "model.24.cv2.1.1.bn.bias",
+      "model.24.cv2.1.1.bn.num_batches_tracked",
+      "model.24.cv2.1.1.bn.running_mean",
+      "model.24.cv2.1.1.bn.running_var",
+      "model.24.cv2.1.1.bn.weight",
+      "model.24.cv2.1.1.conv.weight",
+      "model.24.cv2.1.2.bias",
+      "model.24.cv2.1.2.weight",
+      "model.24.cv2.2.0.bn.bias",
+      "model.24.cv2.2.0.bn.num_batches_tracked",
+      "model.24.cv2.2.0.bn.running_mean",
+      "model.24.cv2.2.0.bn.running_var",
+      "model.24.cv2.2.0.bn.weight",
+      "model.24.cv2.2.0.conv.weight",
+      "model.24.cv2.2.1.bn.bias",
+      "model.24.cv2.2.1.bn.num_batches_tracked",
+      "model.24.cv2.2.1.bn.running_mean",
+      "model.24.cv2.2.1.bn.running_var",
+      "model.24.cv2.2.1.bn.weight",
+      "model.24.cv2.2.1.conv.weight",
+      "model.24.cv2.2.2.bias",
+      "model.24.cv2.2.2.weight",
+      "model.24.cv3.0.0.bn.bias",
+      "model.24.cv3.0.0.bn.num_batches_tracked",
+      "model.24.cv3.0.0.bn.running_mean",
+      "model.24.cv3.0.0.bn.running_var",
+      "model.24.cv3.0.0.bn.weight",
+      "model.24.cv3.0.0.conv.weight",
+      "model.24.cv3.0.1.bn.bias",
+      "model.24.cv3.0.1.bn.num_batches_tracked",
+      "model.24.cv3.0.1.bn.running_mean",
+      "model.24.cv3.0.1.bn.running_var",
+      "model.24.cv3.0.1.bn.weight",
+      "model.24.cv3.0.1.conv.weight",
+      "model.24.cv3.0.2.bias",
+      "model.24.cv3.0.2.weight",
+      "model.24.cv3.1.0.bn.bias",
+      "model.24.cv3.1.0.bn.num_batches_tracked",
+      "model.24.cv3.1.0.bn.running_mean",
+      "model.24.cv3.1.0.bn.running_var",
+      "model.24.cv3.1.0.bn.weight",
+      "model.24.cv3.1.0.conv.weight",
+      "model.24.cv3.1.1.bn.bias",
+      "model.24.cv3.1.1.bn.num_batches_tracked",
+      "model.24.cv3.1.1.bn.running_mean",
+      "model.24.cv3.1.1.bn.running_var",
+      "model.24.cv3.1.1.bn.weight",
+      "model.24.cv3.1.1.conv.weight",
+      "model.24.cv3.1.2.bias",
+      "model.24.cv3.1.2.weight",
+      "model.24.cv3.2.0.bn.bias",
+      "model.24.cv3.2.0.bn.num_batches_tracked",
+      "model.24.cv3.2.0.bn.running_mean",
+      "model.24.cv3.2.0.bn.running_var",
+      "model.24.cv3.2.0.bn.weight",
+      "model.24.cv3.2.0.conv.weight",
+      "model.24.cv3.2.1.bn.bias",
+      "model.24.cv3.2.1.bn.num_batches_tracked",
+      "model.24.cv3.2.1.bn.running_mean",
+      "model.24.cv3.2.1.bn.running_var",
+      "model.24.cv3.2.1.bn.weight",
+      "model.24.cv3.2.1.conv.weight",
+      "model.24.cv3.2.2.bias",
+      "model.24.cv3.2.2.weight",
+      "model.24.dfl.conv.weight"
+    ],
+    "unexpected_keys": [
+      "model.12.cv0.bn.bias",
+      "model.12.cv0.bn.num_batches_tracked",
+      "model.12.cv0.bn.running_mean",
+      "model.12.cv0.bn.running_var",
+      "model.12.cv0.bn.weight",
+      "model.12.cv0.conv.weight",
+      "model.12.cv1.bn.bias",
+      "model.12.cv1.bn.num_batches_tracked",
+      "model.12.cv1.bn.running_mean",
+      "model.12.cv1.bn.running_var",
+      "model.12.cv1.bn.weight",
+      "model.12.cv1.conv.weight",
+      "model.12.cv2.bn.bias",
+      "model.12.cv2.bn.num_batches_tracked",
+      "model.12.cv2.bn.running_mean",
+      "model.12.cv2.bn.running_var",
+      "model.12.cv2.bn.weight",
+      "model.12.cv2.conv.weight",
+      "model.12.m.0.cv1.bn.bias",
+      "model.12.m.0.cv1.bn.num_batches_tracked",
+      "model.12.m.0.cv1.bn.running_mean",
+      "model.12.m.0.cv1.bn.running_var",
+      "model.12.m.0.cv1.bn.weight",
+      "model.12.m.0.cv1.conv.weight",
+      "model.12.m.0.cv2.bn.bias",
+      "model.12.m.0.cv2.bn.num_batches_tracked",
+      "model.12.m.0.cv2.bn.running_mean",
+      "model.12.m.0.cv2.bn.running_var",
+      "model.12.m.0.cv2.bn.weight",
+      "model.12.m.0.cv2.conv.weight",
+      "model.15.cv0.bn.bias",
+      "model.15.cv0.bn.num_batches_tracked",
+      "model.15.cv0.bn.running_mean",
+      "model.15.cv0.bn.running_var",
+      "model.15.cv0.bn.weight",
+      "model.15.cv0.conv.weight",
+      "model.15.cv1.bn.bias",
+      "model.15.cv1.bn.num_batches_tracked",
+      "model.15.cv1.bn.running_mean",
+      "model.15.cv1.bn.running_var",
+      "model.15.cv1.bn.weight",
+      "model.15.cv1.conv.weight",
+      "model.15.cv2.bn.bias",
+      "model.15.cv2.bn.num_batches_tracked",
+      "model.15.cv2.bn.running_mean",
+      "model.15.cv2.bn.running_var",
+      "model.15.cv2.bn.weight",
+      "model.15.cv2.conv.weight",
+      "model.15.m.0.cv1.bn.bias",
+      "model.15.m.0.cv1.bn.num_batches_tracked",
+      "model.15.m.0.cv1.bn.running_mean",
+      "model.15.m.0.cv1.bn.running_var",
+      "model.15.m.0.cv1.bn.weight",
+      "model.15.m.0.cv1.conv.weight",
+      "model.15.m.0.cv2.bn.bias",
+      "model.15.m.0.cv2.bn.num_batches_tracked",
+      "model.15.m.0.cv2.bn.running_mean",
+      "model.15.m.0.cv2.bn.running_var",
+      "model.15.m.0.cv2.bn.weight",
+      "model.15.m.0.cv2.conv.weight",
+      "model.16.bn.bias",
+      "model.16.bn.num_batches_tracked",
+      "model.16.bn.running_mean",
+      "model.16.bn.running_var",
+      "model.16.bn.weight",
+      "model.16.conv.weight",
+      "model.18.cv0.bn.bias",
+      "model.18.cv0.bn.num_batches_tracked",
+      "model.18.cv0.bn.running_mean",
+      "model.18.cv0.bn.running_var",
+      "model.18.cv0.bn.weight",
+      "model.18.cv0.conv.weight",
+      "model.18.cv1.bn.bias",
+      "model.18.cv1.bn.num_batches_tracked",
+      "model.18.cv1.bn.running_mean",
+      "model.18.cv1.bn.running_var",
+      "model.18.cv1.bn.weight",
+      "model.18.cv1.conv.weight",
+      "model.18.cv2.bn.bias",
+      "model.18.cv2.bn.num_batches_tracked",
+      "model.18.cv2.bn.running_mean",
+      "model.18.cv2.bn.running_var",
+      "model.18.cv2.bn.weight",
+      "model.18.cv2.conv.weight",
+      "model.18.m.0.cv1.bn.bias",
+      "model.18.m.0.cv1.bn.num_batches_tracked",
+      "model.18.m.0.cv1.bn.running_mean",
+      "model.18.m.0.cv1.bn.running_var",
+      "model.18.m.0.cv1.bn.weight",
+      "model.18.m.0.cv1.conv.weight",
+      "model.18.m.0.cv2.bn.bias",
+      "model.18.m.0.cv2.bn.num_batches_tracked",
+      "model.18.m.0.cv2.bn.running_mean",
+      "model.18.m.0.cv2.bn.running_var",
+      "model.18.m.0.cv2.bn.weight",
+      "model.18.m.0.cv2.conv.weight",
+      "model.19.bn.bias",
+      "model.19.bn.num_batches_tracked",
+      "model.19.bn.running_mean",
+      "model.19.bn.running_var",
+      "model.19.bn.weight",
+      "model.19.conv.weight",
+      "model.2.cv0.bn.bias",
+      "model.2.cv0.bn.num_batches_tracked",
+      "model.2.cv0.bn.running_mean",
+      "model.2.cv0.bn.running_var",
+      "model.2.cv0.bn.weight",
+      "model.2.cv0.conv.weight",
+      "model.21.cv0.bn.bias",
+      "model.21.cv0.bn.num_batches_tracked",
+      "model.21.cv0.bn.running_mean",
+      "model.21.cv0.bn.running_var",
+      "model.21.cv0.bn.weight",
+      "model.21.cv0.conv.weight",
+      "model.21.cv1.bn.bias",
+      "model.21.cv1.bn.num_batches_tracked",
+      "model.21.cv1.bn.running_mean",
+      "model.21.cv1.bn.running_var",
+      "model.21.cv1.bn.weight",
+      "model.21.cv1.conv.weight",
+      "model.21.cv2.bn.bias",
+      "model.21.cv2.bn.num_batches_tracked",
+      "model.21.cv2.bn.running_mean",
+      "model.21.cv2.bn.running_var",
+      "model.21.cv2.bn.weight",
+      "model.21.cv2.conv.weight",
+      "model.21.m.0.cv1.bn.bias",
+      "model.21.m.0.cv1.bn.num_batches_tracked",
+      "model.21.m.0.cv1.bn.running_mean",
+      "model.21.m.0.cv1.bn.running_var",
+      "model.21.m.0.cv1.bn.weight",
+      "model.21.m.0.cv1.conv.weight",
+      "model.21.m.0.cv2.bn.bias",
+      "model.21.m.0.cv2.bn.num_batches_tracked",
+      "model.21.m.0.cv2.bn.running_mean",
+      "model.21.m.0.cv2.bn.running_var",
+      "model.21.m.0.cv2.bn.weight",
+      "model.21.m.0.cv2.conv.weight",
+      "model.22.cv2.0.0.bn.bias",
+      "model.22.cv2.0.0.bn.num_batches_tracked",
+      "model.22.cv2.0.0.bn.running_mean",
+      "model.22.cv2.0.0.bn.running_var",
+      "model.22.cv2.0.0.bn.weight",
+      "model.22.cv2.0.0.conv.weight",
+      "model.22.cv2.0.1.bn.bias",
+      "model.22.cv2.0.1.bn.num_batches_tracked",
+      "model.22.cv2.0.1.bn.running_mean",
+      "model.22.cv2.0.1.bn.running_var",
+      "model.22.cv2.0.1.bn.weight",
+      "model.22.cv2.0.1.conv.weight",
+      "model.22.cv2.0.2.bias",
+      "model.22.cv2.0.2.weight",
+      "model.22.cv2.1.0.bn.bias",
+      "model.22.cv2.1.0.bn.num_batches_tracked",
+      "model.22.cv2.1.0.bn.running_mean",
+      "model.22.cv2.1.0.bn.running_var",
+      "model.22.cv2.1.0.bn.weight",
+      "model.22.cv2.1.0.conv.weight",
+      "model.22.cv2.1.1.bn.bias",
+      "model.22.cv2.1.1.bn.num_batches_tracked",
+      "model.22.cv2.1.1.bn.running_mean",
+      "model.22.cv2.1.1.bn.running_var",
+      "model.22.cv2.1.1.bn.weight",
+      "model.22.cv2.1.1.conv.weight",
+      "model.22.cv2.1.2.bias",
+      "model.22.cv2.1.2.weight",
+      "model.22.cv2.2.0.bn.bias",
+      "model.22.cv2.2.0.bn.num_batches_tracked",
+      "model.22.cv2.2.0.bn.running_mean",
+      "model.22.cv2.2.0.bn.running_var",
+      "model.22.cv2.2.0.bn.weight",
+      "model.22.cv2.2.0.conv.weight",
+      "model.22.cv2.2.1.bn.bias",
+      "model.22.cv2.2.1.bn.num_batches_tracked",
+      "model.22.cv2.2.1.bn.running_mean",
+      "model.22.cv2.2.1.bn.running_var",
+      "model.22.cv2.2.1.bn.weight",
+      "model.22.cv2.2.1.conv.weight",
+      "model.22.cv2.2.2.bias",
+      "model.22.cv2.2.2.weight",
+      "model.22.cv3.0.0.bn.bias",
+      "model.22.cv3.0.0.bn.num_batches_tracked",
+      "model.22.cv3.0.0.bn.running_mean",
+      "model.22.cv3.0.0.bn.running_var",
+      "model.22.cv3.0.0.bn.weight",
+      "model.22.cv3.0.0.conv.weight",
+      "model.22.cv3.0.1.bn.bias",
+      "model.22.cv3.0.1.bn.num_batches_tracked",
+      "model.22.cv3.0.1.bn.running_mean",
+      "model.22.cv3.0.1.bn.running_var",
+      "model.22.cv3.0.1.bn.weight",
+      "model.22.cv3.0.1.conv.weight",
+      "model.22.cv3.0.2.bias",
+      "model.22.cv3.0.2.weight",
+      "model.22.cv3.1.0.bn.bias",
+      "model.22.cv3.1.0.bn.num_batches_tracked",
+      "model.22.cv3.1.0.bn.running_mean",
+      "model.22.cv3.1.0.bn.running_var",
+      "model.22.cv3.1.0.bn.weight",
+      "model.22.cv3.1.0.conv.weight",
+      "model.22.cv3.1.1.bn.bias",
+      "model.22.cv3.1.1.bn.num_batches_tracked",
+      "model.22.cv3.1.1.bn.running_mean",
+      "model.22.cv3.1.1.bn.running_var",
+      "model.22.cv3.1.1.bn.weight",
+      "model.22.cv3.1.1.conv.weight",
+      "model.22.cv3.1.2.bias",
+      "model.22.cv3.1.2.weight",
+      "model.22.cv3.2.0.bn.bias",
+      "model.22.cv3.2.0.bn.num_batches_tracked",
+      "model.22.cv3.2.0.bn.running_mean",
+      "model.22.cv3.2.0.bn.running_var",
+      "model.22.cv3.2.0.bn.weight",
+      "model.22.cv3.2.0.conv.weight",
+      "model.22.cv3.2.1.bn.bias",
+      "model.22.cv3.2.1.bn.num_batches_tracked",
+      "model.22.cv3.2.1.bn.running_mean",
+      "model.22.cv3.2.1.bn.running_var",
+      "model.22.cv3.2.1.bn.weight",
+      "model.22.cv3.2.1.conv.weight",
+      "model.22.cv3.2.2.bias",
+      "model.22.cv3.2.2.weight",
+      "model.22.dfl.conv.weight",
+      "model.4.cv0.bn.bias",
+      "model.4.cv0.bn.num_batches_tracked",
+      "model.4.cv0.bn.running_mean",
+      "model.4.cv0.bn.running_var",
+      "model.4.cv0.bn.weight",
+      "model.4.cv0.conv.weight",
+      "model.6.cv0.bn.bias",
+      "model.6.cv0.bn.num_batches_tracked",
+      "model.6.cv0.bn.running_mean",
+      "model.6.cv0.bn.running_var",
+      "model.6.cv0.bn.weight",
+      "model.6.cv0.conv.weight",
+      "model.8.cv0.bn.bias",
+      "model.8.cv0.bn.num_batches_tracked",
+      "model.8.cv0.bn.running_mean",
+      "model.8.cv0.bn.running_var",
+      "model.8.cv0.bn.weight",
+      "model.8.cv0.conv.weight"
+    ],
+    "shape_mismatch_keys": [
+      {
+        "key": "model.0.bn.bias",
+        "source_shape": [
+          32
+        ],
+        "target_shape": [
+          16
+        ]
+      },
+      {
+        "key": "model.0.bn.running_mean",
+        "source_shape": [
+          32
+        ],
+        "target_shape": [
+          16
+        ]
+      },
+      {
+        "key": "model.0.bn.running_var",
+        "source_shape": [
+          32
+        ],
+        "target_shape": [
+          16
+        ]
+      },
+      {
+        "key": "model.0.bn.weight",
+        "source_shape": [
+          32
+        ],
+        "target_shape": [
+          16
+        ]
+      },
+      {
+        "key": "model.0.conv.weight",
+        "source_shape": [
+          32,
+          3,
+          3,
+          3
+        ],
+        "target_shape": [
+          16,
+          3,
+          3,
+          3
+        ]
+      },
+      {
+        "key": "model.1.bn.bias",
+        "source_shape": [
+          64
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.1.bn.running_mean",
+        "source_shape": [
+          64
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.1.bn.running_var",
+        "source_shape": [
+          64
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.1.bn.weight",
+        "source_shape": [
+          64
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.1.conv.weight",
+        "source_shape": [
+          64,
+          32,
+          3,
+          3
+        ],
+        "target_shape": [
+          32,
+          16,
+          3,
+          3
+        ]
+      },
+      {
+        "key": "model.2.cv1.conv.weight",
+        "source_shape": [
+          32,
+          64,
+          1,
+          1
+        ],
+        "target_shape": [
+          32,
+          32,
+          1,
+          1
+        ]
+      },
+      {
+        "key": "model.2.cv2.bn.bias",
+        "source_shape": [
+          53
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.2.cv2.bn.running_mean",
+        "source_shape": [
+          53
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.2.cv2.bn.running_var",
+        "source_shape": [
+          53
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.2.cv2.bn.weight",
+        "source_shape": [
+          53
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.2.cv2.conv.weight",
+        "source_shape": [
+          53,
+          95,
+          1,
+          1
+        ],
+        "target_shape": [
+          32,
+          48,
+          1,
+          1
+        ]
+      },
+      {
+        "key": "model.2.m.0.cv1.bn.bias",
+        "source_shape": [
+          32
+        ],
+        "target_shape": [
+          16
+        ]
+      },
+      {
+        "key": "model.2.m.0.cv1.bn.running_mean",
+        "source_shape": [
+          32
+        ],
+        "target_shape": [
+          16
+        ]
+      },
+      {
+        "key": "model.2.m.0.cv1.bn.running_var",
+        "source_shape": [
+          32
+        ],
+        "target_shape": [
+          16
+        ]
+      },
+      {
+        "key": "model.2.m.0.cv1.bn.weight",
+        "source_shape": [
+          32
+        ],
+        "target_shape": [
+          16
+        ]
+      },
+      {
+        "key": "model.2.m.0.cv1.conv.weight",
+        "source_shape": [
+          32,
+          32,
+          3,
+          3
+        ],
+        "target_shape": [
+          16,
+          16,
+          3,
+          3
+        ]
+      },
+      {
+        "key": "model.2.m.0.cv2.bn.bias",
+        "source_shape": [
+          32
+        ],
+        "target_shape": [
+          16
+        ]
+      },
+      {
+        "key": "model.2.m.0.cv2.bn.running_mean",
+        "source_shape": [
+          32
+        ],
+        "target_shape": [
+          16
+        ]
+      },
+      {
+        "key": "model.2.m.0.cv2.bn.running_var",
+        "source_shape": [
+          32
+        ],
+        "target_shape": [
+          16
+        ]
+      },
+      {
+        "key": "model.2.m.0.cv2.bn.weight",
+        "source_shape": [
+          32
+        ],
+        "target_shape": [
+          16
+        ]
+      },
+      {
+        "key": "model.2.m.0.cv2.conv.weight",
+        "source_shape": [
+          32,
+          32,
+          3,
+          3
+        ],
+        "target_shape": [
+          16,
+          16,
+          3,
+          3
+        ]
+      },
+      {
+        "key": "model.3.bn.bias",
+        "source_shape": [
+          81
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.3.bn.running_mean",
+        "source_shape": [
+          81
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.3.bn.running_var",
+        "source_shape": [
+          81
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.3.bn.weight",
+        "source_shape": [
+          81
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.3.conv.weight",
+        "source_shape": [
+          81,
+          53,
+          3,
+          3
+        ],
+        "target_shape": [
+          64,
+          32,
+          3,
+          3
+        ]
+      },
+      {
+        "key": "model.4.cv1.conv.weight",
+        "source_shape": [
+          64,
+          81,
+          1,
+          1
+        ],
+        "target_shape": [
+          64,
+          64,
+          1,
+          1
+        ]
+      },
+      {
+        "key": "model.4.cv2.bn.bias",
+        "source_shape": [
+          108
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.4.cv2.bn.running_mean",
+        "source_shape": [
+          108
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.4.cv2.bn.running_var",
+        "source_shape": [
+          108
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.4.cv2.bn.weight",
+        "source_shape": [
+          108
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.4.cv2.conv.weight",
+        "source_shape": [
+          108,
+          234,
+          1,
+          1
+        ],
+        "target_shape": [
+          64,
+          128,
+          1,
+          1
+        ]
+      },
+      {
+        "key": "model.4.m.0.cv1.bn.bias",
+        "source_shape": [
+          36
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.4.m.0.cv1.bn.running_mean",
+        "source_shape": [
+          36
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.4.m.0.cv1.bn.running_var",
+        "source_shape": [
+          36
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.4.m.0.cv1.bn.weight",
+        "source_shape": [
+          36
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.4.m.0.cv1.conv.weight",
+        "source_shape": [
+          36,
+          64,
+          3,
+          3
+        ],
+        "target_shape": [
+          32,
+          32,
+          3,
+          3
+        ]
+      },
+      {
+        "key": "model.4.m.0.cv2.bn.bias",
+        "source_shape": [
+          64
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.4.m.0.cv2.bn.running_mean",
+        "source_shape": [
+          64
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.4.m.0.cv2.bn.running_var",
+        "source_shape": [
+          64
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.4.m.0.cv2.bn.weight",
+        "source_shape": [
+          64
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.4.m.0.cv2.conv.weight",
+        "source_shape": [
+          64,
+          36,
+          3,
+          3
+        ],
+        "target_shape": [
+          32,
+          32,
+          3,
+          3
+        ]
+      },
+      {
+        "key": "model.4.m.1.cv1.bn.bias",
+        "source_shape": [
+          59
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.4.m.1.cv1.bn.running_mean",
+        "source_shape": [
+          59
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.4.m.1.cv1.bn.running_var",
+        "source_shape": [
+          59
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.4.m.1.cv1.bn.weight",
+        "source_shape": [
+          59
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.4.m.1.cv1.conv.weight",
+        "source_shape": [
+          59,
+          64,
+          3,
+          3
+        ],
+        "target_shape": [
+          32,
+          32,
+          3,
+          3
+        ]
+      },
+      {
+        "key": "model.4.m.1.cv2.bn.bias",
+        "source_shape": [
+          64
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.4.m.1.cv2.bn.running_mean",
+        "source_shape": [
+          64
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.4.m.1.cv2.bn.running_var",
+        "source_shape": [
+          64
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.4.m.1.cv2.bn.weight",
+        "source_shape": [
+          64
+        ],
+        "target_shape": [
+          32
+        ]
+      },
+      {
+        "key": "model.4.m.1.cv2.conv.weight",
+        "source_shape": [
+          64,
+          59,
+          3,
+          3
+        ],
+        "target_shape": [
+          32,
+          32,
+          3,
+          3
+        ]
+      },
+      {
+        "key": "model.5.bn.bias",
+        "source_shape": [
+          232
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.5.bn.running_mean",
+        "source_shape": [
+          232
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.5.bn.running_var",
+        "source_shape": [
+          232
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.5.bn.weight",
+        "source_shape": [
+          232
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.5.conv.weight",
+        "source_shape": [
+          232,
+          108,
+          3,
+          3
+        ],
+        "target_shape": [
+          128,
+          64,
+          3,
+          3
+        ]
+      },
+      {
+        "key": "model.6.cv1.conv.weight",
+        "source_shape": [
+          128,
+          232,
+          1,
+          1
+        ],
+        "target_shape": [
+          128,
+          128,
+          1,
+          1
+        ]
+      },
+      {
+        "key": "model.6.cv2.bn.bias",
+        "source_shape": [
+          248
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.6.cv2.bn.running_mean",
+        "source_shape": [
+          248
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.6.cv2.bn.running_var",
+        "source_shape": [
+          248
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.6.cv2.bn.weight",
+        "source_shape": [
+          248
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.6.cv2.conv.weight",
+        "source_shape": [
+          248,
+          512,
+          1,
+          1
+        ],
+        "target_shape": [
+          128,
+          256,
+          1,
+          1
+        ]
+      },
+      {
+        "key": "model.6.m.0.cv1.bn.bias",
+        "source_shape": [
+          128
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.6.m.0.cv1.bn.running_mean",
+        "source_shape": [
+          128
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.6.m.0.cv1.bn.running_var",
+        "source_shape": [
+          128
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.6.m.0.cv1.bn.weight",
+        "source_shape": [
+          128
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.6.m.0.cv1.conv.weight",
+        "source_shape": [
+          128,
+          128,
+          3,
+          3
+        ],
+        "target_shape": [
+          64,
+          64,
+          3,
+          3
+        ]
+      },
+      {
+        "key": "model.6.m.0.cv2.bn.bias",
+        "source_shape": [
+          128
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.6.m.0.cv2.bn.running_mean",
+        "source_shape": [
+          128
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.6.m.0.cv2.bn.running_var",
+        "source_shape": [
+          128
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.6.m.0.cv2.bn.weight",
+        "source_shape": [
+          128
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.6.m.0.cv2.conv.weight",
+        "source_shape": [
+          128,
+          128,
+          3,
+          3
+        ],
+        "target_shape": [
+          64,
+          64,
+          3,
+          3
+        ]
+      },
+      {
+        "key": "model.6.m.1.cv1.bn.bias",
+        "source_shape": [
+          128
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.6.m.1.cv1.bn.running_mean",
+        "source_shape": [
+          128
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.6.m.1.cv1.bn.running_var",
+        "source_shape": [
+          128
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.6.m.1.cv1.bn.weight",
+        "source_shape": [
+          128
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.6.m.1.cv1.conv.weight",
+        "source_shape": [
+          128,
+          128,
+          3,
+          3
+        ],
+        "target_shape": [
+          64,
+          64,
+          3,
+          3
+        ]
+      },
+      {
+        "key": "model.6.m.1.cv2.bn.bias",
+        "source_shape": [
+          128
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.6.m.1.cv2.bn.running_mean",
+        "source_shape": [
+          128
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.6.m.1.cv2.bn.running_var",
+        "source_shape": [
+          128
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.6.m.1.cv2.bn.weight",
+        "source_shape": [
+          128
+        ],
+        "target_shape": [
+          64
+        ]
+      },
+      {
+        "key": "model.6.m.1.cv2.conv.weight",
+        "source_shape": [
+          128,
+          128,
+          3,
+          3
+        ],
+        "target_shape": [
+          64,
+          64,
+          3,
+          3
+        ]
+      },
+      {
+        "key": "model.7.bn.bias",
+        "source_shape": [
+          502
+        ],
+        "target_shape": [
+          256
+        ]
+      },
+      {
+        "key": "model.7.bn.running_mean",
+        "source_shape": [
+          502
+        ],
+        "target_shape": [
+          256
+        ]
+      },
+      {
+        "key": "model.7.bn.running_var",
+        "source_shape": [
+          502
+        ],
+        "target_shape": [
+          256
+        ]
+      },
+      {
+        "key": "model.7.bn.weight",
+        "source_shape": [
+          502
+        ],
+        "target_shape": [
+          256
+        ]
+      },
+      {
+        "key": "model.7.conv.weight",
+        "source_shape": [
+          502,
+          248,
+          3,
+          3
+        ],
+        "target_shape": [
+          256,
+          128,
+          3,
+          3
+        ]
+      },
+      {
+        "key": "model.8.cv1.conv.weight",
+        "source_shape": [
+          256,
+          502,
+          1,
+          1
+        ],
+        "target_shape": [
+          256,
+          256,
+          1,
+          1
+        ]
+      },
+      {
+        "key": "model.8.cv2.bn.bias",
+        "source_shape": [
+          510
+        ],
+        "target_shape": [
+          256
+        ]
+      },
+      {
+        "key": "model.8.cv2.bn.running_mean",
+        "source_shape": [
+          510
+        ],
+        "target_shape": [
+          256
+        ]
+      },
+      {
+        "key": "model.8.cv2.bn.running_var",
+        "source_shape": [
+          510
+        ],
+        "target_shape": [
+          256
+        ]
+      },
+      {
+        "key": "model.8.cv2.bn.weight",
+        "source_shape": [
+          510
+        ],
+        "target_shape": [
+          256
+        ]
+      },
+      {
+        "key": "model.8.cv2.conv.weight",
+        "source_shape": [
+          510,
+          768,
+          1,
+          1
+        ],
+        "target_shape": [
+          256,
+          384,
+          1,
+          1
+        ]
+      },
+      {
+        "key": "model.8.m.0.cv1.bn.bias",
+        "source_shape": [
+          253
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.8.m.0.cv1.bn.running_mean",
+        "source_shape": [
+          253
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.8.m.0.cv1.bn.running_var",
+        "source_shape": [
+          253
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.8.m.0.cv1.bn.weight",
+        "source_shape": [
+          253
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.8.m.0.cv1.conv.weight",
+        "source_shape": [
+          253,
+          256,
+          3,
+          3
+        ],
+        "target_shape": [
+          128,
+          128,
+          3,
+          3
+        ]
+      },
+      {
+        "key": "model.8.m.0.cv2.bn.bias",
+        "source_shape": [
+          256
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.8.m.0.cv2.bn.running_mean",
+        "source_shape": [
+          256
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.8.m.0.cv2.bn.running_var",
+        "source_shape": [
+          256
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.8.m.0.cv2.bn.weight",
+        "source_shape": [
+          256
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.8.m.0.cv2.conv.weight",
+        "source_shape": [
+          256,
+          253,
+          3,
+          3
+        ],
+        "target_shape": [
+          128,
+          128,
+          3,
+          3
+        ]
+      },
+      {
+        "key": "model.9.cv1.bn.bias",
+        "source_shape": [
+          154
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.9.cv1.bn.running_mean",
+        "source_shape": [
+          154
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.9.cv1.bn.running_var",
+        "source_shape": [
+          154
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.9.cv1.bn.weight",
+        "source_shape": [
+          154
+        ],
+        "target_shape": [
+          128
+        ]
+      },
+      {
+        "key": "model.9.cv1.conv.weight",
+        "source_shape": [
+          154,
+          510,
+          1,
+          1
+        ],
+        "target_shape": [
+          128,
+          256,
+          1,
+          1
+        ]
+      },
+      {
+        "key": "model.9.cv2.bn.bias",
+        "source_shape": [
+          410
+        ],
+        "target_shape": [
+          256
+        ]
+      },
+      {
+        "key": "model.9.cv2.bn.running_mean",
+        "source_shape": [
+          410
+        ],
+        "target_shape": [
+          256
+        ]
+      },
+      {
+        "key": "model.9.cv2.bn.running_var",
+        "source_shape": [
+          410
+        ],
+        "target_shape": [
+          256
+        ]
+      },
+      {
+        "key": "model.9.cv2.bn.weight",
+        "source_shape": [
+          410
+        ],
+        "target_shape": [
+          256
+        ]
+      },
+      {
+        "key": "model.9.cv2.conv.weight",
+        "source_shape": [
+          410,
+          616,
+          1,
+          1
+        ],
+        "target_shape": [
+          256,
+          512,
+          1,
+          1
+        ]
+      }
+    ],
+    "layer_diffs": [
+      {
+        "index": 0,
+        "source": {
+          "index": 0,
+          "type": "ultralytics.nn.modules.conv.Conv",
+          "from": -1,
+          "params": 928,
+          "first_weight_shape": [
+            32,
+            3,
+            3,
+            3
+          ]
+        },
+        "target": {
+          "index": 0,
+          "type": "ultralytics.nn.modules.conv.Conv",
+          "from": -1,
+          "params": 464,
+          "first_weight_shape": [
+            16,
+            3,
+            3,
+            3
+          ]
+        }
+      },
+      {
+        "index": 1,
+        "source": {
+          "index": 1,
+          "type": "ultralytics.nn.modules.conv.Conv",
+          "from": -1,
+          "params": 18560,
+          "first_weight_shape": [
+            64,
+            32,
+            3,
+            3
+          ]
+        },
+        "target": {
+          "index": 1,
+          "type": "ultralytics.nn.modules.conv.Conv",
+          "from": -1,
+          "params": 4672,
+          "first_weight_shape": [
+            32,
+            16,
+            3,
+            3
+          ]
+        }
+      },
+      {
+        "index": 2,
+        "source": {
+          "index": 2,
+          "type": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+          "from": -1,
+          "params": 27859,
+          "first_weight_shape": [
+            31,
+            64,
+            1,
+            1
+          ]
+        },
+        "target": {
+          "index": 2,
+          "type": "ultralytics.nn.modules.block.C2f",
+          "from": -1,
+          "params": 7360,
+          "first_weight_shape": [
+            32,
+            32,
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "index": 3,
+        "source": {
+          "index": 3,
+          "type": "ultralytics.nn.modules.conv.Conv",
+          "from": -1,
+          "params": 38799,
+          "first_weight_shape": [
+            81,
+            53,
+            3,
+            3
+          ]
+        },
+        "target": {
+          "index": 3,
+          "type": "ultralytics.nn.modules.conv.Conv",
+          "from": -1,
+          "params": 18560,
+          "first_weight_shape": [
+            64,
+            32,
+            3,
+            3
+          ]
+        }
+      },
+      {
+        "index": 4,
+        "source": {
+          "index": 4,
+          "type": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+          "from": -1,
+          "params": 144172,
+          "first_weight_shape": [
+            42,
+            81,
+            1,
+            1
+          ]
+        },
+        "target": {
+          "index": 4,
+          "type": "ultralytics.nn.modules.block.C2f",
+          "from": -1,
+          "params": 49664,
+          "first_weight_shape": [
+            64,
+            64,
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "index": 5,
+        "source": {
+          "index": 5,
+          "type": "ultralytics.nn.modules.conv.Conv",
+          "from": -1,
+          "params": 225968,
+          "first_weight_shape": [
+            232,
+            108,
+            3,
+            3
+          ]
+        },
+        "target": {
+          "index": 5,
+          "type": "ultralytics.nn.modules.conv.Conv",
+          "from": -1,
+          "params": 73984,
+          "first_weight_shape": [
+            128,
+            64,
+            3,
+            3
+          ]
+        }
+      },
+      {
+        "index": 6,
+        "source": {
+          "index": 6,
+          "type": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+          "from": -1,
+          "params": 778224,
+          "first_weight_shape": [
+            128,
+            232,
+            1,
+            1
+          ]
+        },
+        "target": {
+          "index": 6,
+          "type": "ultralytics.nn.modules.block.C2f",
+          "from": -1,
+          "params": 197632,
+          "first_weight_shape": [
+            128,
+            128,
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "index": 7,
+        "source": {
+          "index": 7,
+          "type": "ultralytics.nn.modules.conv.Conv",
+          "from": -1,
+          "params": 1121468,
+          "first_weight_shape": [
+            502,
+            248,
+            3,
+            3
+          ]
+        },
+        "target": {
+          "index": 7,
+          "type": "ultralytics.nn.modules.conv.Conv",
+          "from": -1,
+          "params": 295424,
+          "first_weight_shape": [
+            256,
+            128,
+            3,
+            3
+          ]
+        }
+      },
+      {
+        "index": 8,
+        "source": {
+          "index": 8,
+          "type": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+          "from": -1,
+          "params": 1817590,
+          "first_weight_shape": [
+            256,
+            502,
+            1,
+            1
+          ]
+        },
+        "target": {
+          "index": 8,
+          "type": "ultralytics.nn.modules.block.C2f",
+          "from": -1,
+          "params": 460288,
+          "first_weight_shape": [
+            256,
+            256,
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "index": 9,
+        "source": {
+          "index": 9,
+          "type": "ultralytics.nn.modules.block.SPPF",
+          "from": -1,
+          "params": 332228,
+          "first_weight_shape": [
+            154,
+            510,
+            1,
+            1
+          ]
+        },
+        "target": {
+          "index": 9,
+          "type": "ultralytics.nn.modules.block.SPPF",
+          "from": -1,
+          "params": 164608,
+          "first_weight_shape": [
+            128,
+            256,
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "index": 10,
+        "source": {
+          "index": 10,
+          "type": "torch.nn.modules.upsampling.Upsample",
+          "from": -1,
+          "params": 0,
+          "first_weight_shape": null
+        },
+        "target": {
+          "index": 10,
+          "type": "ultralytics.nn.modules.conv.Conv",
+          "from": -1,
+          "params": 33024,
+          "first_weight_shape": [
+            128,
+            256,
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "index": 11,
+        "source": {
+          "index": 11,
+          "type": "ultralytics.nn.modules.conv.Concat",
+          "from": [
+            -1,
+            6
+          ],
+          "params": 0,
+          "first_weight_shape": null
+        },
+        "target": {
+          "index": 11,
+          "type": "ultralytics.nn.modules.conv.Conv",
+          "from": 6,
+          "params": 147712,
+          "first_weight_shape": [
+            128,
+            128,
+            3,
+            3
+          ]
+        }
+      },
+      {
+        "index": 12,
+        "source": {
+          "index": 12,
+          "type": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+          "from": -1,
+          "params": 505939,
+          "first_weight_shape": [
+            119,
+            658,
+            1,
+            1
+          ]
+        },
+        "target": {
+          "index": 12,
+          "type": "ultralytics.nn.modules.conv.Concat",
+          "from": [
+            10,
+            11
+          ],
+          "params": 0,
+          "first_weight_shape": null
+        }
+      },
+      {
+        "index": 13,
+        "source": {
+          "index": 13,
+          "type": "torch.nn.modules.upsampling.Upsample",
+          "from": -1,
+          "params": 0,
+          "first_weight_shape": null
+        },
+        "target": {
+          "index": 13,
+          "type": "defect_modules.blocks.CSPStage",
+          "from": -1,
+          "params": 127872,
+          "first_weight_shape": [
+            64,
+            256,
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "index": 14,
+        "source": {
+          "index": 14,
+          "type": "ultralytics.nn.modules.conv.Concat",
+          "from": [
+            -1,
+            4
+          ],
+          "params": 0,
+          "first_weight_shape": null
+        },
+        "target": {
+          "index": 14,
+          "type": "defect_modules.blocks.RepHFE",
+          "from": 13,
+          "params": 11648,
+          "first_weight_shape": [
+            128,
+            1,
+            3,
+            3
+          ]
+        }
+      },
+      {
+        "index": 15,
+        "source": {
+          "index": 15,
+          "type": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+          "from": -1,
+          "params": 96516,
+          "first_weight_shape": [
+            44,
+            317,
+            1,
+            1
+          ]
+        },
+        "target": {
+          "index": 15,
+          "type": "ultralytics.nn.modules.conv.Conv",
+          "from": 4,
+          "params": 36992,
+          "first_weight_shape": [
+            64,
+            64,
+            3,
+            3
+          ]
+        }
+      },
+      {
+        "index": 16,
+        "source": {
+          "index": 16,
+          "type": "ultralytics.nn.modules.conv.Conv",
+          "from": -1,
+          "params": 60593,
+          "first_weight_shape": [
+            79,
+            85,
+            3,
+            3
+          ]
+        },
+        "target": {
+          "index": 16,
+          "type": "ultralytics.nn.modules.conv.Concat",
+          "from": [
+            14,
+            15,
+            6
+          ],
+          "params": 0,
+          "first_weight_shape": null
+        }
+      },
+      {
+        "index": 17,
+        "source": {
+          "index": 17,
+          "type": "ultralytics.nn.modules.conv.Concat",
+          "from": [
+            -1,
+            12
+          ],
+          "params": 0,
+          "first_weight_shape": null
+        },
+        "target": {
+          "index": 17,
+          "type": "defect_modules.blocks.CSPStage",
+          "from": -1,
+          "params": 40384,
+          "first_weight_shape": [
+            32,
+            256,
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "index": 18,
+        "source": {
+          "index": 18,
+          "type": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+          "from": -1,
+          "params": 164502,
+          "first_weight_shape": [
+            78,
+            288,
+            1,
+            1
+          ]
+        },
+        "target": {
+          "index": 18,
+          "type": "defect_modules.blocks.RepHFE",
+          "from": 17,
+          "params": 5888,
+          "first_weight_shape": [
+            64,
+            1,
+            3,
+            3
+          ]
+        }
+      },
+      {
+        "index": 19,
+        "source": {
+          "index": 19,
+          "type": "ultralytics.nn.modules.conv.Conv",
+          "from": -1,
+          "params": 99435,
+          "first_weight_shape": [
+            105,
+            105,
+            3,
+            3
+          ]
+        },
+        "target": {
+          "index": 19,
+          "type": "ultralytics.nn.modules.conv.Concat",
+          "from": [
+            18,
+            4
+          ],
+          "params": 0,
+          "first_weight_shape": null
+        }
+      },
+      {
+        "index": 20,
+        "source": {
+          "index": 20,
+          "type": "ultralytics.nn.modules.conv.Concat",
+          "from": [
+            -1,
+            9
+          ],
+          "params": 0,
+          "first_weight_shape": null
+        },
+        "target": {
+          "index": 20,
+          "type": "defect_modules.blocks.CSPStage",
+          "from": -1,
+          "params": 32192,
+          "first_weight_shape": [
+            32,
+            128,
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "index": 21,
+        "source": {
+          "index": 21,
+          "type": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+          "from": -1,
+          "params": 1175604,
+          "first_weight_shape": [
+            253,
+            515,
+            1,
+            1
+          ]
+        },
+        "target": {
+          "index": 21,
+          "type": "ultralytics.nn.modules.conv.Conv",
+          "from": 20,
+          "params": 36992,
+          "first_weight_shape": [
+            64,
+            64,
+            3,
+            3
+          ]
+        }
+      },
+      {
+        "index": 22,
+        "source": {
+          "index": 22,
+          "type": "ultralytics.nn.modules.head.Detect",
+          "from": [
+            15,
+            18,
+            21
+          ],
+          "params": 1318885,
+          "first_weight_shape": [
+            58,
+            85,
+            3,
+            3
+          ]
+        },
+        "target": {
+          "index": 22,
+          "type": "ultralytics.nn.modules.conv.Concat",
+          "from": [
+            21,
+            17
+          ],
+          "params": 0,
+          "first_weight_shape": null
+        }
+      },
+      {
+        "index": 23,
+        "source": null,
+        "target": {
+          "index": 23,
+          "type": "defect_modules.blocks.CSPStage",
+          "from": -1,
+          "params": 32192,
+          "first_weight_shape": [
+            32,
+            128,
+            1,
+            1
+          ]
+        }
+      },
+      {
+        "index": 24,
+        "source": null,
+        "target": {
+          "index": 24,
+          "type": "ultralytics.nn.modules.head.Detect",
+          "from": [
+            20,
+            23,
+            13
+          ],
+          "params": 531103,
+          "first_weight_shape": [
+            64,
+            64,
+            3,
+            3
+          ]
+        }
+      }
+    ],
+    "source_layers": [
+      {
+        "index": 0,
+        "type": "ultralytics.nn.modules.conv.Conv",
+        "from": -1,
+        "params": 928,
+        "first_weight_shape": [
+          32,
+          3,
+          3,
+          3
+        ]
+      },
+      {
+        "index": 1,
+        "type": "ultralytics.nn.modules.conv.Conv",
+        "from": -1,
+        "params": 18560,
+        "first_weight_shape": [
+          64,
+          32,
+          3,
+          3
+        ]
+      },
+      {
+        "index": 2,
+        "type": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+        "from": -1,
+        "params": 27859,
+        "first_weight_shape": [
+          31,
+          64,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 3,
+        "type": "ultralytics.nn.modules.conv.Conv",
+        "from": -1,
+        "params": 38799,
+        "first_weight_shape": [
+          81,
+          53,
+          3,
+          3
+        ]
+      },
+      {
+        "index": 4,
+        "type": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+        "from": -1,
+        "params": 144172,
+        "first_weight_shape": [
+          42,
+          81,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 5,
+        "type": "ultralytics.nn.modules.conv.Conv",
+        "from": -1,
+        "params": 225968,
+        "first_weight_shape": [
+          232,
+          108,
+          3,
+          3
+        ]
+      },
+      {
+        "index": 6,
+        "type": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+        "from": -1,
+        "params": 778224,
+        "first_weight_shape": [
+          128,
+          232,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 7,
+        "type": "ultralytics.nn.modules.conv.Conv",
+        "from": -1,
+        "params": 1121468,
+        "first_weight_shape": [
+          502,
+          248,
+          3,
+          3
+        ]
+      },
+      {
+        "index": 8,
+        "type": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+        "from": -1,
+        "params": 1817590,
+        "first_weight_shape": [
+          256,
+          502,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 9,
+        "type": "ultralytics.nn.modules.block.SPPF",
+        "from": -1,
+        "params": 332228,
+        "first_weight_shape": [
+          154,
+          510,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 10,
+        "type": "torch.nn.modules.upsampling.Upsample",
+        "from": -1,
+        "params": 0,
+        "first_weight_shape": null
+      },
+      {
+        "index": 11,
+        "type": "ultralytics.nn.modules.conv.Concat",
+        "from": [
+          -1,
+          6
+        ],
+        "params": 0,
+        "first_weight_shape": null
+      },
+      {
+        "index": 12,
+        "type": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+        "from": -1,
+        "params": 505939,
+        "first_weight_shape": [
+          119,
+          658,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 13,
+        "type": "torch.nn.modules.upsampling.Upsample",
+        "from": -1,
+        "params": 0,
+        "first_weight_shape": null
+      },
+      {
+        "index": 14,
+        "type": "ultralytics.nn.modules.conv.Concat",
+        "from": [
+          -1,
+          4
+        ],
+        "params": 0,
+        "first_weight_shape": null
+      },
+      {
+        "index": 15,
+        "type": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+        "from": -1,
+        "params": 96516,
+        "first_weight_shape": [
+          44,
+          317,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 16,
+        "type": "ultralytics.nn.modules.conv.Conv",
+        "from": -1,
+        "params": 60593,
+        "first_weight_shape": [
+          79,
+          85,
+          3,
+          3
+        ]
+      },
+      {
+        "index": 17,
+        "type": "ultralytics.nn.modules.conv.Concat",
+        "from": [
+          -1,
+          12
+        ],
+        "params": 0,
+        "first_weight_shape": null
+      },
+      {
+        "index": 18,
+        "type": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+        "from": -1,
+        "params": 164502,
+        "first_weight_shape": [
+          78,
+          288,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 19,
+        "type": "ultralytics.nn.modules.conv.Conv",
+        "from": -1,
+        "params": 99435,
+        "first_weight_shape": [
+          105,
+          105,
+          3,
+          3
+        ]
+      },
+      {
+        "index": 20,
+        "type": "ultralytics.nn.modules.conv.Concat",
+        "from": [
+          -1,
+          9
+        ],
+        "params": 0,
+        "first_weight_shape": null
+      },
+      {
+        "index": 21,
+        "type": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+        "from": -1,
+        "params": 1175604,
+        "first_weight_shape": [
+          253,
+          515,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 22,
+        "type": "ultralytics.nn.modules.head.Detect",
+        "from": [
+          15,
+          18,
+          21
+        ],
+        "params": 1318885,
+        "first_weight_shape": [
+          58,
+          85,
+          3,
+          3
+        ]
+      }
+    ],
+    "target_layers": [
+      {
+        "index": 0,
+        "type": "ultralytics.nn.modules.conv.Conv",
+        "from": -1,
+        "params": 464,
+        "first_weight_shape": [
+          16,
+          3,
+          3,
+          3
+        ]
+      },
+      {
+        "index": 1,
+        "type": "ultralytics.nn.modules.conv.Conv",
+        "from": -1,
+        "params": 4672,
+        "first_weight_shape": [
+          32,
+          16,
+          3,
+          3
+        ]
+      },
+      {
+        "index": 2,
+        "type": "ultralytics.nn.modules.block.C2f",
+        "from": -1,
+        "params": 7360,
+        "first_weight_shape": [
+          32,
+          32,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 3,
+        "type": "ultralytics.nn.modules.conv.Conv",
+        "from": -1,
+        "params": 18560,
+        "first_weight_shape": [
+          64,
+          32,
+          3,
+          3
+        ]
+      },
+      {
+        "index": 4,
+        "type": "ultralytics.nn.modules.block.C2f",
+        "from": -1,
+        "params": 49664,
+        "first_weight_shape": [
+          64,
+          64,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 5,
+        "type": "ultralytics.nn.modules.conv.Conv",
+        "from": -1,
+        "params": 73984,
+        "first_weight_shape": [
+          128,
+          64,
+          3,
+          3
+        ]
+      },
+      {
+        "index": 6,
+        "type": "ultralytics.nn.modules.block.C2f",
+        "from": -1,
+        "params": 197632,
+        "first_weight_shape": [
+          128,
+          128,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 7,
+        "type": "ultralytics.nn.modules.conv.Conv",
+        "from": -1,
+        "params": 295424,
+        "first_weight_shape": [
+          256,
+          128,
+          3,
+          3
+        ]
+      },
+      {
+        "index": 8,
+        "type": "ultralytics.nn.modules.block.C2f",
+        "from": -1,
+        "params": 460288,
+        "first_weight_shape": [
+          256,
+          256,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 9,
+        "type": "ultralytics.nn.modules.block.SPPF",
+        "from": -1,
+        "params": 164608,
+        "first_weight_shape": [
+          128,
+          256,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 10,
+        "type": "ultralytics.nn.modules.conv.Conv",
+        "from": -1,
+        "params": 33024,
+        "first_weight_shape": [
+          128,
+          256,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 11,
+        "type": "ultralytics.nn.modules.conv.Conv",
+        "from": 6,
+        "params": 147712,
+        "first_weight_shape": [
+          128,
+          128,
+          3,
+          3
+        ]
+      },
+      {
+        "index": 12,
+        "type": "ultralytics.nn.modules.conv.Concat",
+        "from": [
+          10,
+          11
+        ],
+        "params": 0,
+        "first_weight_shape": null
+      },
+      {
+        "index": 13,
+        "type": "defect_modules.blocks.CSPStage",
+        "from": -1,
+        "params": 127872,
+        "first_weight_shape": [
+          64,
+          256,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 14,
+        "type": "defect_modules.blocks.RepHFE",
+        "from": 13,
+        "params": 11648,
+        "first_weight_shape": [
+          128,
+          1,
+          3,
+          3
+        ]
+      },
+      {
+        "index": 15,
+        "type": "ultralytics.nn.modules.conv.Conv",
+        "from": 4,
+        "params": 36992,
+        "first_weight_shape": [
+          64,
+          64,
+          3,
+          3
+        ]
+      },
+      {
+        "index": 16,
+        "type": "ultralytics.nn.modules.conv.Concat",
+        "from": [
+          14,
+          15,
+          6
+        ],
+        "params": 0,
+        "first_weight_shape": null
+      },
+      {
+        "index": 17,
+        "type": "defect_modules.blocks.CSPStage",
+        "from": -1,
+        "params": 40384,
+        "first_weight_shape": [
+          32,
+          256,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 18,
+        "type": "defect_modules.blocks.RepHFE",
+        "from": 17,
+        "params": 5888,
+        "first_weight_shape": [
+          64,
+          1,
+          3,
+          3
+        ]
+      },
+      {
+        "index": 19,
+        "type": "ultralytics.nn.modules.conv.Concat",
+        "from": [
+          18,
+          4
+        ],
+        "params": 0,
+        "first_weight_shape": null
+      },
+      {
+        "index": 20,
+        "type": "defect_modules.blocks.CSPStage",
+        "from": -1,
+        "params": 32192,
+        "first_weight_shape": [
+          32,
+          128,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 21,
+        "type": "ultralytics.nn.modules.conv.Conv",
+        "from": 20,
+        "params": 36992,
+        "first_weight_shape": [
+          64,
+          64,
+          3,
+          3
+        ]
+      },
+      {
+        "index": 22,
+        "type": "ultralytics.nn.modules.conv.Concat",
+        "from": [
+          21,
+          17
+        ],
+        "params": 0,
+        "first_weight_shape": null
+      },
+      {
+        "index": 23,
+        "type": "defect_modules.blocks.CSPStage",
+        "from": -1,
+        "params": 32192,
+        "first_weight_shape": [
+          32,
+          128,
+          1,
+          1
+        ]
+      },
+      {
+        "index": 24,
+        "type": "ultralytics.nn.modules.head.Detect",
+        "from": [
+          20,
+          23,
+          13
+        ],
+        "params": 531103,
+        "first_weight_shape": [
+          64,
+          64,
+          3,
+          3
+        ]
+      }
+    ]
+  },
+  "rebuild_candidate_files": [
+    {
+      "path": "D:\\defect_detection\\training_project\\inspect_checkpoint_dependencies.py",
+      "matched": [
+        "C2f_v2",
+        "prune_module",
+        "model_c2f_v2",
+        "DAD030",
+        "sparse_prune"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\training_project\\verify_canonical_checkpoint.py",
+      "matched": [
+        "C2f_v2",
+        "prune_module",
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\training_project\\verify_external_blocks.py",
+      "matched": [
+        "prune_module"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\training_project\\verify_pt_load.py",
+      "matched": [
+        "prune_module",
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\training_project\\verify_registry.py",
+      "matched": [
+        "prune_module"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\training_project\\verify_tasks_import_boundary.py",
+      "matched": [
+        "prune_module"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\training_project\\weights\\canonical\\canonical_checkpoint_verification.json",
+      "matched": [
+        "C2f_v2",
+        "prune_module"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\training_project\\weights\\canonical\\DAD030_best_target_manifest.json",
+      "matched": [
+        "C2f_v2",
+        "prune_module",
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\training_project\\weights\\canonical\\pruned_architecture_report.json",
+      "matched": [
+        "C2f_v2",
+        "prune_module",
+        "model_c2f_v2",
+        "DAD030",
+        "sparse_prune"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\training_project\\weights\\canonical\\ruleloss_activation_report.json",
+      "matched": [
+        "prune_module"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\export_pipeline\\bundle.py",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\export_pipeline\\export_onnx.py",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\export_pipeline\\load_canonical_model.py",
+      "matched": [
+        "prune_module",
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\export_pipeline\\verify_onnx_consistency.py",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\export_pipeline\\bundles\\harpnet_b4_rephfe\\metadata.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\export_pipeline\\bundles\\harpnet_b4_rephfe\\README.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\export_pipeline\\outputs\\DAD030_best_target_canonical_640_consistency_report.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\export_pipeline\\outputs\\DAD030_best_target_canonical_640_export_report.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\frozen\\P030_midterm_candidate\\MANIFEST.json",
+      "matched": [
+        "DAD030",
+        "sparse_prune"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\frozen\\P030_midterm_candidate\\SHA256SUMS.txt",
+      "matched": [
+        "DAD030",
+        "sparse_prune"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\frozen\\P030_midterm_candidate\\configs\\recovery_kd_matrix.yaml",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\frozen\\P030_midterm_candidate\\configs\\sparse_prune.yaml",
+      "matched": [
+        "sparse_prune"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\frozen\\P030_midterm_candidate\\midterm_docs\\中期答辩_剪枝蒸馏阶段性实验结果说明_20260618.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\frozen\\P030_midterm_candidate\\results\\OVERNIGHT_SL003FIX0155_20260616_214645_final_eval.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\frozen\\P030_midterm_candidate\\results\\OVERNIGHT_SL003FIX0155_20260616_214645_final_object.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\frozen\\P030_midterm_candidate\\results\\P030_SL003FIX0155_CURVE_summary.json",
+      "matched": [
+        "sparse_prune"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\frozen\\P030_midterm_candidate\\yolo_outputs\\DAD030\\args.yaml",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\BASELINE_COMPARISON_T001_S001.md",
+      "matched": [
+        "sparse_prune"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\BRIDGE_RUN_STATUS.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\EXPERIMENT_PLAN.md",
+      "matched": [
+        "C2f_v2",
+        "sparse_prune"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\EXPERIMENT_RESULTS_SUMMARY_AND_NEXT_STEPS_20260606.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\EXPERIMENT_TRACKER.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\KD_ENGINEERING_DESIGN.md",
+      "matched": [
+        "sparse_prune"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\PRUNE_QUEUE_AUTOMATION.md",
+      "matched": [
+        "sparse_prune"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\ablation_p030_dad_v2\\ablation_p030_dad_v2_eval.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\ablation_p030_dad_v2\\ablation_p030_dad_v2_eval.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\ablation_p030_dad_v2\\ablation_p030_dad_v2_object.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\ablation_p030_dad_v2\\ablation_p030_dad_v2_object.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\cleanup_20260630\\delete_manifest_20260630_192546.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\configs\\README.md",
+      "matched": [
+        "sparse_prune"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\configs\\recovery_kd_enhanced_teacher_v1.yaml",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\configs\\recovery_kd_matrix.yaml",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\configs\\sparse_prune.yaml",
+      "matched": [
+        "sparse_prune"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\curve_v2\\curve_v2_all_results.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\curve_v2\\curve_v2_summary.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\curve_v2\\P030_midterm_candidate_eval.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\curve_v2\\P030_midterm_candidate_eval.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\curve_v2\\P030_midterm_candidate_object.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\curve_v2\\P030_midterm_candidate_object.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\enhanced_teacher_prune_distill_v1\\enhanced_teacher_prune_distill_v1_compare_eval.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\enhanced_teacher_prune_distill_v1\\enhanced_teacher_prune_distill_v1_compare_eval.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\enhanced_teacher_prune_distill_v1\\enhanced_teacher_prune_distill_v1_compare_object.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\enhanced_teacher_prune_distill_v1\\enhanced_teacher_prune_distill_v1_compare_object.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\enhanced_teacher_prune_distill_v1\\enhanced_teacher_prune_distill_v1_summary.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\enhanced_teacher_prune_distill_v1\\P030_ENHT_V1_eval.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\enhanced_teacher_prune_distill_v1\\P030_ENHT_V1_eval.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\enhanced_teacher_prune_distill_v1\\P030_ENHT_V1_object.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\enhanced_teacher_prune_distill_v1\\P030_ENHT_V1_object.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\eval_runs\\object_level_targets_complex_confirmed_20260605.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\eval_runs\\object_level_weak_recall_20260605_full.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\eval_runs\\object_level_weak_recall_20260605_full.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\eval_runs\\object_level_weak_recall_complex_confirmed_20260605.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\eval_runs\\object_level_weak_recall_complex_confirmed_20260605.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\eval_runs\\object_level_weak_recall_dad_weight_smoke_20260605.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\eval_runs\\object_level_weak_recall_dad_weight_smoke_20260605.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\eval_runs\\object_level_weak_recall_targets_20260605.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\eval_runs\\OVERNIGHT_SL003FIX0155_20260616_214645_final_eval.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\eval_runs\\OVERNIGHT_SL003FIX0155_20260616_214645_final_eval.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\eval_runs\\OVERNIGHT_SL003FIX0155_20260616_214645_final_object.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\eval_runs\\OVERNIGHT_SL003FIX0155_20260616_214645_final_object.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\eval_runs\\recovery_test_weak_20260605.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\eval_runs\\recovery_test_weak_20260605_full.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\eval_runs\\recovery_test_weak_20260605_full.md",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\eval_runs\\dad_weight_smoke_metrics_20260605\\summary.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\layer_shapes\\SHAPE_DAD030_ENHT_V1.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\layer_shapes\\SHAPE_DAD030_LW.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\layer_shapes\\SHAPE_DAD030_SL003FIX0155.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\layer_shapes\\SHAPE_DAD030_SW.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\layer_shapes\\SHAPE_DAD030_SWLW.json",
+      "matched": [
+        "DAD030"
+      ]
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\refine-logs\\layer_shapes\\SHAPE_DAD030_WO_BOX_SL003FIX0155.json",
+      "matched": [
+        "DAD030"
+      ]
+    }
+  ]
+}

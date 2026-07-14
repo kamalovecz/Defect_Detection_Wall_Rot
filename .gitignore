@@ -1,0 +1,50 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environments
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Training artifacts
+training_project/runs/
+training_project/**/*.log
+training_project/weights/*.pt
+training_project/weights/*.pth
+export_pipeline/bundles/**/*.pt
+export_pipeline/outputs/*.onnx
+export_pipeline/outputs/*.rknn
+export_pipeline/outputs/*.engine
+export_pipeline/outputs/*.torchscript
+
+# Model artifacts anywhere
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.rknn
+*.engine
+*.torchscript
+
+# Datasets
+ultralytics-main/dataset/**
+!ultralytics-main/dataset/**/
+!ultralytics-main/dataset/**/*.yaml
+!ultralytics-main/dataset/**/*.yml
+!ultralytics-main/dataset/**/README.md
+/data/
+/datasets/
+
+# Local generated staging/build folders
+repo_staging_build_*/
+backups/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/

@@ -1,0 +1,53 @@
+# Ultralytics YOLO 🚀, AGPL-3.0 license
+# YOLOv8 object detection model with P2-P5 outputs.
+
+# Parameters
+nc: 6
+scales:
+  n: [0.33, 0.25, 1024]
+  s: [0.33, 0.50, 1024]
+  m: [0.67, 0.75, 768]
+  l: [1.00, 1.00, 512]
+  x: [1.00, 1.25, 512]
+
+
+# Backbone（保留你写的）
+backbone:
+  - [-1, 1, Conv, [64, 3, 2]]
+  - [-1, 1, Conv, [128, 3, 2]]
+  - [-1, 3, C2f, [128, True]]                # ✅ 浅层标准C2f
+  - [-1, 1, Conv, [256, 3, 2]]
+  - [-1, 6, C2f, [256, True]]                # ✅ 浅层标准C2f
+  - [-1, 1, Conv, [512, 3, 2]]
+  - [-1, 6, C2f_GhostDynamicConv_Top1_Align, [512, True]]   # ✅ 高层用Top-1+Ghost
+  - [-1, 1, Conv, [1024, 3, 2]]
+  - [-1, 3, C2f_GhostDynamicConv_Top1_Align, [1024, True]]  # ✅ 高层用Top-1+Ghost
+  - [-1, 1, SPPF, [1024, 5]]
+
+# Head
+head:
+  - [-1, 1, nn.Upsample, [None, 2, 'nearest']]   # 10: P5->P4
+  - [[-1, 6], 1, Concat, [1]]                    # 11: cat P4
+  - [-1, 3, C2f_GhostDynamicConv_Top1_Align, [512]]    # 12: P4 (td) ✅ 保持Ghost
+
+  - [-1, 1, nn.Upsample, [None, 2, 'nearest']]   # 13: P4->P3
+  - [[-1, 4], 1, Concat, [1]]                    # 14: cat P3
+  - [-1, 3, C2f, [256]]                          # 15: P3 (td) ✅ 改回标准C2f
+
+  - [-1, 1, nn.Upsample, [None, 2, 'nearest']]   # 16: P3->P2
+  - [[-1, 2], 1, Concat, [1]]                    # 17: cat P2
+  - [-1, 3, C2f, [128]]                          # 18: P2 (td) ✅ 改回标准C2f（仅作回流特征）
+
+  - [-1, 1, Conv, [128, 3, 2]]                   # 19: P2->P3
+  - [[-1, 15], 1, Concat, [1]]                   # 20: 与P3(td)融合
+  - [-1, 3, C2f, [256]]                          # 21: P3 (bu) ✅ 改回标准C2f
+
+  - [-1, 1, Conv, [256, 3, 2]]                   # 22: P3->P4
+  - [[-1, 12], 1, Concat, [1]]                   # 23: 与P4(td)融合
+  - [-1, 3, C2f_GhostDynamicConv_Top1_Align, [512]]    # 24: P4 (bu) ✅ 高层Ghost
+
+  - [-1, 1, Conv, [512, 3, 2]]                   # 25: P4->P5
+  - [[-1, 9], 1, Concat, [1]]                    # 26: 与SPPF融合
+  - [-1, 3, C2f_GhostDynamicConv_Top1_Align, [1024]]   # 27: P5 (bu) ✅ 高层Ghost
+
+  - [[18, 21, 24, 27], 1, Detect_LSCSBD, [nc, 256]]

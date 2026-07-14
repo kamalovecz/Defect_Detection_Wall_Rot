@@ -1,0 +1,64 @@
+{
+  "backup_dir": "D:\\defect_detection\\backups\\pre_canonical_onnx_decouple_20260714_183046",
+  "stage_start_time": "2026-07-14T18:30:46.779594",
+  "original_artifact_hashes": [
+    {
+      "path": "D:\\defect_detection\\training_project\\models\\B4_A-GFPN_RepHFE_target.yaml",
+      "baseline_sha256": "32C400D0A2EE4D6619EAEEABF638A1BB5BA2BD6682AFFE5CCA1577AF6C56B4E2",
+      "current_sha256": "32C400D0A2EE4D6619EAEEABF638A1BB5BA2BD6682AFFE5CCA1577AF6C56B4E2",
+      "status": "UNCHANGED"
+    },
+    {
+      "path": "D:\\defect_detection\\training_project\\weights\\DAD030_best_target.pt",
+      "baseline_sha256": "BA5CC233EEA726226B3EFCED7200018F799CB702DB4A7F688BD8B06212B71656",
+      "current_sha256": "BA5CC233EEA726226B3EFCED7200018F799CB702DB4A7F688BD8B06212B71656",
+      "status": "UNCHANGED"
+    }
+  ],
+  "protected_directory_audit": [
+    {
+      "path": "D:\\defect_detection\\ultralytics\\.git\\FETCH_HEAD",
+      "baseline": {
+        "path": "D:\\defect_detection\\ultralytics\\.git\\FETCH_HEAD",
+        "size_bytes": 0,
+        "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "last_write_time": "2026-07-14T17:45:18.861041"
+      },
+      "current_size_bytes": 36714,
+      "current_sha256": "0E368346B1B957A5870710EB57A436771B0F1E549AC9F9D5774E38BD06DF90F4",
+      "current_last_write_time": "2026-07-14T18:37:49.366138",
+      "status": "CHANGED_DURING_THIS_STAGE"
+    },
+    {
+      "path": "D:\\defect_detection\\ultralytics\\descirbe.md",
+      "baseline": {
+        "path": "D:\\defect_detection\\ultralytics\\descirbe.md",
+        "size_bytes": 72,
+        "sha256": "F4235CB2DADD61D764AE79CC90415403F8464910E3741E95F8C99A5A665BE82A",
+        "last_write_time": "2026-07-14T16:22:25.893748"
+      },
+      "current_size_bytes": 72,
+      "current_sha256": "F4235CB2DADD61D764AE79CC90415403F8464910E3741E95F8C99A5A665BE82A",
+      "current_last_write_time": "2026-07-14T16:22:25.893748",
+      "status": "UNCHANGED_DURING_THIS_STAGE"
+    }
+  ],
+  "legacy_files_exist": [
+    {
+      "path": "D:\\defect_detection\\ultralytics-main\\ultralytics\\nn\\extra_modules",
+      "exists": true
+    },
+    {
+      "path": "D:\\defect_detection\\ultralytics-main\\ultralytics\\nn\\extra_modules\\rephfe.py",
+      "exists": true
+    },
+    {
+      "path": "D:\\defect_detection\\prune_distill_exp\\ultralytics-prune-20240726\\ultralytics-prune\\ultralytics\\nn\\extra_modules\\prune_module.py",
+      "exists": true
+    }
+  ],
+  "new_onnx_or_rknn_since_stage_start": [],
+  "rknn_conversion_executed": false,
+  "protected_directory_audit_status": "EXTERNAL_DRIFT_DETECTED",
+  "protected_directory_audit_note": "ultralytics/.git/FETCH_HEAD changed during the stage; recorded as Git metadata drift and not directly attributed to code edits. ultralytics/descirbe.md SHA256 is unchanged during this stage."
+}

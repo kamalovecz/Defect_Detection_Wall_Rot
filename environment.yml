@@ -1,0 +1,15 @@
+﻿name: yolo_ultra
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+  - ca-certificates
+  - certifi
+  - openssl
+  - pytorch-cuda=12.1
+  - torchaudio
+  - torchvision
+  - prettytable
+  - pip
+  - pip:
+      - -e ./ultralytics-main

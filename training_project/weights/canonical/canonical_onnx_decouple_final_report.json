@@ -1,0 +1,179 @@
+{
+  "functional_validation": "FAILED",
+  "protected_directory_audit": "EXTERNAL_DRIFT_DETECTED",
+  "backup_dir": "D:\\defect_detection\\backups\\pre_canonical_onnx_decouple_20260714_183046",
+  "sha256_manifest": "D:\\defect_detection\\backups\\pre_canonical_onnx_decouple_20260714_183046\\sha256_manifest.json",
+  "command_log_summary": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\command_summary.json",
+  "ruleloss_status": "RULELOSS_NOT_ACTIVE",
+  "ruleloss_call_stats": {
+    "rule_weight_builder_call_count": 2,
+    "rule_active_call_count": 0,
+    "ruleloss_changed_base_loss": false,
+    "hard_sample_weight_min": null,
+    "hard_sample_weight_max": null,
+    "hard_sample_weight_mean": null
+  },
+  "pt_dependency_summary": {
+    "topology_case": "CASE_C",
+    "custom_module_types": [
+      {
+        "module_path": "ultralytics.nn.extra_modules.prune_module.C2f_v2",
+        "class_name": "C2f_v2",
+        "instance_count": 8,
+        "class_file": "D:\\defect_detection\\prune_distill_exp\\ultralytics-prune-20240726\\ultralytics-prune\\ultralytics\\nn\\extra_modules\\prune_module.py",
+        "from_defect_modules": false,
+        "from_extra_modules": true,
+        "from_prune_module": true,
+        "belongs_to_model_structure": true,
+        "belongs_only_to_training_state": false,
+        "replaceable_by_state_dict": false
+      }
+    ],
+    "source_parameter_count": 7927270,
+    "target_parameter_count": 2308655,
+    "shape_mismatch_count": 119,
+    "layer_diff_count": 25
+  },
+  "canonical_assets": {
+    "state_dict": null,
+    "manifest": "D:\\defect_detection\\training_project\\weights\\canonical\\DAD030_best_target_manifest.json",
+    "sha256sums": "D:\\defect_detection\\training_project\\weights\\canonical\\SHA256SUMS.json",
+    "pruned_architecture_report": "D:\\defect_detection\\training_project\\weights\\canonical\\pruned_architecture_report.json",
+    "canonical_verification": "D:\\defect_detection\\training_project\\weights\\canonical\\canonical_checkpoint_verification.json"
+  },
+  "onnx": {
+    "path": null,
+    "sha256": null,
+    "export_status": "SKIPPED_CASE_C",
+    "checker_result": null,
+    "onnxruntime_result": null,
+    "consistency_status": "SKIPPED_NO_ONNX"
+  },
+  "protected_audit_file": "D:\\defect_detection\\training_project\\weights\\canonical\\protected_directory_audit.json",
+  "original_artifact_hashes": [
+    {
+      "path": "D:\\defect_detection\\training_project\\models\\B4_A-GFPN_RepHFE_target.yaml",
+      "baseline_sha256": "32C400D0A2EE4D6619EAEEABF638A1BB5BA2BD6682AFFE5CCA1577AF6C56B4E2",
+      "current_sha256": "32C400D0A2EE4D6619EAEEABF638A1BB5BA2BD6682AFFE5CCA1577AF6C56B4E2",
+      "status": "UNCHANGED"
+    },
+    {
+      "path": "D:\\defect_detection\\training_project\\weights\\DAD030_best_target.pt",
+      "baseline_sha256": "BA5CC233EEA726226B3EFCED7200018F799CB702DB4A7F688BD8B06212B71656",
+      "current_sha256": "BA5CC233EEA726226B3EFCED7200018F799CB702DB4A7F688BD8B06212B71656",
+      "status": "UNCHANGED"
+    }
+  ],
+  "protected_directory_details": [
+    {
+      "path": "D:\\defect_detection\\ultralytics\\.git\\FETCH_HEAD",
+      "baseline": {
+        "path": "D:\\defect_detection\\ultralytics\\.git\\FETCH_HEAD",
+        "size_bytes": 0,
+        "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+        "last_write_time": "2026-07-14T17:45:18.861041"
+      },
+      "current_size_bytes": 36714,
+      "current_sha256": "0E368346B1B957A5870710EB57A436771B0F1E549AC9F9D5774E38BD06DF90F4",
+      "current_last_write_time": "2026-07-14T18:37:49.366138",
+      "status": "CHANGED_DURING_THIS_STAGE"
+    },
+    {
+      "path": "D:\\defect_detection\\ultralytics\\descirbe.md",
+      "baseline": {
+        "path": "D:\\defect_detection\\ultralytics\\descirbe.md",
+        "size_bytes": 72,
+        "sha256": "F4235CB2DADD61D764AE79CC90415403F8464910E3741E95F8C99A5A665BE82A",
+        "last_write_time": "2026-07-14T16:22:25.893748"
+      },
+      "current_size_bytes": 72,
+      "current_sha256": "F4235CB2DADD61D764AE79CC90415403F8464910E3741E95F8C99A5A665BE82A",
+      "current_last_write_time": "2026-07-14T16:22:25.893748",
+      "status": "UNCHANGED_DURING_THIS_STAGE"
+    }
+  ],
+  "new_onnx_or_rknn_since_stage_start": [],
+  "forbidden_operations_not_executed": [
+    "RKNN conversion",
+    "delete rephfe.py",
+    "delete prune_module.py",
+    "delete extra_modules",
+    "overwrite original DAD030_best_target.pt",
+    "strict=False as formal load",
+    "modify target YAML semantics",
+    "modify dataset",
+    "formal training",
+    "legacy PT as final ONNX input"
+  ],
+  "remaining_risks": [
+    "RuleLoss is not active in current train.py because RULE_LOSS_ENABLE is not enabled.",
+    "Fixed PT is CASE_C against target YAML; reconstructable pruned YAML/config is still missing.",
+    "ONNX export and numeric verification were skipped because canonical state_dict was not produced."
+  ],
+  "command_results": [
+    {
+      "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe training_project\\verify_registry.py",
+      "start": "2026-07-14T18:42:49.567374",
+      "end": "2026-07-14T18:42:50.797373",
+      "exit_code": 0,
+      "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\01_verify_registry.log"
+    },
+    {
+      "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe training_project\\verify_tasks_import_boundary.py",
+      "start": "2026-07-14T18:42:50.797867",
+      "end": "2026-07-14T18:42:53.233374",
+      "exit_code": 0,
+      "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\02_verify_tasks_import_boundary.log"
+    },
+    {
+      "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe training_project\\verify_external_blocks.py",
+      "start": "2026-07-14T18:42:53.233873",
+      "end": "2026-07-14T18:42:57.952215",
+      "exit_code": 0,
+      "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\03_verify_external_blocks.log"
+    },
+    {
+      "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe training_project\\verify_pt_load.py",
+      "start": "2026-07-14T18:42:57.956716",
+      "end": "2026-07-14T18:43:00.426716",
+      "exit_code": 0,
+      "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\04_verify_pt_load.log"
+    },
+    {
+      "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe training_project\\verify_ruleloss_activation.py",
+      "start": "2026-07-14T18:43:00.427209",
+      "end": "2026-07-14T18:43:03.784522",
+      "exit_code": 0,
+      "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\05_verify_ruleloss_activation.log"
+    },
+    {
+      "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe training_project\\inspect_checkpoint_dependencies.py",
+      "start": "2026-07-14T18:43:03.785022",
+      "end": "2026-07-14T18:43:06.811780",
+      "exit_code": 0,
+      "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\06_inspect_checkpoint_dependencies.log"
+    },
+    {
+      "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe training_project\\verify_canonical_checkpoint.py",
+      "start": "2026-07-14T18:43:06.812280",
+      "end": "2026-07-14T18:43:06.850280",
+      "exit_code": 2,
+      "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\07_verify_canonical_checkpoint.log"
+    },
+    {
+      "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe export_pipeline\\export_onnx.py",
+      "start": "2026-07-14T18:43:06.850280",
+      "end": "2026-07-14T18:43:06.886779",
+      "exit_code": 2,
+      "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\08_export_onnx.log"
+    },
+    {
+      "command": "D:\\Anaconda\\envs\\yolo_ultra\\python.exe export_pipeline\\verify_onnx_consistency.py",
+      "start": "2026-07-14T18:43:06.886779",
+      "end": "2026-07-14T18:43:06.920789",
+      "exit_code": 2,
+      "log_path": "D:\\defect_detection\\training_project\\validation_logs\\canonical_onnx_decouple_20260714_184249\\09_verify_onnx_consistency.log"
+    }
+  ],
+  "created_at": "2026-07-14T18:45:49.466437"
+}

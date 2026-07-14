@@ -1,0 +1,45 @@
+# B3-LITE-innovation
+# NPU-safe variant: remove DySample/GridSample path, use nearest upsample only.
+
+nc: 6
+scales:
+  n: [0.33, 0.25, 1024]
+
+backbone:
+  - [-1, 1, Conv, [64, 3, 2]]
+  - [-1, 1, Conv, [128, 3, 2]]
+  - [-1, 3, C2f, [128, True]]
+  - [-1, 1, Conv, [256, 3, 2]]
+  - [-1, 6, C2f, [256, True]]
+  - [-1, 1, Conv, [512, 3, 2]]
+  - [-1, 6, C2f, [512, True]]
+  - [-1, 1, Conv, [1024, 3, 2]]
+  - [-1, 3, C2f, [1024, True]]
+  - [-1, 1, SPPF, [1024, 5]]
+
+head:
+  - [-1, 1, Conv, [512, 1, 1]]
+  - [6, 1, Conv, [512, 3, 2]]
+  - [[-1, 10], 1, Concat, [1]]
+  - [-1, 1, CSPStage, [512]]
+
+  - [-1, 1, EUCB_SC, [256]]
+  - [4, 1, Conv, [256, 3, 2]]
+  - [[14, -1, 6], 1, Concat, [1]]
+  - [-1, 1, CSPStage, [256]]
+
+  # Replace DySample with nearest upsample to avoid GridSample op on RKNN.
+  - [-1, 1, nn.Upsample, [None, 2, 'nearest']]
+  - [[-1, 4], 1, Concat, [1]]
+  - [-1, 1, CSPStage, [256]]
+
+  - [-1, 1, Conv, [256, 3, 2]]
+  - [[-1, 17], 1, Concat, [1]]
+  - [-1, 1, CSPStage, [256]]
+
+  - [17, 1, Conv, [256, 3, 2]]
+  - [23, 1, Conv, [256, 3, 2]]
+  - [[13, 24, -1], 1, Concat, [1]]
+  - [-1, 1, CSPStage, [512]]
+
+  - [[20, 23, 27], 1, Detect_LSCSBD, [nc, 256]]

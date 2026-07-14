@@ -1,0 +1,12 @@
+{
+  "status": "CANONICAL_REBUILD_NOT_AVAILABLE",
+  "topology_case": "CASE_C",
+  "reason": "Source PT topology uses prune_module/C2f_v2 and does not match target YAML, so no strict canonical state_dict was produced.",
+  "blocked_modules": [
+    "ultralytics.nn.extra_modules.prune_module",
+    "ultralytics.nn.extra_modules.rephfe"
+  ],
+  "legacy_modules_loaded": [],
+  "defect_modules_loss_loaded": false,
+  "training_project_harp_trainer_loaded": false
+}
