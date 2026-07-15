@@ -46,32 +46,44 @@ ultralytics-main/
 
 ### 4. 准备数据集
 
-数据集不进入 Git。后续提供百度网盘链接后，将数据集下载并解压到仓库外部路径，例如：
+数据集不进入 Git。当前数据集通过百度网盘分享：
 
 ```text
-D:\datasets\DAD030_processed_dataset
+文件名: Port_Defect.zip
+链接: https://pan.baidu.com/s/1I62ItneKTMSTZhb54oNGAQ?pwd=0331
+提取码: 0331
 ```
 
-复制示例数据配置：
+克隆仓库后，在仓库根目录新建本地数据集目录：
 
 ```powershell
-copy training_project\datasets\DAD030_dataset.example.yaml training_project\datasets\DAD030_dataset.local.yaml
+mkdir datasets
 ```
 
-修改 `training_project\datasets\DAD030_dataset.local.yaml` 中的 `path`：
+将 `Port_Defect.zip` 放到 `datasets/` 下并解压，推荐得到下面的结构：
+
+```text
+Defect_Detection_Wall_Rot/
+  datasets/
+    Port_Defect/
+      data.yaml
+      images/
+      labels/
+```
+
+`datasets/` 是本地数据目录，已被 Git 忽略，不会上传到仓库。
+
+解压后修改 `datasets/Port_Defect/data.yaml`。如果压缩包内的 `data.yaml` 使用旧的绝对路径，需要改成当前仓库下的相对路径，例如：
 
 ```yaml
-path: D:\datasets\DAD030_processed_dataset
+path: datasets/Port_Defect
 train: images/train
 val: images/val
 test: images/test
-names:
-  0: Rust
-  1: Cracks
-  2: Paint Wear
-  3: Scratches
-  4: Pitting
+# names 字段保持压缩包内 data.yaml 的原有类别编号和类别名称
 ```
+
+如果 `Port_Defect.zip` 解压后多了一层同名目录，例如 `datasets/Port_Defect/Port_Defect/data.yaml`，则按实际目录调整 `path`，或把内部文件整理到推荐结构中。
 
 ### 5. 运行基础验证
 
@@ -92,7 +104,7 @@ python training_project\verify_external_blocks.py
 ```powershell
 python training_project\train.py `
   --model training_project\models\B4_A-GFPN_RepHFE_target.yaml `
-  --data training_project\datasets\DAD030_dataset.local.yaml `
+  --data datasets\Port_Defect\data.yaml `
   --epochs 1 `
   --batch 4 `
   --imgsz 640 `
@@ -113,7 +125,7 @@ training_project\runs\
 ```powershell
 python training_project\train.py `
   --model training_project\models\B4_A-GFPN_RepHFE_target.yaml `
-  --data training_project\datasets\DAD030_dataset.local.yaml `
+  --data datasets\Port_Defect\data.yaml `
   --epochs 100 `
   --batch 16 `
   --imgsz 640 `
@@ -135,6 +147,9 @@ training_project/
   datasets/       数据集 YAML 示例，不存放真实图片和标签
   train.py        统一训练入口
   verify_*.py     结构、来源、维度、PT 加载和训练验证脚本
+
+datasets/
+  本地解压的数据集目录，例如 datasets/Port_Defect/，不进入 Git
 
 export_pipeline/
   export_onnx.py                 ONNX 导出入口
@@ -264,7 +279,7 @@ NewHFEBlock(c1, 128, 3)
 ```powershell
 python training_project\train.py `
   --model training_project\models\new_harpnet.yaml `
-  --data training_project\datasets\DAD030_dataset.local.yaml `
+  --data datasets\Port_Defect\data.yaml `
   --epochs 100 `
   --batch 16 `
   --imgsz 640 `
@@ -346,7 +361,7 @@ model = YOLO("training_project/models/new_harpnet.yaml")
 ```powershell
 python training_project\train.py `
   --model training_project\models\new_harpnet.yaml `
-  --data training_project\datasets\DAD030_dataset.local.yaml `
+  --data datasets\Port_Defect\data.yaml `
   --epochs 1 `
   --batch 4 `
   --imgsz 640 `
@@ -391,13 +406,21 @@ RKNN 不支持的特殊激活或归一化
 
 ### 数据集
 
-数据集不进入 Git。建议发布方式：
+数据集不进入 Git。当前公开数据集信息：
 
-- 百度网盘链接
-- 提取码
+```text
+文件名: Port_Defect.zip
+链接: https://pan.baidu.com/s/1I62ItneKTMSTZhb54oNGAQ?pwd=0331
+提取码: 0331
+推荐解压路径: datasets/Port_Defect/
+训练数据描述文件: datasets/Port_Defect/data.yaml
+```
+
+后续维护数据集时，建议同时记录：
+
 - 数据集版本号
 - 数据集目录结构说明
-- 对应的 `dataset.yaml` 示例
+- `data.yaml` 的类别编号和类别名称
 - 数据集 SHA256 或文件数量统计
 
 ### 阶段性 PT 模型
