@@ -402,6 +402,58 @@ ONNX 不支持的算子
 RKNN 不支持的特殊激活或归一化
 ```
 
+## 与 331_PC_RKNN 的关系
+
+本仓库和 [`kamalovecz/331_PC_RKNN`](https://github.com/kamalovecz/331_PC_RKNN) 是上下游关系，但业务逻辑保持分离。
+
+本仓库负责训练侧：
+
+- 管理 Port_Defect 数据集配置和训练入口。
+- 实现 `defect_modules` 自定义模块。
+- 维护模型 YAML、registry、patch 和训练验证脚本。
+- 训练得到 `.pt` checkpoint。
+- 在需要时完成 ONNX 前置导出和一致性验证。
+
+`331_PC_RKNN` 负责部署侧：
+
+- 接收本仓库训练得到的 `.pt` 或 ONNX 产物。
+- 在 PC/WSL 环境中执行 PT -> ONNX -> RKNN 转换。
+- 生成 `.rknn` 和 `.meta.json`。
+- 将模型传到 RK3588/Orange Pi 5 开发板。
+- 执行板端推理、评估和 PT-RKNN 对齐验证。
+
+两个仓库之间不通过源码互相依赖，不使用 Git submodule，也不复制彼此的业务代码。推荐只通过下面这些产物交接：
+
+```text
+训练仓库产物:
+  best.pt 或 last.pt
+  对应 model YAML
+  数据集版本或百度网盘数据集标识
+  类别 names
+  imgsz
+  预处理/归一化约定
+  训练命令和指标摘要
+  SHA256 校验值
+
+部署仓库输入:
+  PC/models/pt/<model>.pt
+  或 PC/models/onnx/<model>.onnx
+```
+
+推荐流程：
+
+```text
+Defect_Detection_Wall_Rot
+  训练 / 验证 / 产出 PT 或 ONNX
+        |
+        | 通过 GitHub Release 或本地 artifact 目录交接
+        v
+331_PC_RKNN
+  PT -> ONNX -> RKNN -> 板端推理与评估
+```
+
+注意：当前旧固定 PT 是 `CASE_C`，不能作为正式部署链路的标准输入。正式部署应使用本仓库重新训练得到的、与目标 YAML 拓扑一致的 checkpoint。
+
 ## 数据集和模型产物发布方式
 
 ### 数据集
