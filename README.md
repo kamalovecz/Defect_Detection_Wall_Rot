@@ -1,55 +1,64 @@
-# HARP-Net Defect Detection Research Project
+# HARP-Net 缺陷检测项目
 
-This repository is a Git-ready source baseline for the HARP-Net defect detection project.
-It is organized for continued model research: new structure blocks, losses, detection heads, model YAMLs, training entrypoints, verification scripts, and export utilities are kept in project-level modules instead of being scattered through the Ultralytics source tree.
+这是一个面向金属/墙面缺陷检测的 HARP-Net 研究工程。仓库已经整理成可继续开发、可训练、可上传 GitHub 的源码基线版本，重点支持后续不断加入新的自定义结构模块、损失函数、检测头、模型 YAML、训练验证脚本和导出流程。
 
-## Included Source
+当前仓库不是数据集仓库，也不是模型权重仓库。数据集通过百度网盘等外部渠道分发，阶段性 `.pt` 模型文件通过 GitHub Release 或其他 artifact 平台发布。
 
-- `defect_modules/`: custom blocks, loss bridge, registry, and Ultralytics patching.
-- `training_project/`: model YAML, unified training entrypoint, dataset config examples, and verification scripts.
-- `export_pipeline/`: canonical model loading and ONNX/RKNN export utilities.
-- `ultralytics-main/`: minimal modified Ultralytics source package required by this project.
-- `prune_distill_exp/.../extra_modules/{prune_module.py,block.py}`: minimal lazy pickle compatibility path for the fixed legacy PT only.
-- `docs/`: repository policy, environment notes, and current validation truth.
+## 快速启动
 
-## Not Included
+### 1. 克隆仓库
 
-The repository intentionally excludes datasets, `runs/`, `.pt/.pth` weights, ONNX/RKNN/engine exports, Python caches, and large historical experiment trees.
+```powershell
+git clone git@github.com:kamalovecz/Defect_Detection_Wall_Rot.git
+cd Defect_Detection_Wall_Rot
+```
 
-Datasets will be distributed through Baidu Netdisk. Stage checkpoints and other `.pt` artifacts should be published through GitHub Releases or another artifact store, not committed into Git.
+### 2. 准备环境
 
-## Why Ultralytics Source Is Included
-
-This project currently needs the modified Ultralytics source. The HARP-Net boundary change lives in `ultralytics-main/ultralytics/nn/tasks.py`, where the broad `extra_modules` wildcard import was removed and YAML token resolution was narrowed to official modules plus `defect_modules.registry.YAML_BLOCKS`.
-
-Do not upload or depend on the protected sibling directory `D:\defect_detection\ultralytics`; it is not part of this repository snapshot.
-
-## Environment
-
-Use the `yolo_ultra` environment, or create an equivalent Python 3.10 environment from `environment.yml`.
+推荐使用项目当前验证过的环境名 `yolo_ultra`。如果本机还没有环境，可以参考 `environment.yml` 创建：
 
 ```powershell
 conda env create -f environment.yml
 conda activate yolo_ultra
 ```
 
-Run commands from the repository root.
+如果你已经有可用环境，至少需要 Python 3.10、PyTorch、torchvision、OpenCV、PyYAML 和 Ultralytics 相关依赖。仓库中的 `training_project/train.py` 会优先把当前仓库根目录和 `ultralytics-main` 加入 `sys.path`。
 
-## Dataset Setup
+### 3. 是否需要额外放入干净原版 Ultralytics 源码？
 
-The dataset is not stored in Git. After the Baidu Netdisk dataset link is provided, download and extract the dataset outside this repository, for example:
+不需要。
+
+本仓库已经包含项目所需的最小修改版 Ultralytics 源码：
+
+```text
+ultralytics-main/
+```
+
+不要把干净原版 Ultralytics 覆盖到这个目录。原因是当前项目依赖 `ultralytics-main/ultralytics/nn/tasks.py` 中的定制修改：
+
+- 已移除 `from ultralytics.nn.extra_modules import *`。
+- YAML token 解析被收紧到官方模块和 `defect_modules.registry.YAML_BLOCKS`。
+- `CSPStage`、`RepHFE` 等项目模块通过 registry/patch 接入。
+
+如果换成干净原版 Ultralytics，模型 YAML 中的自定义模块大概率无法解析，导入边界验证也会失效。
+
+如果后续确实需要同步新版 Ultralytics，建议新建分支，把上游源码作为参考合并，再重新迁移 `tasks.py` 的边界修改和自定义模块解析逻辑，而不是直接覆盖当前目录。
+
+### 4. 准备数据集
+
+数据集不进入 Git。后续提供百度网盘链接后，将数据集下载并解压到仓库外部路径，例如：
 
 ```text
 D:\datasets\DAD030_processed_dataset
 ```
 
-Copy or edit the example config:
+复制示例数据配置：
 
 ```powershell
 copy training_project\datasets\DAD030_dataset.example.yaml training_project\datasets\DAD030_dataset.local.yaml
 ```
 
-Then update `path` in `training_project\datasets\DAD030_dataset.local.yaml`:
+修改 `training_project\datasets\DAD030_dataset.local.yaml` 中的 `path`：
 
 ```yaml
 path: D:\datasets\DAD030_processed_dataset
@@ -64,21 +73,84 @@ names:
   4: Pitting
 ```
 
-Use the local dataset YAML explicitly when training:
+### 5. 运行基础验证
+
+```powershell
+python training_project\verify_registry.py
+python training_project\verify_tasks_import_boundary.py
+python training_project\verify_external_blocks.py
+```
+
+这三项用于确认：
+
+- `YAML_BLOCKS` 只暴露当前项目允许的模块。
+- 导入 `ultralytics.nn.tasks` 不会触发旧的 `extra_modules` 通配符导入。
+- 目标 YAML 可以用 `defect_modules.blocks` 中的 `CSPStage` 和 `RepHFE` 正常构建。
+
+### 6. 运行 1 epoch smoke train
 
 ```powershell
 python training_project\train.py `
+  --model training_project\models\B4_A-GFPN_RepHFE_target.yaml `
   --data training_project\datasets\DAD030_dataset.local.yaml `
   --epochs 1 `
   --batch 4 `
   --imgsz 640 `
   --workers 0 `
-  --name smoke_dataset_check
+  --name harpnet_smoke
 ```
 
-## Custom Module Training Flow
+训练输出默认写入：
 
-This project is designed as an extensible custom-module framework. New modules should follow this chain:
+```text
+training_project\runs\
+```
+
+`runs/` 不进入 Git。
+
+### 7. 正式训练示例
+
+```powershell
+python training_project\train.py `
+  --model training_project\models\B4_A-GFPN_RepHFE_target.yaml `
+  --data training_project\datasets\DAD030_dataset.local.yaml `
+  --epochs 100 `
+  --batch 16 `
+  --imgsz 640 `
+  --workers 0 `
+  --name harpnet_b4_exp01
+```
+
+## 仓库目录说明
+
+```text
+defect_modules/
+  blocks.py       自定义结构模块，例如卷积、CSP、注意力、高频增强、特征融合
+  loss.py         RuleLoss、蒸馏损失、困难样本加权损失等训练组件
+  registry.py     模型 token、损失对象、参数解析类型和兼容映射
+  patch.py        Ultralytics 命名空间注入和旧 PT 兼容
+
+training_project/
+  models/         不同模块组合的 YAML
+  datasets/       数据集 YAML 示例，不存放真实图片和标签
+  train.py        统一训练入口
+  verify_*.py     结构、来源、维度、PT 加载和训练验证脚本
+
+export_pipeline/
+  export_onnx.py                 ONNX 导出入口
+  verify_onnx_consistency.py     ONNX 一致性验证
+  load_canonical_model.py        canonical 模型加载
+
+ultralytics-main/
+  项目所需的最小修改版 Ultralytics 源码
+
+docs/
+  当前验证状态、环境说明、仓库策略和上传检查清单
+```
+
+## 自建模块训练流程
+
+后续新增模块时，推荐固定沿用下面这条链路：
 
 ```text
 defect_modules/blocks.py
@@ -93,12 +165,12 @@ training_project/train.py
         ->
 Ultralytics parse_model
         ->
-model training
+模型训练
 ```
 
-### 1. Implement The Module
+### 1. 在 `blocks.py` 实现模块
 
-Place structure modules in `defect_modules/blocks.py`. A simple single-input, single-output block usually follows this form:
+例如新增一个普通高频增强模块：
 
 ```python
 import torch.nn as nn
@@ -115,16 +187,14 @@ class NewHFEBlock(nn.Module):
         return self.act(self.bn(self.conv(x)))
 ```
 
-For ordinary channel-aware blocks, the expected tensor contract is:
+普通单输入、单输出模块通常满足：
 
 ```text
-input:  B x C1 x H x W
-output: B x C2 x H x W
+输入: B x C1 x H x W
+输出: B x C2 x H x W
 ```
 
-### 2. Register The YAML Token
-
-Expose only real YAML-visible modules in `defect_modules/registry.py`:
+### 2. 在 `registry.py` 注册 YAML token
 
 ```python
 from defect_modules.blocks import CSPStage, RepHFE, NewHFEBlock
@@ -136,11 +206,11 @@ YAML_BLOCKS = {
 }
 ```
 
-Do not add historical `extra_modules` names to `YAML_BLOCKS`. Legacy PT compatibility belongs in `PICKLE_COMPAT_TYPES`.
+注意：不要把历史 `extra_modules` 的大量模块名塞回 `YAML_BLOCKS`。旧 PT 兼容路径应放在 `PICKLE_COMPAT_TYPES`，不要混入 YAML 主链路。
 
-### 3. Confirm Patch Injection
+### 3. 通过 `patch.py` 注入 Ultralytics 命名空间
 
-The training entrypoint applies the project patch before constructing YOLO:
+训练入口会先执行：
 
 ```python
 from defect_modules.patch import apply
@@ -152,11 +222,17 @@ apply(
 )
 ```
 
-This injects the registered project modules into the Ultralytics namespaces used during model construction.
+这一步会把 registry 中允许的项目模块注入到 Ultralytics 构建模型时使用的命名空间。
 
-### 4. Use The Module In YAML
+### 4. 在 YAML 中使用新模块
 
-Create a new model YAML under `training_project/models/`:
+例如新建：
+
+```text
+training_project/models/new_harpnet.yaml
+```
+
+YAML 示例：
 
 ```yaml
 backbone:
@@ -166,26 +242,24 @@ backbone:
   - [-1, 1, RepHFE, [128]]
 ```
 
-For `NewHFEBlock`, YAML provides `c2=128` and `kernel_size=3`. `parse_model()` must supply `c1` from the previous layer so the final constructor call becomes:
+这里 YAML 显式提供 `c2=128` 和 `kernel_size=3`，`c1` 需要由 `parse_model()` 根据上一层输出通道自动补入，最终构造应类似：
 
 ```python
 NewHFEBlock(c1, 128, 3)
 ```
 
-If a new module changes parameter parsing rules, update the registry/parse-model boundary deliberately instead of restoring wildcard imports.
+如果新模块涉及下面这些情况，就不能只注册 token，还需要同步扩展参数解析逻辑：
 
-Common cases that may need explicit parsing support:
+- 自动推导输入通道 `c1`
+- 自动计算输出通道 `c2`
+- 内部重复次数 `n`
+- 多层输入索引
+- `Concat` 或 `Add` 类多输入
+- 输出多个特征图
+- 特殊宽度/深度缩放
+- 检测头输入通道列表
 
-- automatic input channel `c1`
-- automatic output channel `c2`
-- internal repeat count `n`
-- multiple input indexes
-- `Concat` or `Add` style multi-input behavior
-- multiple output feature maps
-- special width/depth scaling
-- detection head input channel lists
-
-### 5. Train Through The Unified Entrypoint
+### 5. 通过统一入口训练
 
 ```powershell
 python training_project\train.py `
@@ -198,30 +272,43 @@ python training_project\train.py `
   --name new_harpnet_exp01
 ```
 
-Keep training outputs under `training_project\runs`. They are ignored by Git.
+## Loss、Head 与结构模块的边界
 
-## Losses And Heads
+结构模块、特征融合模块、backbone 模块和后续自定义检测头属于 YAML 结构组件，应通过 `YAML_BLOCKS` 进入模型构建链路。
 
-Structure modules, feature-fusion modules, backbone modules, and future custom detection heads are YAML components and should enter through `YAML_BLOCKS`.
+损失函数、蒸馏目标、剪枝约束和困难样本加权属于训练组件。把 loss 写入 `LOSS_OBJECTS` 只表示对象可被发现，不代表训练时自动生效。它还必须被 trainer 或 criterion 实际调用，例如接入 `v8DetectionLoss` 或项目自定义 Trainer。
 
-Losses, distillation objectives, pruning constraints, and hard-sample weighting are training components. Registering a loss in `LOSS_OBJECTS` only makes the object discoverable; it does not automatically change training behavior. The loss must also be called by the trainer or criterion, such as `v8DetectionLoss` or a project-specific trainer.
+推荐长期保持下面的职责边界：
 
-Recommended ownership:
+```text
+defect_modules/blocks.py
+  模型结构模块，例如卷积、CSP、注意力、高频增强、特征融合
 
-- `defect_modules/blocks.py`: convolution, CSP, attention, high-frequency enhancement, and feature-fusion blocks.
-- `defect_modules/heads.py`: future custom detection heads when they become large enough to split from `blocks.py`.
-- `defect_modules/loss.py`: `RuleLoss`, distillation losses, and hard-sample weighting losses.
-- `defect_modules/registry.py`: model tokens, loss objects, parameter parsing groups, and compatibility mappings.
-- `defect_modules/patch.py`: Ultralytics namespace injection and legacy PT compatibility.
-- `training_project/models`: YAML files for different module combinations.
-- `training_project/train.py`: unified training entrypoint.
-- `training_project/verify_*.py`: source, shape, registry, PT loading, and training validations.
+defect_modules/heads.py
+  自定义检测头，后续模块增加较多时可以从 blocks.py 单独拆出
 
-## Required Validation For A New Module
+defect_modules/loss.py
+  RuleLoss、蒸馏损失、困难样本加权损失
 
-At minimum, complete these checks before treating a new module as trainable.
+defect_modules/registry.py
+  模型 token、损失对象、参数解析类型和兼容映射
 
-1. Module shape check:
+defect_modules/patch.py
+  Ultralytics 命名空间注入和旧 PT 兼容
+
+training_project/models
+  不同模块组合的 YAML
+
+training_project/train.py
+  统一训练入口
+
+training_project/verify_*.py
+  结构、来源、维度、PT 加载和训练验证
+```
+
+## 新模块至少需要完成的验证
+
+### 1. 模块 shape 验证
 
 ```python
 import torch
@@ -230,10 +317,11 @@ from defect_modules.blocks import NewHFEBlock
 x = torch.randn(1, 64, 80, 80)
 module = NewHFEBlock(64, 128)
 y = module(x)
+
 assert y.shape == (1, 128, 80, 80)
 ```
 
-2. Registry and patch check:
+### 2. registry 和 patch 验证
 
 ```python
 from defect_modules.patch import apply
@@ -245,7 +333,7 @@ import ultralytics.nn.tasks as tasks
 assert tasks.NewHFEBlock.__module__ == "defect_modules.blocks"
 ```
 
-3. YAML build check:
+### 3. YAML 构建验证
 
 ```python
 from ultralytics import YOLO
@@ -253,7 +341,7 @@ from ultralytics import YOLO
 model = YOLO("training_project/models/new_harpnet.yaml")
 ```
 
-4. Smoke training check:
+### 4. 短训练验证
 
 ```powershell
 python training_project\train.py `
@@ -266,37 +354,57 @@ python training_project\train.py `
   --name new_module_smoke
 ```
 
-Confirm that loss is finite, output is written to `training_project\runs`, and the custom module source is `defect_modules.blocks`.
+确认 loss 正常、输出目录生成、模块真实来源为 `defect_modules.blocks`。
 
-## Export Constraints
+## 导出与部署约束
 
-If a module must eventually deploy to RK3588S/RKNN, prefer conservative operators during design:
+如果模块最终要部署到 RK3588S/RKNN，设计阶段就要控制算子范围。
 
-- `Conv2d`
-- depthwise `Conv2d`
-- `BatchNorm2d`
-- `SiLU` or `ReLU`
-- `Add`
-- `Concat`
-- `Interpolate`
-- `MaxPool`
-- ordinary `reshape` and `permute`
+优先使用：
 
-Use caution with:
+```text
+Conv2d
+Depthwise Conv2d
+BatchNorm2d
+SiLU 或 ReLU
+Add
+Concat
+Interpolate
+MaxPool
+普通 reshape 和 permute
+```
 
-- dynamic Python control flow depending on tensor values
-- custom CUDA operators
-- complex `einsum`
-- dynamic indexing
-- dynamically generated convolution kernels
-- irregular `grid_sample`
-- operators unsupported by ONNX or RKNN
+谨慎使用：
 
-## Model Artifacts And Releases
+```text
+依赖输入数据的 Python 分支
+自定义 CUDA 算子
+复杂 einsum
+动态索引
+动态卷积核生成
+不规则 grid_sample
+ONNX 不支持的算子
+RKNN 不支持的特殊激活或归一化
+```
 
-Do not commit `.pt`, `.pth`, ONNX, RKNN, engine, or TorchScript artifacts to Git.
+## 数据集和模型产物发布方式
 
-When stage checkpoints are ready, publish them as GitHub Release assets. Recommended naming:
+### 数据集
+
+数据集不进入 Git。建议发布方式：
+
+- 百度网盘链接
+- 提取码
+- 数据集版本号
+- 数据集目录结构说明
+- 对应的 `dataset.yaml` 示例
+- 数据集 SHA256 或文件数量统计
+
+### 阶段性 PT 模型
+
+`.pt`、`.pth`、ONNX、RKNN、engine、TorchScript 等产物不提交到 Git。
+
+阶段性 PT 模型建议放到 GitHub Release。命名示例：
 
 ```text
 harpnet-baseline-b4-epochXXX.pt
@@ -305,17 +413,17 @@ harpnet-ruleloss-b4-epochXXX.pt
 harpnet-deploy-candidate-b4-epochXXX.pt
 ```
 
-Each release should include:
+每个 Release 建议附带：
 
-- checkpoint `.pt` files
-- matching model YAML
-- dataset version or Baidu Netdisk dataset identifier
-- training command
-- metrics summary
-- SHA256 checksums
-- known limitations, especially whether RuleLoss was active and whether ONNX export passed
+- `.pt` checkpoint
+- 对应模型 YAML
+- 数据集版本或百度网盘数据集标识
+- 完整训练命令
+- 指标摘要
+- SHA256 校验值
+- 已知限制，例如 RuleLoss 是否启用、是否通过 ONNX 导出验证
 
-Suggested release tags:
+推荐 tag：
 
 ```text
 weights-vYYYYMMDD
@@ -323,29 +431,40 @@ smoke-vYYYYMMDD
 deploy-candidate-vYYYYMMDD
 ```
 
-The current repository commit does not include release assets. Add them only after the dataset and stage PT files are finalized.
+当前仓库提交本身不包含 Release 资产。等数据集和阶段性 PT 文件确定后，再通过 GitHub Release 上传。
 
-## Quick Checks
+## 当前真实状态
 
-Run from the repository root in the `yolo_ultra` environment:
-
-```powershell
-python training_project\verify_registry.py
-python training_project\verify_tasks_import_boundary.py
-python training_project\verify_external_blocks.py
-```
-
-Fixed PT compatibility validation requires the external `DAD030_best_target.pt` artifact at:
+在声明结果前，请先阅读：
 
 ```text
-training_project\weights\DAD030_best_target.pt
+docs/VALIDATION_STATUS.md
 ```
 
-## Current Truth
+当前快照的真实状态是：
 
-See `docs\VALIDATION_STATUS.md` before claiming export or loss results. In the current snapshot:
+- `RuleLoss` 已存在，但当前训练路径中尚未真正激活。
+- 固定 PT 是 `CASE_C`，与目标 YAML 拓扑不严格一致。
+- ONNX 导出当前是 `SKIPPED_CASE_C`，没有 canonical state_dict，因此不能宣称部署导出已完成。
+- 数据集和阶段性 checkpoint 均外置，不进入 Git。
 
-- `RuleLoss` is present but not active in the current training path.
-- The fixed PT is `CASE_C` against the target YAML.
-- ONNX export is skipped because no canonical state_dict exists.
-- Datasets and stage checkpoints are intentionally external to Git.
+## 长期维护原则
+
+后续模块持续迭代时，尽量保持三条原则：
+
+```text
+模块实现集中在 defect_modules
+模块发现和解析规则集中在 registry
+训练和导出均通过固定项目入口
+```
+
+这样可以通过新增 YAML 和实验配置组合出不同模型，例如：
+
+```text
+Baseline + 新模块 A
+Baseline + 新模块 B
+Baseline + A + B
+HARP-Net + 新模块 C
+剪枝学生模型 + 蒸馏模块
+部署版模型 + 可重参数化模块
+```
