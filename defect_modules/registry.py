@@ -15,17 +15,6 @@ ULTRALYTICS_MAIN = ROOT / "ultralytics-main"
 if str(ULTRALYTICS_MAIN) not in sys.path:
     sys.path.insert(0, str(ULTRALYTICS_MAIN))
 
-LEGACY_PRUNE_MODULE = (
-    ROOT
-    / "prune_distill_exp"
-    / "ultralytics-prune-20240726"
-    / "ultralytics-prune"
-    / "ultralytics"
-    / "nn"
-    / "extra_modules"
-    / "prune_module.py"
-)
-
 IMPORT_ERRORS: dict[str, str] = {}
 
 
@@ -79,29 +68,10 @@ def get_loss_objects(strict: bool = False):
     LOSS_OBJECTS["RuleLoss"] = RuleLoss
     return dict(LOSS_OBJECTS)
 
-PICKLE_COMPAT_TYPES = {
-    "ultralytics.nn.extra_modules.rephfe": {
-        "RepDWConv": RepDWConv,
-        "RepHFE": RepHFE,
-    },
-    "ultralytics.nn.extra_modules.prune_module": {
-        "source": LEGACY_PRUNE_MODULE,
-    },
-}
-
-LEGACY_ALIASES = {
-    # Historical YAML aliases retained for explicit opt-in only.
-    "SADH": CSPStage,
-    "A_GFPN": CSPStage,
-}
-
-
-def active_registry(*, legacy_aliases: bool = False, include_loss: bool = True):
+def active_registry(*, include_loss: bool = True):
     registry = dict(YAML_BLOCKS)
     if include_loss:
         registry.update(get_loss_objects(strict=False))
-    if legacy_aliases:
-        registry.update(LEGACY_ALIASES)
     return registry
 
 

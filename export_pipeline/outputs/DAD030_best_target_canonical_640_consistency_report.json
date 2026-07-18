@@ -1,7 +1,0 @@
-{
-  "status": "SKIPPED_NO_ONNX",
-  "reason": "Canonical state_dict was not produced because source PT topology cannot be rebuilt from target YAML. Legacy PT is forbidden as final ONNX export input.",
-  "export_status": "SKIPPED_CASE_C",
-  "onnx_checker": null,
-  "onnxruntime_result": null
-}

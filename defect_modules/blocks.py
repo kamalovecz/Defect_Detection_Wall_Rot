@@ -4,30 +4,10 @@ This file intentionally carries only RepHFE and its direct helper RepDWConv so
 registry.py no longer needs to import RepHFE from extra_modules.
 """
 
-import importlib.util
-import sys
-from pathlib import Path
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
-
-def _load_ultralytics_conv_symbols():
-    conv_path = Path(__file__).resolve().parents[1] / "ultralytics-main" / "ultralytics" / "nn" / "modules" / "conv.py"
-    module_name = "defect_modules._ultralytics_conv"
-    module = sys.modules.get(module_name)
-    if module is None:
-        spec = importlib.util.spec_from_file_location(module_name, conv_path)
-        if spec is None or spec.loader is None:
-            raise ImportError(f"Unable to load Ultralytics conv symbols from {conv_path}")
-        module = importlib.util.module_from_spec(spec)
-        sys.modules[module_name] = module
-        spec.loader.exec_module(module)
-    return module.Conv, module.RepConv
-
-
-Conv, RepConv = _load_ultralytics_conv_symbols()
+from ultralytics.nn.modules import Conv, RepConv
 
 __all__ = ["RepDWConv", "RepHFE", "BasicBlock_3x3_Reverse", "SPP", "CSPStage"]
 

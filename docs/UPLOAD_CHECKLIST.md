@@ -1,18 +1,19 @@
-﻿# Upload Checklist
+# Upload Checklist
 
 Before uploading this staging directory to a repository:
 
 1. Review `docs/VALIDATION_STATUS.md` and keep the wording honest.
-2. Initialize Git from `D:\defect_detection\repo_staging`.
+2. Work on a reviewable feature branch and keep `main` unchanged.
 3. Check that `git status` does not include weights, datasets, runs, ONNX, RKNN, or caches.
 4. Keep the included Ultralytics AGPL-3.0 license file with the modified source.
 5. Add large artifacts through Git LFS or an external artifact store only if you intentionally want to publish them.
-6. Run the three source-boundary checks:
+6. Run the consolidated acceptance checks:
 
 ```powershell
-python training_project\verify_registry.py
-python training_project\verify_tasks_import_boundary.py
-python training_project\verify_external_blocks.py
+python training_project\verify_all.py
 ```
 
-7. Do not claim ONNX/RKNN success until a non-CASE_C canonical state_dict is produced and export consistency passes.
+7. Validate any delivered ONNX with `verify_onnx_consistency.py` and its
+   artifact manifest.
+8. Do not include RKNN conversion code here; hand the validated ONNX and
+   manifest to the deployment repository.

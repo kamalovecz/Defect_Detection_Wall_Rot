@@ -1,69 +1,121 @@
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
-import time
+import shutil
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT_DIR = ROOT / "export_pipeline" / "outputs"
-OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-ONNX_PATH = OUTPUT_DIR / "DAD030_best_target_canonical_640.onnx"
-REPORT_PATH = OUTPUT_DIR / "DAD030_best_target_canonical_640_export_report.json"
-CANONICAL_MANIFEST = ROOT / "training_project" / "weights" / "canonical" / "DAD030_best_target_manifest.json"
+ULTRALYTICS_MAIN = ROOT / "ultralytics-main"
+for path in (ROOT, ULTRALYTICS_MAIN):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
+
+KNOWN_CASE_C_SHA256 = "ba5cc233eea726226b3efced7200018f799cb702db4a7f688bd8b06212b71656"
+EXPECTED_PARAMETERS = 2_308_655
+EXPECTED_LAYERS = 25
 
 
 def sha256(path: Path) -> str:
-    h = hashlib.sha256()
-    with path.open("rb") as f:
-        for chunk in iter(lambda: f.read(1024 * 1024), b""):
-            h.update(chunk)
-    return h.hexdigest().upper()
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest().lower()
+
+
+def reject_known_case_c(checkpoint_sha256: str) -> None:
+    if checkpoint_sha256.lower() == KNOWN_CASE_C_SHA256:
+        raise RuntimeError("CASE_C checkpoint is not a canonical export input for the target YAML")
 
 
 def main() -> int:
-    manifest = json.loads(CANONICAL_MANIFEST.read_text(encoding="utf-8")) if CANONICAL_MANIFEST.exists() else {}
-    if manifest.get("topology_case") == "CASE_C":
-        report = {
-            "status": "SKIPPED_CASE_C",
-            "reason": "Canonical state_dict was not produced because source PT topology cannot be rebuilt from target YAML. Legacy PT is forbidden as final ONNX export input.",
-            "onnx_path": None,
-            "topology_case": manifest.get("topology_case"),
-        }
-        REPORT_PATH.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
-        print(json.dumps(report, indent=2, ensure_ascii=False))
-        return 2
-    try:
-        import torch
-        import onnx
-        from load_canonical_model import load_canonical_model
-    except Exception as exc:
-        report = {"status": "DEPENDENCY_MISSING", "error": repr(exc)}
-        REPORT_PATH.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
-        print(json.dumps(report, indent=2, ensure_ascii=False))
-        return 1
-    model, _ = load_canonical_model(device="cpu")
-    x = torch.randn(1, 3, 640, 640, dtype=torch.float32)
-    start = time.time()
-    torch.onnx.export(model, x, ONNX_PATH, opset_version=12, input_names=["images"], output_names=["output0"], dynamic_axes=None, do_constant_folding=True)
-    elapsed = time.time() - start
-    onnx_model = onnx.load(str(ONNX_PATH))
-    report = {
-        "status": "ok",
-        "onnx_path": str(ONNX_PATH),
-        "onnx_sha256": sha256(ONNX_PATH),
-        "opset": 12,
-        "input_names": [i.name for i in onnx_model.graph.input],
-        "output_names": [o.name for o in onnx_model.graph.output],
-        "input_shapes": [[d.dim_value or d.dim_param for d in i.type.tensor_type.shape.dim] for i in onnx_model.graph.input],
-        "output_shapes": [[d.dim_value or d.dim_param for d in o.type.tensor_type.shape.dim] for o in onnx_model.graph.output],
-        "model_size_bytes": ONNX_PATH.stat().st_size,
-        "elapsed_seconds": elapsed,
-        "pytorch_version": torch.__version__,
-        "onnx_version": onnx.__version__,
+    parser = argparse.ArgumentParser(description="Export a topology-compatible Port_Defect checkpoint to ONNX.")
+    parser.add_argument("--checkpoint", required=True)
+    parser.add_argument("--run-manifest", required=True)
+    parser.add_argument("--output-dir", default=str(ROOT / "export_pipeline" / "outputs" / "port_defect_smoke"))
+    parser.add_argument("--name", default="port_defect_smoke")
+    parser.add_argument("--imgsz", type=int, default=640)
+    parser.add_argument("--device", default="0")
+    args = parser.parse_args()
+
+    source = Path(args.checkpoint).resolve()
+    run_manifest_path = Path(args.run_manifest).resolve()
+    if not source.is_file() or not run_manifest_path.is_file():
+        raise FileNotFoundError("Checkpoint and completed run manifest are required")
+    source_sha = sha256(source)
+    reject_known_case_c(source_sha)
+    run_manifest = json.loads(run_manifest_path.read_text(encoding="utf-8"))
+    if run_manifest.get("status") != "completed":
+        raise RuntimeError("Only checkpoints from a completed training run may be exported")
+
+    output_dir = Path(args.output_dir).resolve()
+    output_dir.mkdir(parents=True, exist_ok=True)
+    pt_path = output_dir / f"{args.name}.pt"
+    yaml_path = output_dir / "model.yaml"
+    shutil.copy2(source, pt_path)
+    shutil.copy2(Path(run_manifest["model_yaml"]), yaml_path)
+
+    from defect_modules.integration import install
+    from ultralytics import YOLO, __version__ as ultralytics_version
+
+    install({"enabled": False})
+    yolo = YOLO(str(pt_path))
+    model = yolo.model
+    parameters = sum(item.numel() for item in model.parameters())
+    layers = len(model.model)
+    if parameters != EXPECTED_PARAMETERS or layers != EXPECTED_LAYERS:
+        raise RuntimeError(f"Checkpoint topology mismatch: parameters={parameters}, layers={layers}")
+    legacy = sorted({module.__class__.__module__ for module in model.modules() if "extra_modules" in module.__class__.__module__})
+    if legacy:
+        raise RuntimeError(f"Checkpoint depends on legacy modules: {legacy}")
+
+    exported = Path(
+        yolo.export(
+            format="onnx", imgsz=args.imgsz, opset=12, simplify=False, dynamic=False, device=args.device
+        )
+    ).resolve()
+    onnx_path = output_dir / f"{args.name}.onnx"
+    if exported != onnx_path:
+        shutil.move(str(exported), onnx_path)
+
+    import onnx
+
+    graph = onnx.load(str(onnx_path))
+    onnx.checker.check_model(graph)
+    manifest = {
+        "schema_version": 1,
+        "status": "exported",
+        "artifact_kind": "engineering-smoke",
+        "files": {
+            "pt": pt_path.name,
+            "onnx": onnx_path.name,
+            "model_yaml": yaml_path.name,
+        },
+        "sha256": {
+            "pt": sha256(pt_path),
+            "onnx": sha256(onnx_path),
+            "model_yaml": sha256(yaml_path),
+        },
+        "model": {
+            "parameters": parameters,
+            "layers": layers,
+            "classes": run_manifest["class_names"],
+            "imgsz": args.imgsz,
+            "input_name": graph.graph.input[0].name,
+            "output_names": [item.name for item in graph.graph.output],
+            "opset": 12,
+        },
+        "preprocess": {"color": "RGB", "layout": "NCHW", "dtype": "float32", "scale": "divide_by_255"},
+        "runtime": {"ultralytics": ultralytics_version},
+        "legacy_modules": [],
+        "validation": None,
     }
-    REPORT_PATH.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(json.dumps(report, indent=2, ensure_ascii=False))
+    manifest_path = output_dir / "artifact_manifest.json"
+    manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(json.dumps(manifest, indent=2, ensure_ascii=False))
     return 0
 
 

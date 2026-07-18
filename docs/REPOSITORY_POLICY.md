@@ -1,4 +1,4 @@
-﻿# Repository Content Policy
+# Repository Content Policy
 
 ## Track in Git
 
@@ -7,7 +7,7 @@
 - Verification scripts.
 - Small JSON reports that document current validation status.
 - Documentation under `docs`.
-- Minimal legacy pickle compatibility source files required for loading the fixed PT.
+- Legacy compatibility source and diagnostic records only under `legacy_compat`.
 
 ## Keep out of Git
 
@@ -16,9 +16,11 @@
 - Weights: `.pt`, `.pth`, `.ckpt`.
 - Exports: `.onnx`, `.rknn`, `.engine`, `.torchscript`.
 - Python caches and local environment folders.
-- The protected sibling directory `D:\defect_detection\ultralytics`.
+- Any sibling checkout or machine-specific absolute path.
 - Massive historical trees from `open_mmlab`, `runs`, or full `prune_distill_exp`.
 
 ## Artifact handling
 
-Use Git LFS or a release/artifact store for weights and exported models. The current fixed PT is a compatibility artifact, not a canonical deployable checkpoint for the target YAML.
+Use Git LFS or a release/artifact store for weights and exported models. CASE_C
+records are diagnostic history only; the active training and export paths reject
+that topology.

@@ -1,0 +1,11 @@
+# Copy this file to datasets/Port_Defect/data.yaml after extracting the dataset.
+path: datasets/Port_Defect
+train: images/train
+val: images/val
+test: images/test
+names:
+  0: Rust
+  1: Cracks
+  2: Paint Wear
+  3: Scratches
+  4: Pitting

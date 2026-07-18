@@ -21,6 +21,7 @@ export_pipeline/outputs/*.onnx
 export_pipeline/outputs/*.rknn
 export_pipeline/outputs/*.engine
 export_pipeline/outputs/*.torchscript
+export_pipeline/outputs/
 
 # Model artifacts anywhere
 *.pt

@@ -1,0 +1,32 @@
+model: training_project/models/B4_A-GFPN_RepHFE_target.yaml
+data: datasets/Port_Defect/data.yaml
+
+loss:
+  rule:
+    enabled: false
+    version: paper
+    small_area: 1024.0
+    gamma_small: 0.06
+    gamma_contrast: 0.04
+    low_contrast_std: 0.12
+    lambda_max: 1.0
+    total_epochs: 1
+    t1_epoch: -1
+    t2_epoch: -1
+
+train:
+  epochs: 1
+  batch: 4
+  imgsz: 640
+  device: "0"
+  workers: 0
+  project: training_project/runs
+  name: harpnet_port_defect_baseline
+  seed: 42
+  patience: 1
+  optimizer: SGD
+  lr0: 0.001
+  lrf: 0.00001
+  cache: true
+  amp: false
+  exist_ok: true

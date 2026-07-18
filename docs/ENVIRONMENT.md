@@ -1,8 +1,8 @@
-﻿# Environment Notes
+# Environment Notes
 
 The remote validation environment is named `yolo_ultra`.
 
-Observed versions on 2026-07-14:
+Original baseline environment observed on 2026-07-14:
 
 - Python: 3.10.19
 - torch: 2.1.0+cu121
@@ -13,4 +13,18 @@ Observed versions on 2026-07-14:
 - onnx: 1.20.1
 - onnxruntime: 1.23.2
 
-`environment.yml` is a lightweight starting point, not a byte-for-byte lockfile.
+`environment.yml` is the acceptance environment specification. It pins the
+Python, PyTorch, CUDA, ONNX, and ONNX Runtime compatibility line and installs
+the bundled Ultralytics runtime from this repository. It is not a byte-for-byte
+package lockfile.
+
+Create and validate a clean environment from the repository root:
+
+```powershell
+conda env create -n harpnet_acceptance -f environment.yml
+conda run -n harpnet_acceptance python training_project/verify_all.py
+```
+
+The clean acceptance environment created on 2026-07-18 resolved to Python
+3.10.20, PyTorch 2.1.2, CUDA 12.1, Ultralytics 8.2.50, ONNX 1.20.1, and ONNX
+Runtime 1.23.2. CUDA was available on the RTX 4090 host.

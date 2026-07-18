@@ -29,9 +29,9 @@ def main() -> None:
         if name.startswith(OLD_PREFIX):
             sys.modules.pop(name, None)
 
-    from defect_modules.patch import apply
+    from defect_modules.integration import install
 
-    patch_result = apply(verbose=True, pickle_compat=False, legacy_aliases=False, strict=True)
+    integration_result = install({"enabled": False})
 
     from ultralytics import YOLO
 
@@ -63,7 +63,7 @@ def main() -> None:
     print(json.dumps({
         "status": "ok",
         "target_yaml": str(TARGET_YAML),
-        "patch_result": patch_result,
+        "integration_result": integration_result,
         "counts": dict(counts),
         "extra_modules_loaded": loaded_legacy,
         "custom_modules": custom_modules,

@@ -32,7 +32,7 @@ from ultralytics.utils.tal import TaskAlignedAssigner, dist2bbox, make_anchors
 class v8DetectionLoss:
     """Criterion class for computing training losses."""
 
-    def __init__(self, model, tal_topk=10):  # model must be de-paralleled
+    def __init__(self, model, tal_topk=10, rule_config=None):  # model must be de-paralleled
         """Initializes v8DetectionLoss with the model, defining model-related properties and BCE loss function."""
         device = next(model.parameters()).device  # get model device
         h = model.args  # hyperparameters
@@ -69,37 +69,30 @@ class v8DetectionLoss:
         # Rule-weighted loss:
         # - RULE_LOSS_VERSION=v2   -> keep legacy update-step schedule (RuleLossV2)
         # - RULE_LOSS_VERSION=paper -> epoch schedule lambda(e) aligned with manuscript
-        self.rule_loss_enable = self._env_flag("RULE_LOSS_ENABLE", False)
-        self.rule_loss_version = str(os.getenv("RULE_LOSS_VERSION", "v2")).strip().lower()
+        rule_config = dict(rule_config or {})
+        self.rule_loss_enable = bool(rule_config.get("enabled", False))
+        self.rule_loss_version = str(rule_config.get("version", "paper")).strip().lower()
         if self.rule_loss_version in {"legacy", "rulelossv2"}:
             self.rule_loss_version = "v2"
         elif self.rule_loss_version in {"v3", "epoch", "paper_strict"}:
             self.rule_loss_version = "paper"
         elif self.rule_loss_version not in {"v2", "paper"}:
             self.rule_loss_version = "v2"
-        self.rule_small_area = self._env_float("RULE_LOSS_SMALL_AREA", 32.0 * 32.0)
-        self.rule_gamma_small = self._env_float(
-            "RULE_LOSS_GAMMA_SMALL",
-            self._env_float("RULE_LOSS_SMALL_GAIN", 0.06),
-        )
-        self.rule_gamma_contrast = self._env_float(
-            "RULE_LOSS_GAMMA_CONTRAST",
-            self._env_float("RULE_LOSS_LOW_CONTRAST_GAIN", 0.04),
-        )
-        self.rule_low_contrast_std = self._env_float("RULE_LOSS_LOW_CONTRAST_STD", 0.12)
-        self.rule_lambda_max = self._env_float("RULE_LOSS_LAMBDA_MAX", 1.0)
-        self.rule_schedule_iters = int(
-            self._env_float("RULE_LOSS_SCHEDULE_ITERS", self._env_float("RULE_LOSS_RAMP_ITERS", 12000))
-        )
-        self.rule_stage0_ratio = max(0.0, min(1.0, self._env_float("RULE_LOSS_STAGE0_RATIO", 0.20)))
+        self.rule_small_area = float(rule_config.get("small_area", 32.0 * 32.0))
+        self.rule_gamma_small = float(rule_config.get("gamma_small", 0.06))
+        self.rule_gamma_contrast = float(rule_config.get("gamma_contrast", 0.04))
+        self.rule_low_contrast_std = float(rule_config.get("low_contrast_std", 0.12))
+        self.rule_lambda_max = float(rule_config.get("lambda_max", 1.0))
+        self.rule_schedule_iters = int(rule_config.get("schedule_iters", 12000))
+        self.rule_stage0_ratio = max(0.0, min(1.0, float(rule_config.get("stage0_ratio", 0.20))))
         self.rule_stage1_ratio = max(
-            self.rule_stage0_ratio + 1e-6, min(1.0, self._env_float("RULE_LOSS_STAGE1_RATIO", 0.60))
+            self.rule_stage0_ratio + 1e-6, min(1.0, float(rule_config.get("stage1_ratio", 0.60)))
         )
         self.rule_updates = 0
-        self.rule_total_epochs = max(1, int(self._env_float("RULE_LOSS_TOTAL_EPOCHS", 300)))
-        self.rule_current_epoch = max(0, int(self._env_float("RULE_LOSS_EPOCH", 0)))
-        self.rule_t1_epoch_cfg = int(self._env_float("RULE_LOSS_T1_EPOCH", -1))
-        self.rule_t2_epoch_cfg = int(self._env_float("RULE_LOSS_T2_EPOCH", -1))
+        self.rule_total_epochs = max(1, int(rule_config.get("total_epochs", 300)))
+        self.rule_current_epoch = 0
+        self.rule_t1_epoch_cfg = int(rule_config.get("t1_epoch", -1))
+        self.rule_t2_epoch_cfg = int(rule_config.get("t2_epoch", -1))
         self.rule_t1_epoch = 0
         self.rule_t2_epoch = 1
         self._resolve_rule_epoch_schedule()
@@ -471,27 +464,8 @@ RuleLoss = v8DetectionLoss
 
 
 def patch_ultralytics_loss(verbose: bool = True):
-    """Route Ultralytics detection training to the externalized RuleLoss class."""
-    patched = []
-
-    import ultralytics.utils.loss as loss_mod
-
-    loss_mod.RuleLoss = RuleLoss
-    loss_mod.RuleLossDetectionLoss = RuleLossDetectionLoss
-    loss_mod.v8DetectionLoss = RuleLossDetectionLoss
-    patched.append("ultralytics.utils.loss")
-
-    try:
-        import ultralytics.nn.tasks as tasks_mod
-
-        tasks_mod.RuleLoss = RuleLoss
-        tasks_mod.RuleLossDetectionLoss = RuleLossDetectionLoss
-        tasks_mod.v8DetectionLoss = RuleLossDetectionLoss
-        patched.append("ultralytics.nn.tasks")
-    except Exception as exc:
-        if verbose:
-            print(f"[defect_modules.loss] tasks patch warning: {exc!r}")
-
+    """Deprecated compatibility hook; criterion selection now uses the runtime factory."""
+    patched = ["ultralytics.nn.extensions"]
     if verbose:
-        print(f"[defect_modules.loss] RuleLossDetectionLoss patched into {', '.join(patched)}")
+        print("[defect_modules.loss] global loss patching is disabled; use integration.install(rule_config=...)")
     return patched
