@@ -1,47 +1,91 @@
 from __future__ import annotations
 
+import argparse
 import json
+import sys
 from pathlib import Path
 
+import numpy as np
+import torch
+
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT_DIR = ROOT / "export_pipeline" / "outputs"
-ONNX_PATH = OUTPUT_DIR / "DAD030_best_target_canonical_640.onnx"
-REPORT_PATH = OUTPUT_DIR / "DAD030_best_target_canonical_640_consistency_report.json"
-EXPORT_REPORT = OUTPUT_DIR / "DAD030_best_target_canonical_640_export_report.json"
+ULTRALYTICS_MAIN = ROOT / "ultralytics-main"
+for path in (ROOT, ULTRALYTICS_MAIN):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
 
 
 def main() -> int:
-    export_report = json.loads(EXPORT_REPORT.read_text(encoding="utf-8")) if EXPORT_REPORT.exists() else {}
-    if not ONNX_PATH.exists():
-        report = {
-            "status": "SKIPPED_NO_ONNX",
-            "reason": export_report.get("reason", "ONNX file does not exist."),
-            "export_status": export_report.get("status"),
-            "onnx_checker": None,
-            "onnxruntime_result": None,
-        }
-        REPORT_PATH.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
-        print(json.dumps(report, indent=2, ensure_ascii=False))
-        return 2
-    try:
-        import onnx
-    except Exception as exc:
-        report = {"status": "DEPENDENCY_MISSING", "dependency": "onnx", "error": repr(exc)}
-        REPORT_PATH.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
-        print(json.dumps(report, indent=2, ensure_ascii=False))
-        return 1
-    onnx_model = onnx.load(str(ONNX_PATH))
-    onnx.checker.check_model(onnx_model)
-    try:
-        import onnxruntime as ort
-    except Exception as exc:
-        report = {"status": "ONNX_CHECKER_PASSED_ORT_MISSING", "onnx_checker": "passed", "onnxruntime_error": repr(exc)}
-        REPORT_PATH.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
-        print(json.dumps(report, indent=2, ensure_ascii=False))
-        return 1
-    report = {"status": "ORT_AVAILABLE_BUT_NUMERIC_CHECK_NOT_IMPLEMENTED_IN_CASE_C_PATH", "onnx_checker": "passed", "onnxruntime_version": ort.__version__}
-    REPORT_PATH.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(json.dumps(report, indent=2, ensure_ascii=False))
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--manifest", required=True)
+    parser.add_argument("--box-max-abs", type=float, default=5e-2)
+    parser.add_argument("--box-mean-abs", type=float, default=1e-3)
+    parser.add_argument("--score-max-abs", type=float, default=1e-3)
+    parser.add_argument("--score-mean-abs", type=float, default=1e-4)
+    args = parser.parse_args()
+    manifest_path = Path(args.manifest).resolve()
+    artifact_dir = manifest_path.parent
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    pt_path = artifact_dir / manifest["files"]["pt"]
+    onnx_path = artifact_dir / manifest["files"]["onnx"]
+
+    from defect_modules.integration import install
+    from ultralytics import YOLO
+    import onnx
+    import onnxruntime as ort
+
+    install({"enabled": False})
+    onnx.checker.check_model(onnx.load(str(onnx_path)))
+    model = YOLO(str(pt_path)).model.float().eval().cpu()
+    sample = np.random.default_rng(42).random((1, 3, manifest["model"]["imgsz"], manifest["model"]["imgsz"]), dtype=np.float32)
+    with torch.no_grad():
+        pt_output = model(torch.from_numpy(sample))
+    if isinstance(pt_output, (tuple, list)):
+        pt_output = pt_output[0]
+    pt_array = pt_output.detach().cpu().numpy()
+
+    session = ort.InferenceSession(str(onnx_path), providers=["CPUExecutionProvider"])
+    ort_array = session.run(None, {session.get_inputs()[0].name: sample})[0]
+    if pt_array.shape != ort_array.shape:
+        raise RuntimeError(f"PT/ONNX output shape mismatch: {pt_array.shape} != {ort_array.shape}")
+    delta = np.abs(pt_array - ort_array)
+    box_delta = delta[:, :4]
+    score_delta = delta[:, 4:]
+    metrics = {
+        "box_max_abs": float(box_delta.max()),
+        "box_mean_abs": float(box_delta.mean()),
+        "score_max_abs": float(score_delta.max()),
+        "score_mean_abs": float(score_delta.mean()),
+    }
+    thresholds = {
+        "box_max_abs": args.box_max_abs,
+        "box_mean_abs": args.box_mean_abs,
+        "score_max_abs": args.score_max_abs,
+        "score_mean_abs": args.score_mean_abs,
+    }
+    failed = {name: value for name, value in metrics.items() if value > thresholds[name]}
+    if failed:
+        raise RuntimeError(f"PT/ONNX numeric mismatch: metrics={metrics}, thresholds={thresholds}")
+
+    def contains_absolute(value) -> bool:
+        if isinstance(value, dict):
+            return any(contains_absolute(item) for item in value.values())
+        if isinstance(value, list):
+            return any(contains_absolute(item) for item in value)
+        return isinstance(value, str) and Path(value).is_absolute()
+
+    if contains_absolute(manifest):
+        raise RuntimeError("Artifact manifest contains an absolute path")
+    manifest["status"] = "validated"
+    manifest["validation"] = {
+        "onnx_checker": "passed",
+        "provider": "CPUExecutionProvider",
+        "output_shape": list(pt_array.shape),
+        **metrics,
+        "thresholds": thresholds,
+    }
+    manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(json.dumps(manifest["validation"], indent=2))
     return 0
 
 

@@ -16,3 +16,6 @@ dependencies:
   - pip
   - pip:
       - -e ./ultralytics-main
+      - onnx==1.20.1
+      - onnxruntime==1.23.2
+      - py-cpuinfo==9.0.0
