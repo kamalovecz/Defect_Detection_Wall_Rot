@@ -10,6 +10,13 @@ dataset_contract:
   class_names: [Rust, Cracks, Paint Wear, Scratches, Pitting]
   rule_loss_for_structure_ablations: false
 
+interpretation_contract:
+  note: A0 is an external YOLOv8n reference and B1 is a standalone architecture point; neither is single-factor evidence.
+  controlled_comparisons:
+    - {comparison: B4-B2, isolated_factor: a_gfpn, controls: [cspstage, rephfe, sadh]}
+    - {comparison: B4-B3, isolated_factor: rephfe, controls: [cspstage, a_gfpn, sadh]}
+    - {comparison: B5-B4, isolated_factor: sadh, controls: [cspstage, a_gfpn, rephfe]}
+
 experiments:
   - id: A0
     name: yolov8n
@@ -19,10 +26,12 @@ experiments:
     source_bytes: 1888
     source_sha256: c8d4b4fb7af33409a11b19203a5d982aec5e839841988b289c12554816cb575e
     canonical_path: training_project/models/ablations/A0_yolov8n.yaml
-    components: {a_gfpn: false, rephfe: false, sadh: false, rule_loss: false}
+    reference_role: external_baseline
+    components: {cspstage: false, a_gfpn: false, rephfe: false, sadh: false, rule_loss: false}
     archive_status: verified
-    runtime_status: blocked
-    blockers: [canonical_not_created, parser_cleanup_required]
+    runtime_status: verified
+    verification_level: build_forward
+    blockers: []
   - id: B1
     name: SADH
     source_filename: B1_SADH.yaml
@@ -31,10 +40,12 @@ experiments:
     source_bytes: 1414
     source_sha256: 86bc637d886a206f7d6acfc4434dcbea1be6ae672167acf9755ec2e19cf9db7b
     canonical_path: training_project/models/ablations/B1_SADH.yaml
-    components: {a_gfpn: false, rephfe: false, sadh: true, rule_loss: false}
+    reference_role: standalone_architecture
+    components: {cspstage: true, a_gfpn: false, rephfe: false, sadh: true, rule_loss: false}
     archive_status: verified
     runtime_status: blocked
-    blockers: [canonical_not_created, parser_cleanup_required, sadh_not_registered]
+    verification_level: archive_only
+    blockers: [canonical_not_created, sadh_not_registered]
   - id: B2
     name: RepHFE
     source_filename: B2_RepHFE.yaml
@@ -43,10 +54,12 @@ experiments:
     source_bytes: 1238
     source_sha256: 10c2407cc9f716db8f21285ecdd08e6258e5022a6415fff10346594c606b2339
     canonical_path: training_project/models/ablations/B2_RepHFE.yaml
-    components: {a_gfpn: false, rephfe: true, sadh: false, rule_loss: false}
+    reference_role: controlled_component_candidate
+    components: {cspstage: true, a_gfpn: false, rephfe: true, sadh: false, rule_loss: false}
     archive_status: verified
-    runtime_status: source_verified
-    blockers: [canonical_not_created]
+    runtime_status: verified
+    verification_level: build_forward
+    blockers: []
   - id: B3
     name: A-GFPN
     source_filename: B3_A-GFPN.yaml
@@ -55,10 +68,12 @@ experiments:
     source_bytes: 1535
     source_sha256: 3d7fca3e34758da865cf4f505f0e380ebc7f1f53bf425b34faf61fa1c036795e
     canonical_path: training_project/models/ablations/B3_A-GFPN.yaml
-    components: {a_gfpn: true, rephfe: false, sadh: false, rule_loss: false}
+    reference_role: controlled_component_candidate
+    components: {cspstage: true, a_gfpn: true, rephfe: false, sadh: false, rule_loss: false}
     archive_status: verified
-    runtime_status: blocked
-    blockers: [canonical_not_created, parser_cleanup_required]
+    runtime_status: verified
+    verification_level: build_forward
+    blockers: []
   - id: B4
     name: A-GFPN_RepHFE
     source_filename: B4_A-GFPN_RepHFE_target.yaml
@@ -67,9 +82,11 @@ experiments:
     source_bytes: 1296
     source_sha256: 32c400d0a2ee4d6619eaeeabf638a1bb5ba2bd6682affe5cca1577af6c56b4e2
     canonical_path: training_project/models/B4_A-GFPN_RepHFE_target.yaml
-    components: {a_gfpn: true, rephfe: true, sadh: false, rule_loss: false}
+    reference_role: controlled_component_candidate
+    components: {cspstage: true, a_gfpn: true, rephfe: true, sadh: false, rule_loss: false}
     archive_status: verified
     runtime_status: verified
+    verification_level: build_forward
     blockers: []
   - id: B5
     name: Full
@@ -79,9 +96,11 @@ experiments:
     source_bytes: 2804
     source_sha256: 4b518706d2eb4b143b7352a552e87862aabcf61eb85bc1f625ee144fda10c221
     canonical_path: training_project/models/ablations/B5_Full.yaml
-    components: {a_gfpn: true, rephfe: true, sadh: true, rule_loss: false}
+    reference_role: controlled_component_candidate
+    components: {cspstage: true, a_gfpn: true, rephfe: true, sadh: true, rule_loss: false}
     archive_status: verified
     runtime_status: blocked
+    verification_level: archive_only
     blockers: [canonical_not_created, sadh_not_registered]
 
 historical_weights:

@@ -4,7 +4,6 @@ import contextlib
 from copy import deepcopy
 from pathlib import Path
 
-import timm
 import torch
 import torch.nn as nn
 import torchvision
@@ -373,27 +372,19 @@ class DetectionModel(BaseModel):
             )
             self.yaml["backbone"][0][2] = "nn.Identity"
 
-        # Warehouse_Manager
-        warehouse_manager_flag = self.yaml.get('Warehouse_Manager', False)
-        self.warehouse_manager = None
-        if warehouse_manager_flag:
-            self.warehouse_manager = Warehouse_Manager(cell_num_ratio=self.yaml.get('Warehouse_Manager_Ratio', 1.0))
-        
+        if self.yaml.get("Warehouse_Manager", False):
+            raise ValueError("Warehouse_Manager is a removed legacy feature and is not supported by this runtime")
+
         # Define model
         ch = self.yaml["ch"] = self.yaml.get("ch", ch)  # input channels
         if nc and nc != self.yaml["nc"]:
             LOGGER.info(f"Overriding model.yaml nc={self.yaml['nc']} with nc={nc}")
             self.yaml["nc"] = nc  # override YAML value
-        self.model, self.save = parse_model(deepcopy(self.yaml), ch=ch, verbose=verbose, warehouse_manager=self.warehouse_manager)  # model, savelist
+        self.model, self.save = parse_model(deepcopy(self.yaml), ch=ch, verbose=verbose)  # model, savelist
         self.names = {i: f"{i}" for i in range(self.yaml["nc"])}  # default names dict
         self.inplace = self.yaml.get("inplace", True)
         self.end2end = getattr(self.model[-1], "end2end", False)
         
-        if warehouse_manager_flag:
-            self.warehouse_manager.store()
-            self.warehouse_manager.allocate(self)
-            self.net_update_temperature(0)
-
         # Build strides
         m = self.model[-1]  # Detect()
         if isinstance(m, (DETECT_CLASS + SEGMENT_CLASS + POSE_CLASS + OBB_CLASS + V10_DETECT_CLASS)):  # includes all Detect subclasses like Segment, Pose, OBB, WorldDetect
@@ -979,7 +970,7 @@ def attempt_load_one_weight(weight, device=None, inplace=True, fuse=False):
     return model, ckpt
 
 
-def parse_model(d, ch, verbose=True, warehouse_manager=None):  # model_dict, input_channels(3)
+def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
     """Parse a YOLO model.yaml dictionary into a PyTorch model."""
     import ast
 
@@ -1006,7 +997,6 @@ def parse_model(d, ch, verbose=True, warehouse_manager=None):  # model_dict, inp
         LOGGER.info(f"\n{'':>3}{'from':>20}{'n':>3}{'params':>10}  {'module':<60}{'arguments':<50}")
     ch = [ch]
     layers, save, c2 = [], [], ch[-1]  # layers, savelist, ch out
-    is_backbone = False
     for i, (f, n, m, args) in enumerate(d["backbone"] + d["head"]):  # from, number, module, args
         try:
             if m == 'node_mode':
@@ -1077,226 +1067,22 @@ def parse_model(d, ch, verbose=True, warehouse_manager=None):  # model_dict, inp
                 args[2] = make_divisible(min(args[2], max_channels) * width, 8)
         elif m is RTDETRDecoder:  # special case, channels arg must be passed in index 1
             args.insert(1, [ch[x] for x in f])
-        elif m is Fusion:
-            args[0] = d[args[0]]
-            c1, c2 = [ch[x] for x in f], (sum([ch[x] for x in f]) if args[0] == 'concat' else ch[f[0]])
-            args = [c1, args[0]]
-        elif m is CBLinear:
-            c2 = make_divisible(min(args[0][-1], max_channels) * width, 8)
-            c1 = ch[f]
-            args = [c1, [make_divisible(min(c2_, max_channels) * width, 8) for c2_ in args[0]], *args[1:]]
-        elif m is CBFuse:
-            c2 = ch[f[-1]]
-        elif isinstance(m, str):
-            t = m
-            if len(args) == 2:        
-                m = timm.create_model(m, pretrained=args[0], pretrained_cfg_overlay={'file':args[1]}, features_only=True)
-            elif len(args) == 1:
-                m = timm.create_model(m, pretrained=args[0], features_only=True)
-            c2 = m.feature_info.channels()
-        elif m in {convnextv2_atto, convnextv2_femto, convnextv2_pico, convnextv2_nano, convnextv2_tiny, convnextv2_base, convnextv2_large, convnextv2_huge,
-                   fasternet_t0, fasternet_t1, fasternet_t2, fasternet_s, fasternet_m, fasternet_l,
-                   EfficientViT_M0, EfficientViT_M1, EfficientViT_M2, EfficientViT_M3, EfficientViT_M4, EfficientViT_M5,
-                   efficientformerv2_s0, efficientformerv2_s1, efficientformerv2_s2, efficientformerv2_l,
-                   vanillanet_5, vanillanet_6, vanillanet_7, vanillanet_8, vanillanet_9, vanillanet_10, vanillanet_11, vanillanet_12, vanillanet_13, vanillanet_13_x1_5, vanillanet_13_x1_5_ada_pool,
-                   RevCol,
-                   lsknet_t, lsknet_s,
-                   SwinTransformer_Tiny,
-                   repvit_m0_9, repvit_m1_0, repvit_m1_1, repvit_m1_5, repvit_m2_3,
-                   CSWin_tiny, CSWin_small, CSWin_base, CSWin_large,
-                   unireplknet_a, unireplknet_f, unireplknet_p, unireplknet_n, unireplknet_t, unireplknet_s, unireplknet_b, unireplknet_l, unireplknet_xl,
-                   transnext_micro, transnext_tiny, transnext_small, transnext_base,
-                   RMT_T, RMT_S, RMT_B, RMT_L,
-                   PKINET_T, PKINET_S, PKINET_B,
-                   MobileNetV4ConvSmall, MobileNetV4ConvMedium, MobileNetV4ConvLarge, MobileNetV4HybridMedium, MobileNetV4HybridLarge,
-                   starnet_s050, starnet_s100, starnet_s150, starnet_s1, starnet_s2, starnet_s3, starnet_s4,
-                   mambaout_femto, mambaout_kobe, mambaout_tiny, mambaout_small, mambaout_base,
-                   overlock_xt, overlock_t, overlock_s, overlock_b,
-                   lsnet_t, lsnet_s, lsnet_b
-                   }:
-            if m is RevCol:
-                args[1] = [make_divisible(min(k, max_channels) * width, 8) for k in args[1]]
-                args[2] = [max(round(k * depth), 1) for k in args[2]]
-            m = m(*args)
-            c2 = m.channel
-        elif m is EUCB_SC:
-            c1 = ch[f]
-            c2 = make_divisible(min(args[0], max_channels) * width, 8) if len(args) else c1
-            args = [c1, c2, *args[1:]]
-        elif m in {EMA, SpatialAttention, BiLevelRoutingAttention, BiLevelRoutingAttention_nchw,
-                   TripletAttention, CoordAtt, CBAM, BAMBlock, LSKBlock, ScConv, LAWDS, EMSConv, EMSConvP,
-                   SEAttention, ECALite, CPCA, Partial_conv3, FocalModulation, EfficientAttention, MPCA, deformable_LKA,
-                   EffectiveSEModule, LSKA, SegNext_Attention, DAttention, MLCA, TransNeXt_AggregatedAttention,
-                   FocusedLinearAttention, LocalWindowAttention, ChannelAttention_HSFPN, ELA_HSFPN, CA_HSFPN, CAA_HSFPN, 
-                   DySample, CARAFE, CAA, ELA, CAFM, AFGCAttention, EUCB, ContrastDrivenFeatureAggregation, FSA,
-                   AttentiveLayer, EUCB_Lite, FCM}:
+        elif m is nn.Upsample:
             c2 = ch[f]
-            args = [c2, *args]
-            # print(args)
-        elif m in {SimAM, SpatialGroupEnhance}:
-            c2 = ch[f]
-        elif m is ContextGuidedBlock_Down:
-            c2 = ch[f] * 2
-            args = [ch[f], c2, *args]
-        elif m is BiFusion:
-            c1 = [ch[x] for x in f]
-            c2 = make_divisible(min(args[0], max_channels) * width, 8)
-            args = [c1, c2]
-        # --------------GOLD-YOLO--------------
-        elif m in {SimFusion_4in, AdvPoolFusion}:
-            c2 = sum(ch[x] for x in f)
-        elif m is SimFusion_3in:
-            c2 = args[0]
-            if c2 != nc:  # if c2 not equal to number of classes (i.e. for Classify() output)
-                c2 = make_divisible(min(c2, max_channels) * width, 8)
-            args = [[ch[f_] for f_ in f], c2]
-        elif m is IFM:
-            c1 = ch[f]
-            c2 = sum(args[0])
-            args = [c1, *args]
-        elif m is InjectionMultiSum_Auto_pool:
-            c1 = ch[f[0]]
-            c2 = args[0]
-            args = [c1, *args]
-        elif m is PyramidPoolAgg:
-            c2 = args[0]
-            args = [sum([ch[f_] for f_ in f]), *args]
-        elif m is TopBasicLayer:
-            c2 = sum(args[1])
-        # --------------GOLD-YOLO--------------
-        # --------------ASF--------------
-        elif m is Zoom_cat:
-            c2 = sum(ch[x] for x in f)
-        elif m is Add:
-            c2 = ch[f[-1]]
-        elif m in {ScalSeq, DynamicScalSeq}:
-            c1 = [ch[x] for x in f]
-            c2 = make_divisible(args[0] * width, 8)
-            args = [c1, c2]
-        elif m is asf_attention_model:
-            args = [ch[f[-1]]]
-        # --------------ASF--------------
-        elif m is SDI:
-            args = [[ch[x] for x in f]]
-        elif m is Multiply:
-            c2 = ch[f[0]]
-        elif m is FocusFeature:
-            c1 = [ch[x] for x in f]
-            c2 = int(c1[1] * 0.5 * 3)
-            args = [c1, *args]
-        elif m is DASI:
-            c1 = [ch[x] for x in f]
-            args = [c1, c2]
-        elif m is CSMHSA:
-            c1 = [ch[x] for x in f]
-            c2 = ch[f[-1]]
-            args = [c1, c2]
-        elif m is CFC_CRB:
-            c1 = ch[f]
-            c2 = c1 // 2
-            args = [c1, *args]
-        elif m is SFC_G2:
-            c1 = [ch[x] for x in f]
-            c2 = c1[0]
-            args = [c1]
-        elif m in {CGAFusion, CAFMFusion, SDFM, PSFM}:
-            c2 = ch[f[1]]
-            args = [c2, *args]
-        elif m in {ContextGuideFusionModule}:
-            c1 = [ch[x] for x in f]
-            c2 = 2 * c1[1]
-            args = [c1]
-        # elif m in {PSA}:
-        #     c2 = ch[f]
-        #     args = [c2, *args]
-        elif m in {SBA}:
-            c1 = [ch[x] for x in f]
-            c2 = c1[-1]
-            args = [c1, c2]
-        elif m in {WaveletPool}:
-            c2 = ch[f] * 4
-        elif m in {WaveletUnPool}:
-            c2 = ch[f] // 4
-        elif m in {CSPOmniKernel}:
-            c2 = ch[f]
-            args = [c2]
-        elif m in {ChannelTransformer, PyramidContextExtraction}:
-            c1 = [ch[x] for x in f]
-            c2 = c1
-            args = [c1]
-        elif m in {RCM}:
-            c2 = ch[f]
-            args = [c2, *args]
-        elif m in {DynamicInterpolationFusion}:
-            c2 = ch[f[0]]
-            args = [[ch[x] for x in f]]
-        elif m in {FuseBlockMulti}:
-            c2 = ch[f[0]]
-            args = [c2]
-        elif m in {CrossLayerChannelAttention, CrossLayerSpatialAttention}:
-            c2 = [ch[x] for x in f]
-            args = [c2[0], *args]
-        elif m in {FreqFusion}:
-            c2 = ch[f[0]]
-            args = [[ch[x] for x in f], *args]
-        elif m in {DynamicAlignFusion}:
-            c2 = args[0]
-            args = [[ch[x] for x in f], c2]
-        elif m in {ConvEdgeFusion}:
-            c2 = make_divisible(min(args[0], max_channels) * width, 8)
-            args = [[ch[x] for x in f], c2]
-        elif m in {MutilScaleEdgeInfoGenetator}:
-            c1 = ch[f]
-            c2 = [make_divisible(min(i, max_channels) * width, 8) for i in args[0]]
-            args = [c1, c2]
-        elif m in {MultiScaleGatedAttn}:
-            c1 = [ch[x] for x in f]
-            c2 = min(c1)
-            args = [c1]
-        elif m in {WFU, MultiScalePCA, MultiScalePCA_Down}:
-            c1 = [ch[x] for x in f]
-            c2 = c1[0]
-            args = [c1]
-        elif m in {HAFB, MFM}:
-            if args[0] == 'head_channel':
-                args[0] = d[args[0]]
-            c1 = [ch[x] for x in f]
-            c2 = make_divisible(min(args[0], max_channels) * width, 8)
-            args = [c1, c2, *args[1:]]
-        elif m in {GDSAFusion}:
-            c1 = [ch[x] for x in f]
-            c2 = sum(c1)
-            args = [*c1, *args]
-        elif m in {GetIndexOutput}:
-            c2 = ch[f][args[0]]
-        elif m is HyperComputeModule:
-            c1, c2 = ch[f], args[0]
-            c2 = make_divisible(min(c2, max_channels) * width, 8)
-            args = [c1, c2, threshold]
         else:
             c2 = ch[f]
 
-        if isinstance(c2, list) and m not in {ChannelTransformer, PyramidContextExtraction, CrossLayerChannelAttention, CrossLayerSpatialAttention, MutilScaleEdgeInfoGenetator}:
-            is_backbone = True
-            m_ = m
-            m_.backbone = True
-        else:
-            m_ = nn.Sequential(*(m(*args) for _ in range(n))) if n > 1 else m(*args)  # module
-            t = str(m)[8:-2].replace('__main__.', '')  # module type
+        m_ = nn.Sequential(*(m(*args) for _ in range(n))) if n > 1 else m(*args)  # module
+        t = str(m)[8:-2].replace('__main__.', '')  # module type
         m.np = sum(x.numel() for x in m_.parameters())  # number params
-        m_.i, m_.f, m_.type = i + 4 if is_backbone else i, f, t  # attach index, 'from' index, type
+        m_.i, m_.f, m_.type = i, f, t  # attach index, 'from' index, type
         if verbose:
             LOGGER.info(f"{i:>3}{str(f):>20}{n_:>3}{m.np:10.0f}  {t:<60}{str(args):<50}")  # print
-        save.extend(x % (i + 4 if is_backbone else i) for x in ([f] if isinstance(f, int) else f) if x != -1)  # append to savelist
+        save.extend(x % i for x in ([f] if isinstance(f, int) else f) if x != -1)  # append to savelist
         layers.append(m_)
         if i == 0:
             ch = []
-        if isinstance(c2, list) and m not in {ChannelTransformer, PyramidContextExtraction, CrossLayerChannelAttention, CrossLayerSpatialAttention, MutilScaleEdgeInfoGenetator}:
-            ch.extend(c2)
-            for _ in range(5 - len(ch)):
-                ch.insert(0, 0)
-        else:
-            ch.append(c2)
+        ch.append(c2)
     return nn.Sequential(*layers), sorted(save)
 
 
