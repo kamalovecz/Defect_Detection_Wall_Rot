@@ -15,6 +15,7 @@ class ModelModuleSpec:
 
 _MODEL_MODULES: dict[str, ModelModuleSpec] = {}
 _MODEL_MODULES_BY_CLASS: dict[type, ModelModuleSpec] = {}
+_DETECTION_LOSS_FACTORY = None
 
 
 def register_model_module(
@@ -46,3 +47,19 @@ def get_model_module_by_class(cls: type) -> ModelModuleSpec | None:
 
 def registered_model_modules() -> dict[str, ModelModuleSpec]:
     return dict(_MODEL_MODULES)
+
+
+def register_detection_loss_factory(factory) -> None:
+    global _DETECTION_LOSS_FACTORY
+    if not callable(factory):
+        raise TypeError("Detection loss factory must be callable")
+    _DETECTION_LOSS_FACTORY = factory
+
+
+def clear_detection_loss_factory() -> None:
+    global _DETECTION_LOSS_FACTORY
+    _DETECTION_LOSS_FACTORY = None
+
+
+def get_detection_loss_factory():
+    return _DETECTION_LOSS_FACTORY

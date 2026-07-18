@@ -82,13 +82,23 @@ def main() -> None:
 
     from defect_modules.integration import install
 
-    integration_result = install()
+    rule_config = dict(config["loss"]["rule"])
+    rule_config["total_epochs"] = int(config["train"]["epochs"])
+    integration_result = install(rule_config=rule_config)
     print(f"[train.py] registered modules: {sorted(integration_result['modules'])}")
 
     from ultralytics import YOLO
 
     train_args = dict(config["train"])
     model = YOLO(config["model"])
+
+    def update_rule_epoch(trainer):
+        criterion = getattr(trainer.model, "criterion", None)
+        if hasattr(criterion, "set_rule_epoch"):
+            criterion.set_rule_epoch(trainer.epoch, trainer.epochs)
+
+    if rule_config["enabled"]:
+        model.add_callback("on_train_epoch_start", update_rule_epoch)
     model.train(
         data=config["data"],
         deterministic=True,

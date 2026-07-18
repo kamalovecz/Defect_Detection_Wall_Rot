@@ -20,11 +20,13 @@ def load_config(path: str | Path = DEFAULT_CONFIG) -> dict:
     config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     if not isinstance(config, dict):
         raise ValueError(f"Training config must contain a mapping: {config_path}")
-    for key in ("model", "data", "train"):
+    for key in ("model", "data", "train", "loss"):
         if key not in config:
             raise ValueError(f"Training config is missing required key {key!r}: {config_path}")
     if not isinstance(config["train"], dict):
         raise ValueError("Training config key 'train' must contain a mapping")
+    if not isinstance(config["loss"], dict) or not isinstance(config["loss"].get("rule"), dict):
+        raise ValueError("Training config key 'loss.rule' must contain a mapping")
     result = deepcopy(config)
     result["config_path"] = str(config_path.resolve())
     return result

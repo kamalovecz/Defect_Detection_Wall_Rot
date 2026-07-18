@@ -61,7 +61,7 @@ from ultralytics.nn.modules import (
     WorldDetect,
     v10Detect,
 )
-from ultralytics.nn.extensions import get_model_module, get_model_module_by_class
+from ultralytics.nn.extensions import get_detection_loss_factory, get_model_module, get_model_module_by_class
 from ultralytics.utils import DEFAULT_CFG_DICT, DEFAULT_CFG_KEYS, LOGGER, colorstr, emojis, yaml_load
 from ultralytics.utils.checks import check_requirements, check_suffix, check_yaml
 from ultralytics.utils.loss import (
@@ -472,7 +472,10 @@ class DetectionModel(BaseModel):
 
     def init_criterion(self):
         """Initialize the loss criterion for the DetectionModel."""
-        return E2EDetectLoss(self) if self.end2end else v8DetectionLoss(self)
+        if self.end2end:
+            return E2EDetectLoss(self)
+        factory = get_detection_loss_factory()
+        return factory(self) if factory is not None else v8DetectionLoss(self)
     
     def net_update_temperature(self, temp):
         for m in self.modules():
