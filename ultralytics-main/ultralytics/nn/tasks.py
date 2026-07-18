@@ -61,10 +61,7 @@ from ultralytics.nn.modules import (
     WorldDetect,
     v10Detect,
 )
-from defect_modules.registry import YAML_BLOCKS
-
-HARP_CSPSTAGE = YAML_BLOCKS["CSPStage"]
-HARP_REPHFE = YAML_BLOCKS["RepHFE"]
+from ultralytics.nn.extensions import get_model_module, get_model_module_by_class
 from ultralytics.utils import DEFAULT_CFG_DICT, DEFAULT_CFG_KEYS, LOGGER, colorstr, emojis, yaml_load
 from ultralytics.utils.checks import check_requirements, check_suffix, check_yaml
 from ultralytics.utils.loss import (
@@ -110,8 +107,9 @@ def resolve_model_module(name, layer_index):
         raise ValueError(f"\u65e0\u6cd5\u89e3\u6790\u6a21\u5757 {name!r} at YAML layer index {layer_index}") from exc
     if name in globals():
         return globals()[name]
-    if name in YAML_BLOCKS:
-        return YAML_BLOCKS[name]
+    extension = get_model_module(name)
+    if extension is not None:
+        return extension.cls
     raise ValueError(f"\u65e0\u6cd5\u89e3\u6790\u6a21\u5757 {name!r} at YAML layer index {layer_index}")
 
 DETECT_CLASS = (Detect,)
@@ -1027,12 +1025,13 @@ def parse_model(d, ch, verbose=True, warehouse_manager=None):  # model_dict, inp
                     except:
                         args[j] = a
         n = n_ = max(round(n * depth), 1) if n > 1 else n  # depth gain
+        extension_spec = get_model_module_by_class(m)
         if m in {
             Classify, Conv, ConvTranspose, GhostConv, GhostBottleneck, Bottleneck, BottleneckCSP,
             SPP, SPPF, DWConv, Focus, C1, C2, C2f, ELAN1, AConv, SPPELAN, C2fAttn,
             C3, C3TR, C3Ghost, nn.Conv2d, nn.ConvTranspose2d, DWConvTranspose2d, C3x,
-            RepC3, PSA, SCDown, C2fCIB, HARP_CSPSTAGE,
-        }:
+            RepC3, PSA, SCDown, C2fCIB,
+        } or (extension_spec is not None and extension_spec.inject_channels):
             if args[0] == 'head_channel':
                 args[0] = d[args[0]]
             c1, c2 = ch[f], args[0]
@@ -1047,8 +1046,8 @@ def parse_model(d, ch, verbose=True, warehouse_manager=None):  # model_dict, inp
             args = [c1, c2, *args[1:]]
             if m in {
                 BottleneckCSP, C1, C2, C2f, C2fAttn, C3, C3TR, C3Ghost, C3x, RepC3,
-                C2fCIB, HARP_CSPSTAGE,
-            }:
+                C2fCIB,
+            } or (extension_spec is not None and extension_spec.internal_repeat):
                 args.insert(2, n)  # number of repeats
                 n = 1
         elif m in {AIFI}:
@@ -1073,10 +1072,6 @@ def parse_model(d, ch, verbose=True, warehouse_manager=None):  # model_dict, inp
             args.append([ch[x] for x in f])
             if m in SEGMENT_CLASS:
                 args[2] = make_divisible(min(args[2], max_channels) * width, 8)
-        elif m is HARP_REPHFE:
-            c1 = ch[f]
-            c2 = make_divisible(min(args[0], max_channels) * width, 8) if len(args) else c1
-            args = [c1, c2, *args[1:]]
         elif m is RTDETRDecoder:  # special case, channels arg must be passed in index 1
             args.insert(1, [ch[x] for x in f])
         elif m is Fusion:

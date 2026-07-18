@@ -16,6 +16,7 @@ from defect_modules.registry import (
     get_loss_objects,
 )
 from defect_modules.loss import patch_ultralytics_loss
+from defect_modules.integration import install
 
 EXTRA_MODULES_PACKAGE = "ultralytics.nn.extra_modules"
 LEGACY_REPHFE_MODULE = f"{EXTRA_MODULES_PACKAGE}.rephfe"
@@ -101,6 +102,7 @@ def apply(
     legacy_aliases: bool = True,
     strict: bool = False,
 ):
+    integration_result = install()
     if strict and IMPORT_ERRORS:
         raise ImportError(f"defect_modules registry has import errors: {IMPORT_ERRORS}")
 
@@ -139,6 +141,7 @@ def apply(
         "loss_targets": loss_targets,
         "legacy_rephfe_module": legacy_rephfe_module,
         "legacy_prune_module": legacy_prune_module,
+        "integration": integration_result,
     }
     if verbose:
         print(

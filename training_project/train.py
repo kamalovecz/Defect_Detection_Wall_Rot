@@ -80,10 +80,10 @@ def main() -> None:
     config["data"] = str(data_path)
     config["train"]["project"] = str(project_path)
 
-    from defect_modules.patch import apply
+    from defect_modules.integration import install
 
-    patch_result = apply(verbose=True, pickle_compat=False, legacy_aliases=False, strict=True)
-    print(f"[train.py] patch targets: {patch_result['targets']}")
+    integration_result = install()
+    print(f"[train.py] registered modules: {sorted(integration_result['modules'])}")
 
     from ultralytics import YOLO
 
