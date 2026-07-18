@@ -3,9 +3,14 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
+
+import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 ULTRALYTICS_MAIN = ROOT / "ultralytics-main"
@@ -57,6 +62,55 @@ def merged_config(args: argparse.Namespace) -> dict:
     return config
 
 
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def git_commit() -> str | None:
+    try:
+        return subprocess.check_output(
+            ["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL
+        ).strip()
+    except Exception:
+        return None
+
+
+def write_manifest(
+    config: dict,
+    rule_config: dict,
+    status: str,
+    error: str | None = None,
+    criterion_runtime: dict | None = None,
+) -> Path:
+    data_config = yaml.safe_load(Path(config["data"]).read_text(encoding="utf-8"))
+    run_dir = Path(config["train"]["project"]) / config["train"]["name"]
+    run_dir.mkdir(parents=True, exist_ok=True)
+    manifest = {
+        "schema_version": 1,
+        "status": status,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "git_commit": git_commit(),
+        "model_yaml": config["model"],
+        "model_yaml_sha256": sha256(Path(config["model"])),
+        "data_yaml": config["data"],
+        "dataset": "Port_Defect",
+        "class_names": data_config.get("names", {}),
+        "seed": config["train"].get("seed"),
+        "imgsz": config["train"].get("imgsz"),
+        "rule_loss": rule_config,
+        "criterion_runtime": criterion_runtime,
+        "config": config,
+        "error": error,
+    }
+    path = run_dir / "run_manifest.json"
+    path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
+    return path
+
+
 def main() -> None:
     args = parse_args()
     config = merged_config(args)
@@ -91,6 +145,17 @@ def main() -> None:
 
     train_args = dict(config["train"])
     model = YOLO(config["model"])
+    criterion_runtime = {}
+
+    def capture_criterion(trainer):
+        criterion = getattr(trainer.model, "criterion", None)
+        if criterion is None:
+            return
+        criterion_runtime.update({
+            "class": f"{criterion.__class__.__module__}.{criterion.__class__.__name__}",
+            "rule_updates": int(getattr(criterion, "rule_updates", 0)),
+            "lambda_rule": float(criterion._lambda_rule_t()) if hasattr(criterion, "_lambda_rule_t") else 0.0,
+        })
 
     def update_rule_epoch(trainer):
         criterion = getattr(trainer.model, "criterion", None)
@@ -99,15 +164,23 @@ def main() -> None:
 
     if rule_config["enabled"]:
         model.add_callback("on_train_epoch_start", update_rule_epoch)
-    model.train(
-        data=config["data"],
-        deterministic=True,
-        cos_lr=True,
-        close_mosaic=0,
-        plots=False,
-        pretrained=True,
-        **train_args,
-    )
+    model.add_callback("on_train_batch_end", capture_criterion)
+    model.add_callback("on_train_end", capture_criterion)
+    write_manifest(config, rule_config, "started")
+    try:
+        model.train(
+            data=config["data"],
+            deterministic=True,
+            cos_lr=True,
+            close_mosaic=0,
+            plots=False,
+            pretrained=True,
+            **train_args,
+        )
+    except Exception as exc:
+        write_manifest(config, rule_config, "failed", repr(exc))
+        raise
+    write_manifest(config, rule_config, "completed", criterion_runtime=criterion_runtime)
 
 
 if __name__ == "__main__":
