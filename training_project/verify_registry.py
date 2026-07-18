@@ -16,7 +16,7 @@ for path in (ROOT, ULTRALYTICS_MAIN):
 def main() -> int:
     from defect_modules import registry
 
-    if set(registry.YAML_BLOCKS) != {"CSPStage", "RepHFE"}:
+    if set(registry.YAML_BLOCKS) != {"CSPStage", "RepHFE", "Detect_LSCSBD"}:
         raise RuntimeError(f"Unexpected YAML blocks: {sorted(registry.YAML_BLOCKS)}")
     if any(hasattr(registry, name) for name in ("PICKLE_COMPAT_TYPES", "LEGACY_ALIASES", "LEGACY_PRUNE_MODULE")):
         raise RuntimeError("Legacy compatibility leaked into the active registry")

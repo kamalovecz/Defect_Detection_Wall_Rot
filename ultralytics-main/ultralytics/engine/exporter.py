@@ -70,7 +70,7 @@ from ultralytics.data.dataset import YOLODataset
 from ultralytics.data.utils import check_cls_dataset, check_det_dataset
 from ultralytics.nn.autobackend import check_class_names, default_class_names
 from ultralytics.nn.modules import C2f, Detect, RTDETRDecoder
-from ultralytics.nn.tasks import DetectionModel, SegmentationModel, WorldModel
+from ultralytics.nn.tasks import DetectionModel, SegmentationModel, WorldModel, is_extension_detection_head
 from ultralytics.utils import (
     ARM64,
     DEFAULT_CFG,
@@ -142,6 +142,16 @@ def try_export(inner_func):
             raise e
 
     return outer_func
+
+
+def configure_detection_head_for_export(module, *, dynamic: bool, export_format: str) -> bool:
+    """Configure built-in or runtime-registered detection heads for export."""
+    if not isinstance(module, (Detect, RTDETRDecoder)) and not is_extension_detection_head(module):
+        return False
+    module.dynamic = dynamic
+    module.export = True
+    module.format = export_format
+    return True
 
 
 class Exporter:
@@ -244,11 +254,9 @@ class Exporter:
         model.float()
         model = model.fuse()
         for m in model.modules():
-            if isinstance(m, (Detect, RTDETRDecoder)):  # includes all Detect subclasses like Segment, Pose, OBB
-                m.dynamic = self.args.dynamic
-                m.export = True
-                m.format = self.args.format
-            elif isinstance(m, C2f) and not is_tf_format:
+            if configure_detection_head_for_export(m, dynamic=self.args.dynamic, export_format=self.args.format):
+                continue
+            if isinstance(m, C2f) and not is_tf_format:
                 # EdgeTPU does not support FlexSplitV while split provides cleaner ONNX graph
                 m.forward = m.forward_split
 

@@ -17,6 +17,18 @@ interpretation_contract:
     - {comparison: B4-B3, isolated_factor: rephfe, controls: [cspstage, a_gfpn, sadh]}
     - {comparison: B5-B4, isolated_factor: sadh, controls: [cspstage, a_gfpn, rephfe]}
 
+implementation_provenance:
+  Detect_LSCSBD:
+    active_path: defect_modules/sadh.py
+    migration_policy: minimal_detection_only_no_extra_modules
+    references:
+      - path: 'D:\defect_detection\ultralytics-main\ultralytics\nn\extra_modules\head.py'
+        role: authoritative_runtime_reference
+        sha256: cd6a0f1779ed5928b873319d3922088785404094e4cab5d431f68ecef98ecdbc
+      - path: 'D:\defect_detection\ultralytics-main\paper_module.py'
+        role: paper_cross_reference
+        sha256: fdea2f092e42ed22443c5813ab5ed418500e1edba0aea66273705263caafa89c
+
 experiments:
   - id: A0
     name: yolov8n
@@ -43,9 +55,9 @@ experiments:
     reference_role: standalone_architecture
     components: {cspstage: true, a_gfpn: false, rephfe: false, sadh: true, rule_loss: false}
     archive_status: verified
-    runtime_status: blocked
-    verification_level: archive_only
-    blockers: [canonical_not_created, sadh_not_registered]
+    runtime_status: verified
+    verification_level: build_forward_backward
+    blockers: []
   - id: B2
     name: RepHFE
     source_filename: B2_RepHFE.yaml
@@ -99,9 +111,9 @@ experiments:
     reference_role: controlled_component_candidate
     components: {cspstage: true, a_gfpn: true, rephfe: true, sadh: true, rule_loss: false}
     archive_status: verified
-    runtime_status: blocked
-    verification_level: archive_only
-    blockers: [canonical_not_created, sadh_not_registered]
+    runtime_status: verified
+    verification_level: build_forward_backward
+    blockers: []
 
 historical_weights:
   policy: provenance_only_not_training_initialization

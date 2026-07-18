@@ -117,6 +117,13 @@ SEGMENT_CLASS = (Segment,)
 POSE_CLASS = (Pose,)
 OBB_CLASS = (OBB,)
 
+
+def is_extension_detection_head(module_or_class):
+    """Return whether a runtime-registered extension is a detection head."""
+    cls = module_or_class if isinstance(module_or_class, type) else type(module_or_class)
+    spec = get_model_module_by_class(cls)
+    return spec is not None and spec.detection_head
+
 class BaseModel(nn.Module):
     """The BaseModel class serves as a base class for all the models in the Ultralytics YOLO family."""
 
@@ -318,7 +325,7 @@ class BaseModel(nn.Module):
         """
         self = super()._apply(fn)
         m = self.model[-1]  # Detect()
-        if isinstance(m, DETECT_CLASS):  # includes all Detect subclasses like Segment, Pose, OBB, WorldDetect
+        if isinstance(m, DETECT_CLASS) or is_extension_detection_head(m):
             m.stride = fn(m.stride)
             m.anchors = fn(m.anchors)
             m.strides = fn(m.strides)
@@ -387,7 +394,7 @@ class DetectionModel(BaseModel):
         
         # Build strides
         m = self.model[-1]  # Detect()
-        if isinstance(m, (DETECT_CLASS + SEGMENT_CLASS + POSE_CLASS + OBB_CLASS + V10_DETECT_CLASS)):  # includes all Detect subclasses like Segment, Pose, OBB, WorldDetect
+        if isinstance(m, (DETECT_CLASS + SEGMENT_CLASS + POSE_CLASS + OBB_CLASS + V10_DETECT_CLASS)) or is_extension_detection_head(m):
             s = 640  # 2x min stride
             m.inplace = self.inplace
 
@@ -1065,6 +1072,9 @@ def parse_model(d, ch, verbose=True):  # model_dict, input_channels(3)
             args.append([ch[x] for x in f])
             if m in SEGMENT_CLASS:
                 args[2] = make_divisible(min(args[2], max_channels) * width, 8)
+        elif extension_spec is not None and extension_spec.multi_input_channels:
+            args.append([ch[x] for x in f])
+            c2 = ch[f[-1]]
         elif m is RTDETRDecoder:  # special case, channels arg must be passed in index 1
             args.insert(1, [ch[x] for x in f])
         elif m is nn.Upsample:
@@ -1178,7 +1188,7 @@ def guess_model_task(model):
                 return "pose"
             elif isinstance(m, OBB_CLASS):
                 return "obb"
-            elif isinstance(m, (WorldDetect,) + DETECT_CLASS + V10_DETECT_CLASS):
+            elif isinstance(m, (WorldDetect,) + DETECT_CLASS + V10_DETECT_CLASS) or is_extension_detection_head(m):
                 return "detect"
 
     # Guess from model filename

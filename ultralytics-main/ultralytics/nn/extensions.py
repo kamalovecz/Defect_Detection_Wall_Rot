@@ -11,6 +11,8 @@ class ModelModuleSpec:
     cls: type
     inject_channels: bool = True
     internal_repeat: bool = False
+    multi_input_channels: bool = False
+    detection_head: bool = False
 
 
 _MODEL_MODULES: dict[str, ModelModuleSpec] = {}
@@ -24,8 +26,12 @@ def register_model_module(
     *,
     inject_channels: bool = True,
     internal_repeat: bool = False,
+    multi_input_channels: bool = False,
+    detection_head: bool = False,
 ) -> ModelModuleSpec:
-    spec = ModelModuleSpec(name, cls, inject_channels, internal_repeat)
+    if inject_channels and multi_input_channels:
+        raise ValueError("A model extension cannot request both single-input and multi-input channel injection")
+    spec = ModelModuleSpec(name, cls, inject_channels, internal_repeat, multi_input_channels, detection_head)
     current = _MODEL_MODULES.get(name)
     if current is not None and current != spec:
         raise ValueError(f"Model module {name!r} is already registered with a different specification")

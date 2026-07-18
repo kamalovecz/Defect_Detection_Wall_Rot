@@ -1,7 +1,7 @@
 ﻿"""Explicit HARP-Net custom object registry.
 
-The fixed B4_A-GFPN_RepHFE_target.yaml path intentionally exposes only two
-YAML blocks: CSPStage and RepHFE. Pickle compatibility is tracked separately so
+The active HARP-Net YAML path exposes CSPStage, RepHFE, and Detect_LSCSBD.
+Pickle compatibility is tracked separately so
 training/YAML construction does not pull in legacy extra_modules imports.
 """
 
@@ -44,9 +44,16 @@ except Exception as exc:
     RepDWConv = _placeholder("RepDWConv")
     RepHFE = _placeholder("RepHFE")
 
+try:
+    from defect_modules.sadh import Detect_LSCSBD
+except Exception as exc:
+    IMPORT_ERRORS["Detect_LSCSBD"] = repr(exc)
+    Detect_LSCSBD = _placeholder("Detect_LSCSBD")
+
 YAML_BLOCKS = {
     "CSPStage": CSPStage,
     "RepHFE": RepHFE,
+    "Detect_LSCSBD": Detect_LSCSBD,
 }
 
 LOSS_OBJECTS = {

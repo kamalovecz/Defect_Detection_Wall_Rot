@@ -33,6 +33,10 @@ def main() -> int:
         raise RuntimeError("CSPStage registration source is wrong")
     if specs["RepHFE"].cls.__module__ != "defect_modules.blocks":
         raise RuntimeError("RepHFE registration source is wrong")
+    if specs["Detect_LSCSBD"].cls.__module__ != "defect_modules.sadh":
+        raise RuntimeError("Detect_LSCSBD registration source is wrong")
+    if not specs["Detect_LSCSBD"].multi_input_channels or not specs["Detect_LSCSBD"].detection_head:
+        raise RuntimeError("Detect_LSCSBD extension metadata is incomplete")
     if loaded_legacy():
         raise RuntimeError(f"Project installation loaded legacy modules: {loaded_legacy()}")
     print(json.dumps({

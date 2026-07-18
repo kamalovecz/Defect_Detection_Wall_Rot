@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from defect_modules.blocks import CSPStage, RepHFE
+from defect_modules.sadh import Detect_LSCSBD
 from ultralytics.nn.extensions import (
     clear_detection_loss_factory,
     register_detection_loss_factory,
@@ -48,6 +49,13 @@ def normalize_rule_config(value: dict | None) -> dict:
 def install(rule_config: dict | None = None) -> dict:
     register_model_module("CSPStage", CSPStage, inject_channels=True, internal_repeat=True)
     register_model_module("RepHFE", RepHFE, inject_channels=True, internal_repeat=False)
+    register_model_module(
+        "Detect_LSCSBD",
+        Detect_LSCSBD,
+        inject_channels=False,
+        multi_input_channels=True,
+        detection_head=True,
+    )
     rule = normalize_rule_config(rule_config)
     if rule["enabled"]:
         from defect_modules.loss import RuleLoss
@@ -63,9 +71,11 @@ def install(rule_config: dict | None = None) -> dict:
                 "class": f"{spec.cls.__module__}.{spec.cls.__name__}",
                 "inject_channels": spec.inject_channels,
                 "internal_repeat": spec.internal_repeat,
+                "multi_input_channels": spec.multi_input_channels,
+                "detection_head": spec.detection_head,
             }
             for name, spec in specs.items()
-            if name in {"CSPStage", "RepHFE"}
+            if name in {"CSPStage", "RepHFE", "Detect_LSCSBD"}
         },
         "rule_loss": rule,
     }
