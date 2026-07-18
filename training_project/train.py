@@ -1,8 +1,9 @@
-"""HARP-Net training entrypoint with the external module bridge enabled."""
+"""Configuration-driven HARP-Net training entrypoint."""
 
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -13,35 +14,71 @@ for path in (ROOT, ULTRALYTICS_MAIN):
     if path_str not in sys.path:
         sys.path.insert(0, path_str)
 
-DEFAULT_MODEL = ROOT / "training_project" / "models" / "B4_A-GFPN_RepHFE_target.yaml"
-DEFAULT_DATA = ROOT / "ultralytics-main" / "dataset" / "processed" / "processed_dataset" / "dataset.yaml"
-DEFAULT_PROJECT = ROOT / "training_project" / "runs"
+from training_project.config import DEFAULT_CONFIG, load_config, resolve_repo_path, validate_training_paths
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Train HARP-Net with defect_modules.patch applied first.")
-    parser.add_argument("--model", default=str(DEFAULT_MODEL))
-    parser.add_argument("--data", default=str(DEFAULT_DATA))
-    parser.add_argument("--epochs", type=int, default=1)
-    parser.add_argument("--batch", type=int, default=4)
-    parser.add_argument("--imgsz", type=int, default=640)
-    parser.add_argument("--device", default="0")
-    parser.add_argument("--workers", type=int, default=0)
-    parser.add_argument("--project", default=str(DEFAULT_PROJECT))
-    parser.add_argument("--name", default="harpnet_b4_external_next_smoke")
-    parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--patience", type=int, default=1)
-    parser.add_argument("--optimizer", default="SGD")
-    parser.add_argument("--lr0", type=float, default=0.001)
-    parser.add_argument("--lrf", type=float, default=1e-5)
-    parser.add_argument("--cache", action=argparse.BooleanOptionalAction, default=True)
-    parser.add_argument("--amp", action=argparse.BooleanOptionalAction, default=False)
-    parser.add_argument("--exist-ok", action=argparse.BooleanOptionalAction, default=True)
+    parser = argparse.ArgumentParser(description="Train HARP-Net from a reproducible project configuration.")
+    parser.add_argument("--config", default=str(DEFAULT_CONFIG))
+    parser.add_argument("--check-config", action="store_true", help="Validate paths and print the resolved config.")
+    parser.add_argument("--model")
+    parser.add_argument("--data")
+    parser.add_argument("--epochs", type=int)
+    parser.add_argument("--batch", type=int)
+    parser.add_argument("--imgsz", type=int)
+    parser.add_argument("--device")
+    parser.add_argument("--workers", type=int)
+    parser.add_argument("--project")
+    parser.add_argument("--name")
+    parser.add_argument("--seed", type=int)
+    parser.add_argument("--patience", type=int)
+    parser.add_argument("--optimizer")
+    parser.add_argument("--lr0", type=float)
+    parser.add_argument("--lrf", type=float)
+    parser.add_argument("--cache", action=argparse.BooleanOptionalAction, default=None)
+    parser.add_argument("--amp", action=argparse.BooleanOptionalAction, default=None)
+    parser.add_argument("--exist-ok", action=argparse.BooleanOptionalAction, default=None)
     return parser.parse_args()
+
+
+def merged_config(args: argparse.Namespace) -> dict:
+    config = load_config(args.config)
+    for key in ("model", "data"):
+        value = getattr(args, key)
+        if value is not None:
+            config[key] = value
+    for key in (
+        "epochs", "batch", "imgsz", "device", "workers", "project", "name", "seed",
+        "patience", "optimizer", "lr0", "lrf", "cache", "amp", "exist_ok",
+    ):
+        value = getattr(args, key)
+        if value is not None:
+            config["train"][key] = value
+    return config
 
 
 def main() -> None:
     args = parse_args()
+    config = merged_config(args)
+
+    if args.check_config:
+        report = {
+            "status": "ok",
+            "config": config,
+            "resolved": {
+                "model": str(resolve_repo_path(config["model"])),
+                "model_exists": resolve_repo_path(config["model"]).is_file(),
+                "data": str(resolve_repo_path(config["data"])),
+                "data_exists": resolve_repo_path(config["data"]).is_file(),
+            },
+        }
+        print(json.dumps(report, indent=2, ensure_ascii=False))
+        return
+
+    model_path, data_path, project_path = validate_training_paths(config)
+    config["model"] = str(model_path)
+    config["data"] = str(data_path)
+    config["train"]["project"] = str(project_path)
 
     from defect_modules.patch import apply
 
@@ -50,29 +87,16 @@ def main() -> None:
 
     from ultralytics import YOLO
 
-    model = YOLO(args.model)
+    train_args = dict(config["train"])
+    model = YOLO(config["model"])
     model.train(
-        data=args.data,
-        epochs=args.epochs,
-        batch=args.batch,
-        imgsz=args.imgsz,
-        device=args.device,
-        workers=args.workers,
-        project=args.project,
-        name=args.name,
-        exist_ok=args.exist_ok,
-        cache=args.cache,
-        seed=args.seed,
+        data=config["data"],
         deterministic=True,
-        optimizer=args.optimizer,
-        lr0=args.lr0,
-        lrf=args.lrf,
         cos_lr=True,
-        patience=args.patience,
         close_mosaic=0,
-        amp=args.amp,
         plots=False,
         pretrained=True,
+        **train_args,
     )
 
 

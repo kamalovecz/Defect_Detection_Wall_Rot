@@ -1,11 +1,14 @@
 ﻿name: yolo_ultra
 channels:
+  - pytorch
+  - nvidia
   - defaults
 dependencies:
   - python=3.10
   - ca-certificates
   - certifi
   - openssl
+  - pytorch=2.1
   - pytorch-cuda=12.1
   - torchaudio
   - torchvision

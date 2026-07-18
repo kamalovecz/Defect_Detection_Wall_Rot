@@ -91,6 +91,7 @@ test: images/test
 python training_project\verify_registry.py
 python training_project\verify_tasks_import_boundary.py
 python training_project\verify_external_blocks.py
+python training_project\verify_config.py
 ```
 
 这三项用于确认：
@@ -102,9 +103,8 @@ python training_project\verify_external_blocks.py
 ### 6. 运行 1 epoch smoke train
 
 ```powershell
-python training_project\train.py `
-  --model training_project\models\B4_A-GFPN_RepHFE_target.yaml `
-  --data datasets\Port_Defect\data.yaml `
+python -m training_project.train `
+  --config training_project\configs\port_defect_baseline.yaml `
   --epochs 1 `
   --batch 4 `
   --imgsz 640 `
@@ -123,9 +123,8 @@ training_project\runs\
 ### 7. 正式训练示例
 
 ```powershell
-python training_project\train.py `
-  --model training_project\models\B4_A-GFPN_RepHFE_target.yaml `
-  --data datasets\Port_Defect\data.yaml `
+python -m training_project.train `
+  --config training_project\configs\port_defect_baseline.yaml `
   --epochs 100 `
   --batch 16 `
   --imgsz 640 `
@@ -143,6 +142,7 @@ defect_modules/
   patch.py        Ultralytics 命名空间注入和旧 PT 兼容
 
 training_project/
+  configs/        可复现训练配置，默认使用 Port_Defect baseline
   models/         不同模块组合的 YAML
   datasets/       数据集 YAML 示例，不存放真实图片和标签
   train.py        统一训练入口
@@ -277,9 +277,9 @@ NewHFEBlock(c1, 128, 3)
 ### 5. 通过统一入口训练
 
 ```powershell
-python training_project\train.py `
+python -m training_project.train `
+  --config training_project\configs\port_defect_baseline.yaml `
   --model training_project\models\new_harpnet.yaml `
-  --data datasets\Port_Defect\data.yaml `
   --epochs 100 `
   --batch 16 `
   --imgsz 640 `
@@ -359,9 +359,9 @@ model = YOLO("training_project/models/new_harpnet.yaml")
 ### 4. 短训练验证
 
 ```powershell
-python training_project\train.py `
+python -m training_project.train `
+  --config training_project\configs\port_defect_baseline.yaml `
   --model training_project\models\new_harpnet.yaml `
-  --data datasets\Port_Defect\data.yaml `
   --epochs 1 `
   --batch 4 `
   --imgsz 640 `
