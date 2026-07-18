@@ -8,14 +8,15 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from defect_modules.patch import apply
+from defect_modules.integration import install
 
-BUNDLE = Path(r"D:\defect_detection\export_pipeline\bundles\harpnet_b4_rephfe")
-OUTPUTS = Path(r"D:\defect_detection\export_pipeline\outputs")
+ROOT = Path(__file__).resolve().parents[1]
+BUNDLE = ROOT / "export_pipeline" / "bundles" / "harpnet_b4_rephfe"
+OUTPUTS = ROOT / "export_pipeline" / "outputs"
 
 
 def main() -> None:
-    apply()
+    install({"enabled": False})
     from ultralytics import YOLO
 
     OUTPUTS.mkdir(parents=True, exist_ok=True)

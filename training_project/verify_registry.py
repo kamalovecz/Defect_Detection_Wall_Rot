@@ -1,4 +1,4 @@
-"""Verify the HARP-Net registry boundary for the fixed B4 YAML path."""
+"""Verify the active HARP-Net registry contains no legacy compatibility surface."""
 
 from __future__ import annotations
 
@@ -9,39 +9,27 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ULTRALYTICS_MAIN = ROOT / "ultralytics-main"
 for path in (ROOT, ULTRALYTICS_MAIN):
-    path_str = str(path)
-    if path_str not in sys.path:
-        sys.path.insert(0, path_str)
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
 
 
-def main() -> None:
+def main() -> int:
     from defect_modules import registry
 
-    yaml_blocks = registry.YAML_BLOCKS
-    if set(yaml_blocks) != {"CSPStage", "RepHFE"}:
-        raise RuntimeError(f"Unexpected YAML_BLOCKS: {sorted(yaml_blocks)}")
-    if yaml_blocks["CSPStage"].__module__ != "defect_modules.blocks":
-        raise RuntimeError("CSPStage is not sourced from defect_modules.blocks")
-    if yaml_blocks["RepHFE"].__module__ != "defect_modules.blocks":
-        raise RuntimeError("RepHFE is not sourced from defect_modules.blocks")
-    if "RuleLoss" not in registry.LOSS_OBJECTS:
-        raise RuntimeError("RuleLoss missing from LOSS_OBJECTS")
-    if "ultralytics.nn.extra_modules.rephfe" not in registry.PICKLE_COMPAT_TYPES:
-        raise RuntimeError("rephfe pickle compatibility path missing")
-    if "ultralytics.nn.extra_modules.prune_module" not in registry.PICKLE_COMPAT_TYPES:
-        raise RuntimeError("prune_module pickle compatibility path missing")
-    if any("prune" in name.lower() for name in yaml_blocks):
-        raise RuntimeError("prune_module leaked into YAML_BLOCKS")
-
+    if set(registry.YAML_BLOCKS) != {"CSPStage", "RepHFE"}:
+        raise RuntimeError(f"Unexpected YAML blocks: {sorted(registry.YAML_BLOCKS)}")
+    if any(hasattr(registry, name) for name in ("PICKLE_COMPAT_TYPES", "LEGACY_ALIASES", "LEGACY_PRUNE_MODULE")):
+        raise RuntimeError("Legacy compatibility leaked into the active registry")
+    if set(registry.LOSS_OBJECTS) != {"RuleLoss"}:
+        raise RuntimeError(f"Unexpected loss objects: {sorted(registry.LOSS_OBJECTS)}")
     print(json.dumps({
         "status": "ok",
-        "yaml_blocks": sorted(yaml_blocks),
+        "yaml_blocks": sorted(registry.YAML_BLOCKS),
         "loss_objects": sorted(registry.LOSS_OBJECTS),
-        "pickle_compat_paths": sorted(registry.PICKLE_COMPAT_TYPES),
-        "legacy_aliases": sorted(registry.LEGACY_ALIASES),
-        "prune_module_in_yaml": False,
+        "legacy_surface": False,
     }, indent=2))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
