@@ -1,0 +1,70 @@
+# ====================================================================
+# B3-Lite-V3
+# Algorithm-Hardware Co-optimized Detection Framework
+# Core modules:
+# 1) A-GFPN  : Asymmetric aggregation-distribution feature pyramid
+# 2) RepHFE  : Reparameterized high-frequency enhancement
+# 3) SADH    : Scale-adaptive decoupled detection head
+# ====================================================================
+
+# --------------------------------------------------------------------
+# Basic parameters
+# --------------------------------------------------------------------
+nc: 5   # number of classes
+scales:
+  n: [0.33, 0.25, 1024]   # depth, width, max_channels
+
+# --------------------------------------------------------------------
+# Backbone
+# Outputs:
+#   P3 <- layer 4
+#   P4 <- layer 6
+#   P5 <- layer 9
+# --------------------------------------------------------------------
+backbone:
+  - [-1, 1, Conv, [64, 3, 2]]       # 0  640 -> 320
+  - [-1, 1, Conv, [128, 3, 2]]      # 1  320 -> 160
+  - [-1, 3, C2f, [128, True]]       # 2  160
+
+  - [-1, 1, Conv, [256, 3, 2]]      # 3  160 -> 80
+  - [-1, 6, C2f, [256, True]]       # 4  P3 / C3
+
+  - [-1, 1, Conv, [512, 3, 2]]      # 5  80 -> 40
+  - [-1, 6, C2f, [512, True]]       # 6  P4 / C4
+
+  - [-1, 1, Conv, [1024, 3, 2]]     # 7  40 -> 20
+  - [-1, 3, C2f, [1024, True]]      # 8
+  - [-1, 1, SPPF, [1024, 5]]        # 9  P5 / C5
+
+# --------------------------------------------------------------------
+# Neck: A-GFPN
+# Final outputs to head:
+#   P3_out <- layer 20
+#   P4_out <- layer 23
+#   P5_out <- layer 13
+# --------------------------------------------------------------------
+head:
+  # Step 1: high-level fusion, build final P5 output only once
+  - [-1, 1, Conv, [512, 1, 1]]          # 10  compress P5
+  - [6, 1, Conv, [512, 3, 2]]           # 11  P4 -> P5 scale
+  - [[10, 11], 1, Concat, [1]]          # 12
+  - [-1, 1, CSPStage, [512]]            # 13  P5_out / N5_fuse
+
+  # Step 2: build mid-level feature with controlled high-level injection
+  - [13, 1, RepHFE, [256]]              # 14  P5_out -> P4 scale
+  - [4, 1, Conv, [256, 3, 2]]           # 15  P3 -> P4 scale
+  - [[14, 15, 6], 1, Concat, [1]]       # 16
+  - [-1, 1, CSPStage, [256]]            # 17  N4_mid
+
+  # Step 3: build high-resolution output
+  - [17, 1, RepHFE, [256]]              # 18  N4_mid -> P3 scale
+  - [[18, 4], 1, Concat, [1]]           # 19
+  - [-1, 1, CSPStage, [256]]            # 20  P3_out / N3_out
+
+  # Step 4: minimal bottom-up refinement for P4
+  - [20, 1, Conv, [256, 3, 2]]          # 21  P3_out -> P4 scale
+  - [[21, 17], 1, Concat, [1]]          # 22
+  - [-1, 1, CSPStage, [256]]            # 23  P4_out / N4_out
+
+  # Step 5: SADH head
+  - [[20, 23, 13], 1, Detect_LSCSBD, [nc, 256]]   # 24

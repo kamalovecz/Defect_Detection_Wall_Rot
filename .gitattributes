@@ -3,6 +3,10 @@
 *.md text eol=lf
 *.yaml text eol=lf
 *.yml text eol=lf
+# Historical ablation sources are immutable byte-for-byte evidence. Preserve
+# their original CRLF bytes in Git instead of normalizing them as active YAML.
+training_project/models/ablations/source/*.yaml -text
+training_project/models/ablations/source/*.yml -text
 *.json text eol=lf
 *.pt filter=lfs diff=lfs merge=lfs -text
 *.pth filter=lfs diff=lfs merge=lfs -text

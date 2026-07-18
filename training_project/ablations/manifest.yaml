@@ -1,0 +1,94 @@
+schema_version: 1
+status: integration_in_progress
+captured_at: "2026-07-18"
+source_root: 'D:\defect_detection\History_Data\harpnet_selected_artifacts'
+archive_root: training_project/models/ablations/source
+canonical_root: training_project/models/ablations
+dataset_contract:
+  name: Port_Defect
+  nc: 5
+  class_names: [Rust, Cracks, Paint Wear, Scratches, Pitting]
+  rule_loss_for_structure_ablations: false
+
+experiments:
+  - id: A0
+    name: yolov8n
+    source_filename: yolov8n.yaml
+    source_path: 'D:\defect_detection\History_Data\harpnet_selected_artifacts\yolov8n.yaml'
+    archive_path: training_project/models/ablations/source/yolov8n.yaml
+    source_bytes: 1888
+    source_sha256: c8d4b4fb7af33409a11b19203a5d982aec5e839841988b289c12554816cb575e
+    canonical_path: training_project/models/ablations/A0_yolov8n.yaml
+    components: {a_gfpn: false, rephfe: false, sadh: false, rule_loss: false}
+    archive_status: verified
+    runtime_status: blocked
+    blockers: [canonical_not_created, parser_cleanup_required]
+  - id: B1
+    name: SADH
+    source_filename: B1_SADH.yaml
+    source_path: 'D:\defect_detection\History_Data\harpnet_selected_artifacts\B1_SADH.yaml'
+    archive_path: training_project/models/ablations/source/B1_SADH.yaml
+    source_bytes: 1414
+    source_sha256: 86bc637d886a206f7d6acfc4434dcbea1be6ae672167acf9755ec2e19cf9db7b
+    canonical_path: training_project/models/ablations/B1_SADH.yaml
+    components: {a_gfpn: false, rephfe: false, sadh: true, rule_loss: false}
+    archive_status: verified
+    runtime_status: blocked
+    blockers: [canonical_not_created, parser_cleanup_required, sadh_not_registered]
+  - id: B2
+    name: RepHFE
+    source_filename: B2_RepHFE.yaml
+    source_path: 'D:\defect_detection\History_Data\harpnet_selected_artifacts\B2_RepHFE.yaml'
+    archive_path: training_project/models/ablations/source/B2_RepHFE.yaml
+    source_bytes: 1238
+    source_sha256: 10c2407cc9f716db8f21285ecdd08e6258e5022a6415fff10346594c606b2339
+    canonical_path: training_project/models/ablations/B2_RepHFE.yaml
+    components: {a_gfpn: false, rephfe: true, sadh: false, rule_loss: false}
+    archive_status: verified
+    runtime_status: source_verified
+    blockers: [canonical_not_created]
+  - id: B3
+    name: A-GFPN
+    source_filename: B3_A-GFPN.yaml
+    source_path: 'D:\defect_detection\History_Data\harpnet_selected_artifacts\B3_A-GFPN.yaml'
+    archive_path: training_project/models/ablations/source/B3_A-GFPN.yaml
+    source_bytes: 1535
+    source_sha256: 3d7fca3e34758da865cf4f505f0e380ebc7f1f53bf425b34faf61fa1c036795e
+    canonical_path: training_project/models/ablations/B3_A-GFPN.yaml
+    components: {a_gfpn: true, rephfe: false, sadh: false, rule_loss: false}
+    archive_status: verified
+    runtime_status: blocked
+    blockers: [canonical_not_created, parser_cleanup_required]
+  - id: B4
+    name: A-GFPN_RepHFE
+    source_filename: B4_A-GFPN_RepHFE_target.yaml
+    source_path: 'D:\defect_detection\History_Data\harpnet_selected_artifacts\B4_A-GFPN_RepHFE_target.yaml'
+    archive_path: training_project/models/ablations/source/B4_A-GFPN_RepHFE_target.yaml
+    source_bytes: 1296
+    source_sha256: 32c400d0a2ee4d6619eaeeabf638a1bb5ba2bd6682affe5cca1577af6c56b4e2
+    canonical_path: training_project/models/B4_A-GFPN_RepHFE_target.yaml
+    components: {a_gfpn: true, rephfe: true, sadh: false, rule_loss: false}
+    archive_status: verified
+    runtime_status: verified
+    blockers: []
+  - id: B5
+    name: Full
+    source_filename: B5_Full_model.yaml
+    source_path: 'D:\defect_detection\History_Data\harpnet_selected_artifacts\B5_Full_model.yaml'
+    archive_path: training_project/models/ablations/source/B5_Full_model.yaml
+    source_bytes: 2804
+    source_sha256: 4b518706d2eb4b143b7352a552e87862aabcf61eb85bc1f625ee144fda10c221
+    canonical_path: training_project/models/ablations/B5_Full.yaml
+    components: {a_gfpn: true, rephfe: true, sadh: true, rule_loss: false}
+    archive_status: verified
+    runtime_status: blocked
+    blockers: [canonical_not_created, sadh_not_registered]
+
+historical_weights:
+  policy: provenance_only_not_training_initialization
+  artifacts:
+    - {filename: DAD030_best_target.pt, sha256: ba5cc233eea726226b3efced7200018f799cb702db4a7f688bd8b06212b71656, topology: CASE_C}
+    - {filename: FT030_best.pt, sha256: 765dbe55c2e34fd19c1d5404ee06156c58954cd44fd211959eb4251b1ecf3f3c, topology: unverified}
+    - {filename: KD030X_best.pt, sha256: 8b4368cea5059c20f46300abd668c60c41277c36c8b82c7f2d810cc557f2f9dc, topology: unverified}
+    - {filename: S001_best.pt, sha256: a2d65caaedc687e01097d6e622b4a1de7a82cc5af9a825d4521ec6d5bae0ad57, topology: unverified}
+    - {filename: T001_best.pt, sha256: c3d15ed3a0c98e265ee4c2460c03e52ca0cfa9b0e4a4aed95cef64d3fca7a94a, topology: unverified}
