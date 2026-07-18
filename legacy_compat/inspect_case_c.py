@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MANIFEST = ROOT / "training_project" / "weights" / "canonical" / "DAD030_best_target_manifest.json"
+MANIFEST = ROOT / "legacy_compat" / "records" / "case_c" / "DAD030_best_target_manifest.json"
 
 
 def main() -> int:

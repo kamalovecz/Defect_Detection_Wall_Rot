@@ -12,10 +12,10 @@ for path in (ROOT, ULTRALYTICS_MAIN):
     if p not in sys.path:
         sys.path.insert(0, p)
 
-CANONICAL_DIR = ROOT / "training_project" / "weights" / "canonical"
-MANIFEST_PATH = CANONICAL_DIR / "DAD030_best_target_manifest.json"
-STATE_DICT_PATH = CANONICAL_DIR / "DAD030_best_target_state_dict.pt"
-REPORT_PATH = CANONICAL_DIR / "canonical_checkpoint_verification.json"
+RECORD_DIR = ROOT / "legacy_compat" / "records" / "case_c"
+MANIFEST_PATH = RECORD_DIR / "DAD030_best_target_manifest.json"
+STATE_DICT_PATH = RECORD_DIR / "DAD030_best_target_state_dict.pt"
+REPORT_PATH = RECORD_DIR / "canonical_checkpoint_verification.json"
 BLOCKED = {"ultralytics.nn.extra_modules.rephfe", "ultralytics.nn.extra_modules.prune_module"}
 
 

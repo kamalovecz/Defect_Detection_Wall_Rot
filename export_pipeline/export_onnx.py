@@ -13,7 +13,7 @@ for path in (ROOT, ULTRALYTICS_MAIN):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-LEGACY_MANIFEST = ROOT / "training_project" / "weights" / "canonical" / "DAD030_best_target_manifest.json"
+KNOWN_CASE_C_SHA256 = "ba5cc233eea726226b3efced7200018f799cb702db4a7f688bd8b06212b71656"
 EXPECTED_PARAMETERS = 2_308_655
 EXPECTED_LAYERS = 25
 
@@ -27,8 +27,7 @@ def sha256(path: Path) -> str:
 
 
 def reject_known_case_c(checkpoint_sha256: str) -> None:
-    record = json.loads(LEGACY_MANIFEST.read_text(encoding="utf-8"))
-    if checkpoint_sha256.lower() == str(record.get("source_sha256", "")).lower():
+    if checkpoint_sha256.lower() == KNOWN_CASE_C_SHA256:
         raise RuntimeError("CASE_C checkpoint is not a canonical export input for the target YAML")
 
 
