@@ -71,11 +71,29 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def semantic_sha256(value: dict) -> str:
+    payload = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
 def git_commit() -> str | None:
     try:
         return subprocess.check_output(
             ["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL
         ).strip()
+    except Exception:
+        return None
+
+
+def git_dirty() -> bool | None:
+    try:
+        return bool(
+            subprocess.check_output(
+                ["git", "-C", str(ROOT), "status", "--porcelain", "--untracked-files=all"],
+                text=True,
+                stderr=subprocess.DEVNULL,
+            ).strip()
+        )
     except Exception:
         return None
 
@@ -115,9 +133,11 @@ def write_manifest(
         "status": status,
         "created_at": datetime.now(timezone.utc).isoformat(),
         "git_commit": git_commit(),
+        "git_dirty": git_dirty(),
         "model_yaml": stored_config["model"],
         "model_yaml_sha256": sha256(Path(config["model"])),
         "data_yaml": stored_config["data"],
+        "data_yaml_sha256": semantic_sha256(data_config),
         "dataset": "Port_Defect",
         "class_names": data_config.get("names", {}),
         "seed": config["train"].get("seed"),
@@ -125,6 +145,7 @@ def write_manifest(
         "rule_loss": rule_config,
         "criterion_runtime": criterion_runtime,
         "config": stored_config,
+        "effective_config_sha256": semantic_sha256(stored_config),
         "error": error,
     }
     path = run_dir / "run_manifest.json"
