@@ -1,0 +1,6 @@
+extends: B5.yaml
+loss:
+  rule:
+    enabled: true
+train:
+  name: L1_B5_RuleLoss

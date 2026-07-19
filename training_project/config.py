@@ -11,15 +11,40 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = ROOT / "training_project" / "configs" / "port_defect_baseline.yaml"
 
 
-def load_config(path: str | Path = DEFAULT_CONFIG) -> dict:
-    config_path = Path(path)
-    if not config_path.is_absolute():
-        config_path = ROOT / config_path
+def _merge_config(base: dict, override: dict) -> dict:
+    result = deepcopy(base)
+    for key, value in override.items():
+        if isinstance(value, dict) and isinstance(result.get(key), dict):
+            result[key] = _merge_config(result[key], value)
+        else:
+            result[key] = deepcopy(value)
+    return result
+
+
+def _load_config_data(config_path: Path, stack: tuple[Path, ...] = ()) -> dict:
+    config_path = config_path.resolve()
+    if config_path in stack:
+        chain = " -> ".join(str(path) for path in (*stack, config_path))
+        raise ValueError(f"Training config inheritance cycle: {chain}")
     if not config_path.is_file():
         raise FileNotFoundError(f"Training config does not exist: {config_path}")
     config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     if not isinstance(config, dict):
         raise ValueError(f"Training config must contain a mapping: {config_path}")
+    extends = config.pop("extends", None)
+    if extends is None:
+        return config
+    base_path = Path(extends)
+    if not base_path.is_absolute():
+        base_path = config_path.parent / base_path
+    return _merge_config(_load_config_data(base_path, (*stack, config_path)), config)
+
+
+def load_config(path: str | Path = DEFAULT_CONFIG) -> dict:
+    config_path = Path(path)
+    if not config_path.is_absolute():
+        config_path = ROOT / config_path
+    config = _load_config_data(config_path)
     for key in ("model", "data", "train", "loss"):
         if key not in config:
             raise ValueError(f"Training config is missing required key {key!r}: {config_path}")

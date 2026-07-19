@@ -1,0 +1,4 @@
+extends: common.yaml
+model: training_project/models/ablations/B2_RepHFE.yaml
+train:
+  name: B2_RepHFE

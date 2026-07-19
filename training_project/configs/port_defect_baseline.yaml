@@ -30,3 +30,8 @@ train:
   cache: true
   amp: false
   exist_ok: true
+  pretrained: true
+  deterministic: true
+  cos_lr: true
+  close_mosaic: 0
+  plots: false

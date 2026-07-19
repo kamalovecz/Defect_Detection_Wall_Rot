@@ -1,0 +1,4 @@
+extends: common.yaml
+model: training_project/models/ablations/A0_yolov8n.yaml
+train:
+  name: A0_yolov8n

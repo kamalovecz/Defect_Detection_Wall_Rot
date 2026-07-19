@@ -1,0 +1,11 @@
+train: images/train
+val: images/val
+test: images/test
+
+nc: 5
+names:
+  0: Rust
+  1: Cracks
+  2: Paint Wear
+  3: Scratches
+  4: Pitting

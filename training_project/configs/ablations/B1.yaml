@@ -1,0 +1,4 @@
+extends: common.yaml
+model: training_project/models/ablations/B1_SADH.yaml
+train:
+  name: B1_SADH

@@ -170,11 +170,6 @@ def main() -> None:
     try:
         model.train(
             data=config["data"],
-            deterministic=True,
-            cos_lr=True,
-            close_mosaic=0,
-            plots=False,
-            pretrained=True,
             **train_args,
         )
     except Exception as exc:

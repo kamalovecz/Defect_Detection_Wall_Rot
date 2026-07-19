@@ -39,7 +39,9 @@ ultralytics-main/dataset/**
 !ultralytics-main/dataset/**/*.yml
 !ultralytics-main/dataset/**/README.md
 /data/
-/datasets/
+/datasets/**
+!/datasets/Port_Defect/
+!/datasets/Port_Defect/data.yaml
 
 # Local generated staging/build folders
 repo_staging_build_*/

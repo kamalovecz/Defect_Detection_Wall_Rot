@@ -1,0 +1,65 @@
+data: datasets/Port_Defect/data.yaml
+
+loss:
+  rule:
+    enabled: false
+    version: paper
+    small_area: 1024.0
+    gamma_small: 0.06
+    gamma_contrast: 0.04
+    low_contrast_std: 0.12
+    lambda_max: 1.0
+    schedule_iters: 12000
+    stage0_ratio: 0.20
+    stage1_ratio: 0.60
+    total_epochs: 300
+    t1_epoch: -1
+    t2_epoch: -1
+
+train:
+  epochs: 300
+  batch: 4
+  imgsz: 640
+  device: "0"
+  workers: 0
+  project: training_project/runs/ablations
+  name: must_be_overridden
+  seed: 42
+  patience: 50
+  optimizer: SGD
+  lr0: 0.001
+  lrf: 0.00001
+  momentum: 0.937
+  weight_decay: 0.0005
+  warmup_epochs: 3.0
+  warmup_momentum: 0.8
+  warmup_bias_lr: 0.1
+  nbs: 64
+  box: 7.5
+  cls: 0.5
+  dfl: 1.5
+  hsv_h: 0.015
+  hsv_s: 0.7
+  hsv_v: 0.4
+  degrees: 0.0
+  translate: 0.1
+  scale: 0.5
+  shear: 0.0
+  perspective: 0.0
+  flipud: 0.0
+  fliplr: 0.5
+  mosaic: 1.0
+  mixup: 0.0
+  copy_paste: 0.0
+  cache: true
+  amp: false
+  exist_ok: false
+  pretrained: false
+  resume: false
+  deterministic: true
+  cos_lr: true
+  close_mosaic: 0
+  val: true
+  iou: 0.7
+  max_det: 300
+  plots: false

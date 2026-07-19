@@ -1,0 +1,4 @@
+extends: common.yaml
+model: training_project/models/ablations/B3_A-GFPN.yaml
+train:
+  name: B3_A-GFPN

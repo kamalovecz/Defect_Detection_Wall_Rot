@@ -1,0 +1,59 @@
+schema_version: 1
+dataset: Port_Defect
+data_config: datasets/Port_Defect/data.yaml
+data_config_sha256: cba5e2da809ec0731c4237b3796c7092b4e0fb0e0afe4e8d914eba6bdf4f3a44
+dataset_snapshot:
+  algorithm: sha256(sorted relative image path, expected label path, label-present flag)
+  splits:
+    train:
+      images: 2428
+      labels: 2428
+      missing_labels: 0
+      fingerprint_sha256: 04f428f33ee558bf1a3b1947a12ee2c661fccb7c44b534161f2c58617fa80b46
+    val:
+      images: 607
+      labels: 607
+      missing_labels: 0
+      fingerprint_sha256: 6033d3a93b04b08653ed49392cbe34aaf9849277ceb0838e15aff8e4609c5263
+    test:
+      images: 350
+      labels: 350
+      missing_labels: 0
+      fingerprint_sha256: 4346e7063e48872b4a8b19378a71b519980b3dbc0fe82f688ce93963893a3d2b
+  combined_fingerprint_sha256: ac99f30bb09ab1e85b6a66840a7160600d7ba4f0df8909a5bc4c0a9aff1acc1a
+common_config: training_project/configs/ablations/common.yaml
+common_config_sha256: 1154ab3f1c8eabf8aa36395935e71408e584bb0eae8e413e806256a0fa11e182
+config_hash_algorithm: sha256(canonical JSON with sorted keys)
+initialization: scratch
+screening_seed: 42
+formal_seeds: [42, 43, 44]
+structure_rule_loss: false
+structure_experiments:
+  A0:
+    config: training_project/configs/ablations/A0.yaml
+    model_sha256: 91aad34e581d44f5320829d28f959e143fdf8497adf879420a3326fe654aa730
+  B1:
+    config: training_project/configs/ablations/B1.yaml
+    model_sha256: 8f514b10876c340dbd1adcf40aad172622e380cd1c924d9e988cf80c0316cce9
+  B2:
+    config: training_project/configs/ablations/B2.yaml
+    model_sha256: 1d27d08b5335b2a7d144bd978c4f33dc6bfd078eab302f78cac9185d3c3370fb
+  B3:
+    config: training_project/configs/ablations/B3.yaml
+    model_sha256: 104eea77eecb1b5bbf3bca0a2c2760533eb09ad3294bf11425d5e66de443fd3b
+  B4:
+    config: training_project/configs/ablations/B4.yaml
+    model_sha256: 32c400d0a2ee4d6619eaeeabf638a1bb5ba2bd6682affe5cca1577af6c56b4e2
+  B5:
+    config: training_project/configs/ablations/B5.yaml
+    model_sha256: 1e6e7db8f0d36163eb040e1b81cef1e42dff9f95d9c5bc6b2ae49f811931dbac
+loss_experiment:
+  id: L1
+  config: training_project/configs/ablations/L1_B5_RuleLoss.yaml
+  reference: B5
+  isolated_factor: rule_loss
+reporting:
+  primary_metric: mAP50-95
+  secondary_metrics: [mAP50, precision, recall, per_class_ap]
+  efficiency_metrics: [parameters, flops, latency, peak_vram]
+  aggregation: mean_std_over_formal_seeds

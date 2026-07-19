@@ -1,0 +1,4 @@
+extends: common.yaml
+model: training_project/models/B4_A-GFPN_RepHFE_target.yaml
+train:
+  name: B4_A-GFPN_RepHFE
