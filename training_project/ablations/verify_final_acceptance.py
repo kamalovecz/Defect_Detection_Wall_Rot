@@ -11,6 +11,8 @@ from pathlib import Path
 import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 EXPECTED_IDS = ["A0", "B1", "B2", "B3", "B4", "B5", "L1"]
 
 
