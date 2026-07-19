@@ -1,6 +1,6 @@
 # Environment Notes
 
-The remote validation environment is named `yolo_ultra`.
+The final remote validation environment is named `harpnet_acceptance`.
 
 Original baseline environment observed on 2026-07-14:
 

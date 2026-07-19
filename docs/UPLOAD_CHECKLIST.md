@@ -11,9 +11,13 @@ Before uploading this staging directory to a repository:
 
 ```powershell
 python training_project\verify_all.py
+python training_project\ablations\verify_ablation_models.py --require-cuda
 ```
 
 7. Validate any delivered ONNX with `verify_onnx_consistency.py` and its
    artifact manifest.
 8. Do not include RKNN conversion code here; hand the validated ONNX and
    manifest to the deployment repository.
+9. Do not publish formal ablation metrics while `training_matrix.yaml` records
+   `formal_training_eligible: false`; rebuild the dataset splits and review the
+   new content fingerprint first.
