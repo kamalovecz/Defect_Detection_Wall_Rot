@@ -82,7 +82,8 @@ def main() -> int:
         observed_hash = digest.hexdigest()
         if observed_hash != manifest["sha256"][key] or observed_hash != lock["sha256"][key]:
             raise RuntimeError(
-                f"Artifact hash mismatch for {key}: {observed_hash} != {lock['sha256'][key]}"
+                f"Artifact hash mismatch for {key}: observed={observed_hash}, "
+                f"manifest={manifest['sha256'][key]}, lock={lock['sha256'][key]}"
             )
         artifact_paths[key] = candidate
     pt_path = artifact_paths["pt"]
