@@ -27,7 +27,10 @@
 - run manifest 使用仓库相对路径，并记录 model/data/effective-config 哈希、Git commit 和 dirty 状态。
 - 每个 smoke 产物增加 `smoke_contract.json`，绑定实验、配置、模型、数据内容、override、run 名、commit 和 checkpoint SHA。
 - runner 强制 Git clean；dirty worktree、跨实验冒用、合同篡改和 checkpoint 字节篡改均会失败。
-- 增加最终工程验收入口、消融复制指南、阶段 0～6 报告和本 Release Notes。
+- 最终工程验收强制要求真实数据、smoke state 和 ONNX manifest 三类证据，并在入口/出口检查 Git clean 与 HEAD 不变。
+- 增加 Git 跟踪的 canonical artifact lock，固定来源 checkpoint、PT/ONNX/YAML 哈希、模型拓扑、类别、预处理和 runtime；元数据伪造与整包替换会失败。
+- 增加 Windows/PyTorch 验证子进程安全退出机制；异常仍退出非零，连续五次独立完整验收均通过。
+- 增加最终工程验收入口、消融复制指南、阶段 0～7 报告和本 Release Notes。
 
 ### 消融矩阵
 
@@ -79,6 +82,11 @@
 | `d276e7e` | 6 报告 | 工程通过/正式阻断分级 |
 | `da4d72a` | 7 | 最终验收入口与文档 |
 | `f9c8411` | 7 修复 | 最终验收入口导入边界 |
+| `3967242` | 7 加固 | 重新计算 smoke/ONNX 证据与路径边界 |
+| `3520f26` | 7 负测 | 最终证据篡改负向套件 |
+| `8fac557` | 7 加固 | 强制完整证据、canonical artifact lock 与安全子进程 |
+| `63281b7` | 7 诊断 | 明确 artifact 哈希差异来源 |
+| `cf650bb` | 7 修复 | 安全启动器保持标准脚本导入语义 |
 
 ### 使用入口
 
@@ -86,6 +94,11 @@
 conda activate harpnet_acceptance
 python training_project/verify_all.py
 python training_project/ablations/verify_ablation_models.py --require-cuda
+python training_project/ablations/verify_final_negative_cases.py
+python training_project/ablations/verify_final_acceptance.py `
+  --require-real-data `
+  --smoke-state training_project/runs/ablation_smoke_final/stage6_state.json `
+  --onnx-manifest export_pipeline/outputs/port_defect_smoke/artifact_manifest.json
 ```
 
 完整说明见 `README.md`、`docs/ABLATION_GUIDE.md` 与 `docs/ablation_reports/`。
