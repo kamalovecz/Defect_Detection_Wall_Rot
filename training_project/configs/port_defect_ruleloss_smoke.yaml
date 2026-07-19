@@ -37,4 +37,4 @@ train:
   deterministic: true
   cos_lr: true
   close_mosaic: 0
-  plots: false
+  plots: true
