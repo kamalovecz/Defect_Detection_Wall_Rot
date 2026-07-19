@@ -12,6 +12,10 @@ Before uploading this staging directory to a repository:
 ```powershell
 python training_project\verify_all.py
 python training_project\ablations\verify_ablation_models.py --require-cuda
+python training_project\ablations\verify_final_acceptance.py `
+  --require-real-data `
+  --smoke-state training_project/runs/ablation_smoke_final/stage6_state.json `
+  --onnx-manifest export_pipeline/outputs/port_defect_smoke/artifact_manifest.json
 ```
 
 7. Validate any delivered ONNX with `verify_onnx_consistency.py` and its

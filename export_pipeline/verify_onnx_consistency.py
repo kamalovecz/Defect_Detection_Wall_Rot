@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -24,10 +25,35 @@ def main() -> int:
     parser.add_argument("--score-mean-abs", type=float, default=1e-4)
     args = parser.parse_args()
     manifest_path = Path(args.manifest).resolve()
+    outputs_root = (ROOT / "export_pipeline/outputs").resolve()
+    if not manifest_path.is_relative_to(outputs_root):
+        raise RuntimeError(f"Artifact manifest must be under {outputs_root}: {manifest_path}")
     artifact_dir = manifest_path.parent
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    pt_path = artifact_dir / manifest["files"]["pt"]
-    onnx_path = artifact_dir / manifest["files"]["onnx"]
+    expected_file_keys = {"pt", "onnx", "model_yaml"}
+    if set(manifest.get("files", {})) != expected_file_keys or set(manifest.get("sha256", {})) != expected_file_keys:
+        raise RuntimeError("Artifact manifest file/hash set is incomplete")
+
+    artifact_paths = {}
+    for key in sorted(expected_file_keys):
+        declared = Path(manifest["files"][key])
+        candidate = (artifact_dir / declared).resolve()
+        if declared.is_absolute() or len(declared.parts) != 1 or not candidate.is_relative_to(artifact_dir.resolve()):
+            raise RuntimeError(f"Artifact file {key} escapes its artifact directory: {declared}")
+        if not candidate.is_file():
+            raise FileNotFoundError(f"Artifact file is missing for {key}: {candidate}")
+        digest = hashlib.sha256()
+        with candidate.open("rb") as stream:
+            for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                digest.update(chunk)
+        observed_hash = digest.hexdigest()
+        if observed_hash != manifest["sha256"][key]:
+            raise RuntimeError(
+                f"Artifact hash mismatch for {key}: {observed_hash} != {manifest['sha256'][key]}"
+            )
+        artifact_paths[key] = candidate
+    pt_path = artifact_paths["pt"]
+    onnx_path = artifact_paths["onnx"]
 
     from defect_modules.integration import install
     from ultralytics import YOLO
