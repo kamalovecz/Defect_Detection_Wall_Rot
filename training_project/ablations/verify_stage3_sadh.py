@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import gc
 import hashlib
 import json
 import re
@@ -251,6 +252,12 @@ def main() -> int:
         if components["sadh"] != (observed["Detect_LSCSBD"] > 0):
             raise RuntimeError(f"{experiment_id} SADH evidence disagrees with manifest")
         results[experiment_id] = observed
+        del criterion, gradient_tensors, head, loss, loss_items, model, train_predictions
+        if cuda_checked:
+            del cuda_output, cuda_prediction
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+        gc.collect()
 
     legacy = sorted(name for name in sys.modules if "extra_modules" in name)
     if legacy:
