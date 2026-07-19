@@ -43,6 +43,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--lrf", type=float)
     parser.add_argument("--cache", action=argparse.BooleanOptionalAction, default=None)
     parser.add_argument("--amp", action=argparse.BooleanOptionalAction, default=None)
+    parser.add_argument("--plots", action=argparse.BooleanOptionalAction, default=None)
     parser.add_argument("--exist-ok", action=argparse.BooleanOptionalAction, default=None)
     return parser.parse_args()
 
@@ -55,7 +56,7 @@ def merged_config(args: argparse.Namespace) -> dict:
             config[key] = value
     for key in (
         "epochs", "batch", "imgsz", "device", "workers", "project", "name", "seed",
-        "patience", "optimizer", "lr0", "lrf", "cache", "amp", "exist_ok",
+        "patience", "optimizer", "lr0", "lrf", "cache", "amp", "plots", "exist_ok",
     ):
         value = getattr(args, key)
         if value is not None:

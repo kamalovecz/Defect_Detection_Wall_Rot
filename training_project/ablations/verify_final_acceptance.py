@@ -51,13 +51,17 @@ def validate_real_data() -> dict:
     ):
         if content_snapshot[key] != expected["content"][key]:
             raise RuntimeError(f"Final dataset content snapshot changed at {key}")
-    if expected["content"].get("formal_training_eligible") is not False:
-        raise RuntimeError("Formal training blocker disappeared without a reviewed data-contract update")
+    eligible = expected["content"].get("formal_training_eligible")
+    if not isinstance(eligible, bool):
+        raise RuntimeError("Final dataset eligibility must be explicit")
+    if eligible and content_snapshot["cross_split_duplicate_images"] != 0:
+        raise RuntimeError("A formally eligible dataset cannot contain cross-split duplicate images")
     return {
         "status": "passed",
         "images": {split: path_snapshot["splits"][split]["images"] for split in ("train", "val", "test")},
         "cross_split_duplicate_images": content_snapshot["cross_split_duplicate_images"],
-        "formal_training_status": "blocked",
+        "formal_training_status": "eligible" if eligible else "blocked",
+        "formal_training_blocker": expected["content"].get("formal_training_blocker"),
     }
 
 
@@ -97,7 +101,7 @@ def validate_smoke_state(path: Path) -> dict:
     dataset_report = {
         "path_snapshot": fingerprint_dataset(dataset_root),
         "content_snapshot": fingerprint_dataset_content(dataset_root),
-        "formal_training_eligible": False,
+        "formal_training_eligible": matrix["dataset_snapshot"]["content"]["formal_training_eligible"],
     }
     if state.get("dataset") != dataset_report:
         raise RuntimeError("Smoke state dataset evidence does not match the current reviewed snapshot")
@@ -233,8 +237,8 @@ def main() -> int:
             {
                 "status": "passed",
                 "scope": "engineering_acceptance",
-                "formal_training_status": "blocked",
-                "formal_training_blocker": "26 exact image-content duplicates across dataset splits",
+                "formal_training_status": dataset["formal_training_status"],
+                "formal_training_blocker": dataset["formal_training_blocker"],
                 "git_commit": commit,
                 "checks": checks,
                 "dataset": dataset,

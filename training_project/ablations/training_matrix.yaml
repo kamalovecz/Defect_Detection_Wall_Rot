@@ -6,41 +6,41 @@ dataset_snapshot:
   algorithm: sha256(sorted relative image path, expected label path, label-present flag)
   splits:
     train:
-      images: 2428
-      labels: 2428
+      images: 2090
+      labels: 2090
       missing_labels: 0
-      fingerprint_sha256: 04f428f33ee558bf1a3b1947a12ee2c661fccb7c44b534161f2c58617fa80b46
+      fingerprint_sha256: 7945e455c612bf56165310c8206ae21b6d74f469c880df5da303f01fa8c69ad0
     val:
-      images: 607
-      labels: 607
+      images: 523
+      labels: 523
       missing_labels: 0
-      fingerprint_sha256: 6033d3a93b04b08653ed49392cbe34aaf9849277ceb0838e15aff8e4609c5263
+      fingerprint_sha256: a35ec96399af7f907c76c36f9c2a40a1f6fb3d27e792a2b38022eb7c3dd3adc0
     test:
-      images: 350
-      labels: 350
+      images: 301
+      labels: 301
       missing_labels: 0
-      fingerprint_sha256: 4346e7063e48872b4a8b19378a71b519980b3dbc0fe82f688ce93963893a3d2b
-  combined_fingerprint_sha256: ac99f30bb09ab1e85b6a66840a7160600d7ba4f0df8909a5bc4c0a9aff1acc1a
+      fingerprint_sha256: 390b4f24e09d9822a68adf75fef71af7801ead0295fe0de4df5a4a541ba2f61e
+  combined_fingerprint_sha256: 9939ccfcee7c541482e4bfc1d084f423a1b36cfe68599a7c2abc5aa7a751bfa8
   content:
     algorithm: sha256(relative image path+content, relative label path+content)
     splits:
       train:
-        content_fingerprint_sha256: cf9317cb971ef8b7e8ca82af91e780aa480474cb0c0c06b663cb1c8ec00da5da
+        content_fingerprint_sha256: ed503e81614210701ede273f916dbb3580d6b9dd9b173a2b698c2d2ad1b8b034
         empty_labels: 0
         invalid_label_rows: 0
       val:
-        content_fingerprint_sha256: 19ad6dcd6a6091fb2885174bc5f8440d5fb9b15393123f3f5541a0f92d9c1d75
+        content_fingerprint_sha256: bb62331faa9c667981dcf550022c788bf3075a3a80ef4920d5c19c89abdff2e1
         empty_labels: 0
         invalid_label_rows: 0
       test:
-        content_fingerprint_sha256: 4e6bca26342293b335164e49330b99b323661bf481306bab54fbc7044143682a
+        content_fingerprint_sha256: bebf70917b7510d63f4d239d021c5b2e6200b8ed4b6ff7019f69ee14a8742b0b
         empty_labels: 0
         invalid_label_rows: 0
-    combined_content_fingerprint_sha256: ff472b1e1ee05117d35360946d65326a5d338d499dc5fa3fa51f4b0e69bd07b0
-    cross_split_duplicate_images: 26
-    cross_split_duplicate_fingerprint_sha256: 045888310cd3745e2e752494802c1d272d3f7339c8e6f52729ae87d7377432f0
-    formal_training_eligible: false
-    formal_training_blocker: exact image content occurs across dataset splits
+    combined_content_fingerprint_sha256: 4269dc8b69ccf97f4b8d9cb2742c0c578a1a7f28b1f3606807fba9f061cee0e4
+    cross_split_duplicate_images: 0
+    cross_split_duplicate_fingerprint_sha256: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+    formal_training_eligible: true
+    formal_training_blocker: null
 common_config: training_project/configs/ablations/common.yaml
 common_config_sha256: 1154ab3f1c8eabf8aa36395935e71408e584bb0eae8e413e806256a0fa11e182
 config_hash_algorithm: sha256(canonical JSON with sorted keys)

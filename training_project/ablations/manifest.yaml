@@ -1,5 +1,5 @@
 schema_version: 1
-status: integration_in_progress
+status: verified
 captured_at: "2026-07-18"
 source_root: 'D:\defect_detection\History_Data\harpnet_selected_artifacts'
 archive_root: training_project/models/ablations/source

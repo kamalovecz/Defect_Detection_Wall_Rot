@@ -151,8 +151,13 @@ def verify_dataset(matrix: dict) -> dict:
     ):
         if content[key] != expected_content[key]:
             raise RuntimeError(f"Dataset content snapshot changed at {key}")
-    if expected_content.get("formal_training_eligible") is not False or content["cross_split_duplicate_images"] <= 0:
-        raise RuntimeError("Known cross-split leakage is no longer represented by the formal-training blocker")
+    eligible = expected_content.get("formal_training_eligible")
+    if not isinstance(eligible, bool):
+        raise RuntimeError("Dataset formal-training eligibility must be explicit")
+    if eligible and content["cross_split_duplicate_images"] != 0:
+        raise RuntimeError("A formally eligible dataset cannot contain cross-split duplicate images")
+    if not eligible and not expected_content.get("formal_training_blocker"):
+        raise RuntimeError("An ineligible dataset must declare its formal-training blocker")
 
     from ultralytics.data.utils import check_det_dataset
 
@@ -163,7 +168,7 @@ def verify_dataset(matrix: dict) -> dict:
             raise RuntimeError(
                 f"Ultralytics resolved {split} outside the repository dataset mapping: {resolved[split]}"
             )
-    return {"path_snapshot": observed, "content_snapshot": content, "formal_training_eligible": False}
+    return {"path_snapshot": observed, "content_snapshot": content, "formal_training_eligible": eligible}
 
 
 def verify_run(run_dir: Path, expect_ruleloss: bool) -> dict:
