@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from copy import deepcopy
 import hashlib
 import json
 import subprocess
@@ -79,31 +80,51 @@ def git_commit() -> str | None:
         return None
 
 
+def portable_repo_path(value: str | Path) -> str:
+    path = Path(value).resolve()
+    try:
+        return path.relative_to(ROOT).as_posix()
+    except ValueError:
+        return str(path)
+
+
+def portable_config(config: dict) -> dict:
+    result = deepcopy(config)
+    for key in ("model", "data", "config_path"):
+        if result.get(key):
+            result[key] = portable_repo_path(result[key])
+    if result.get("train", {}).get("project"):
+        result["train"]["project"] = portable_repo_path(result["train"]["project"])
+    return result
+
+
 def write_manifest(
     config: dict,
     rule_config: dict,
     status: str,
     error: str | None = None,
     criterion_runtime: dict | None = None,
+    run_dir: Path | None = None,
 ) -> Path:
     data_config = yaml.safe_load(Path(config["data"]).read_text(encoding="utf-8"))
-    run_dir = Path(config["train"]["project"]) / config["train"]["name"]
+    run_dir = run_dir or Path(config["train"]["project"]) / config["train"]["name"]
     run_dir.mkdir(parents=True, exist_ok=True)
+    stored_config = portable_config(config)
     manifest = {
         "schema_version": 1,
         "status": status,
         "created_at": datetime.now(timezone.utc).isoformat(),
         "git_commit": git_commit(),
-        "model_yaml": config["model"],
+        "model_yaml": stored_config["model"],
         "model_yaml_sha256": sha256(Path(config["model"])),
-        "data_yaml": config["data"],
+        "data_yaml": stored_config["data"],
         "dataset": "Port_Defect",
         "class_names": data_config.get("names", {}),
         "seed": config["train"].get("seed"),
         "imgsz": config["train"].get("imgsz"),
         "rule_loss": rule_config,
         "criterion_runtime": criterion_runtime,
-        "config": config,
+        "config": stored_config,
         "error": error,
     }
     path = run_dir / "run_manifest.json"
@@ -166,16 +187,27 @@ def main() -> None:
         model.add_callback("on_train_epoch_start", update_rule_epoch)
     model.add_callback("on_train_batch_end", capture_criterion)
     model.add_callback("on_train_end", capture_criterion)
-    write_manifest(config, rule_config, "started")
     try:
         model.train(
             data=config["data"],
             **train_args,
         )
     except Exception as exc:
-        write_manifest(config, rule_config, "failed", repr(exc))
+        trainer_save_dir = getattr(getattr(model, "trainer", None), "save_dir", None)
+        failure_dir = (
+            Path(trainer_save_dir)
+            if trainer_save_dir
+            else Path(config["train"]["project"]) / config["train"]["name"]
+        )
+        write_manifest(config, rule_config, "failed", repr(exc), run_dir=failure_dir)
         raise
-    write_manifest(config, rule_config, "completed", criterion_runtime=criterion_runtime)
+    write_manifest(
+        config,
+        rule_config,
+        "completed",
+        criterion_runtime=criterion_runtime,
+        run_dir=Path(model.trainer.save_dir),
+    )
 
 
 if __name__ == "__main__":

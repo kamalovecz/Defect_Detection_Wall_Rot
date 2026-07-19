@@ -21,6 +21,26 @@ dataset_snapshot:
       missing_labels: 0
       fingerprint_sha256: 4346e7063e48872b4a8b19378a71b519980b3dbc0fe82f688ce93963893a3d2b
   combined_fingerprint_sha256: ac99f30bb09ab1e85b6a66840a7160600d7ba4f0df8909a5bc4c0a9aff1acc1a
+  content:
+    algorithm: sha256(relative image path+content, relative label path+content)
+    splits:
+      train:
+        content_fingerprint_sha256: cf9317cb971ef8b7e8ca82af91e780aa480474cb0c0c06b663cb1c8ec00da5da
+        empty_labels: 0
+        invalid_label_rows: 0
+      val:
+        content_fingerprint_sha256: 19ad6dcd6a6091fb2885174bc5f8440d5fb9b15393123f3f5541a0f92d9c1d75
+        empty_labels: 0
+        invalid_label_rows: 0
+      test:
+        content_fingerprint_sha256: 4e6bca26342293b335164e49330b99b323661bf481306bab54fbc7044143682a
+        empty_labels: 0
+        invalid_label_rows: 0
+    combined_content_fingerprint_sha256: ff472b1e1ee05117d35360946d65326a5d338d499dc5fa3fa51f4b0e69bd07b0
+    cross_split_duplicate_images: 26
+    cross_split_duplicate_fingerprint_sha256: 045888310cd3745e2e752494802c1d272d3f7339c8e6f52729ae87d7377432f0
+    formal_training_eligible: false
+    formal_training_blocker: exact image content occurs across dataset splits
 common_config: training_project/configs/ablations/common.yaml
 common_config_sha256: 1154ab3f1c8eabf8aa36395935e71408e584bb0eae8e413e806256a0fa11e182
 config_hash_algorithm: sha256(canonical JSON with sorted keys)
