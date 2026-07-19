@@ -14,6 +14,10 @@ def main() -> None:
         raise SystemExit("usage: run_verifier_safely.py SCRIPT [ARG ...]")
     script = Path(sys.argv[1]).resolve()
     sys.argv = [str(script), *sys.argv[2:]]
+    if sys.path:
+        sys.path[0] = str(script.parent)
+    else:
+        sys.path.insert(0, str(script.parent))
     exit_code = 0
     try:
         runpy.run_path(str(script), run_name="__main__")
