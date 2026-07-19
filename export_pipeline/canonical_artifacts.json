@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "artifacts": {
+    "port_defect_smoke": {
+      "artifact_kind": "engineering-smoke",
+      "source": {
+        "git_commit": "ea9e8f4077560b4a6606ac0d7335d199bf2295e6",
+        "checkpoint": "training_project/runs/stage5_baseline/weights/best.pt",
+        "checkpoint_sha256": "2bfecdff4022b16ed514d4d6ee4529122742fbc4062c480b842c26eaf1925f4a",
+        "run_manifest": "training_project/runs/stage5_baseline/run_manifest.json",
+        "run_manifest_sha256": "8b6205435be62e8647a9e41c63e727b679ab9657b9c0673c7391211b52c4321d"
+      },
+      "canonical_model_yaml": "training_project/models/B4_A-GFPN_RepHFE_target.yaml",
+      "canonical_model_yaml_sha256": "32c400d0a2ee4d6619eaeeabf638a1bb5ba2bd6682affe5cca1577af6c56b4e2",
+      "data_yaml": "datasets/Port_Defect/data.yaml",
+      "data_yaml_sha256": "0e62a639b66019b12c578a915cebf0a062560170a2543e6f134e06973ccf6d2c",
+      "files": {
+        "pt": "port_defect_smoke.pt",
+        "onnx": "port_defect_smoke.onnx",
+        "model_yaml": "model.yaml"
+      },
+      "sha256": {
+        "pt": "2bfecdff4022b16ed514d4d6ee4529122742fbc4062c480b842c26eaf1925f4a",
+        "onnx": "9a97ef15ce8ef30d45179348f243de698ae93e873a14c42bec21e197b28fbddf",
+        "model_yaml": "32c400d0a2ee4d6619eaeeabf638a1bb5ba2bd6682affe5cca1577af6c56b4e2"
+      },
+      "model": {
+        "parameters": 2308655,
+        "layers": 25,
+        "classes": {
+          "0": "Rust",
+          "1": "Cracks",
+          "2": "Paint Wear",
+          "3": "Scratches",
+          "4": "Pitting"
+        },
+        "imgsz": 640,
+        "input_name": "images",
+        "output_names": [
+          "output0"
+        ],
+        "opset": 12
+      },
+      "preprocess": {
+        "color": "RGB",
+        "layout": "NCHW",
+        "dtype": "float32",
+        "scale": "divide_by_255"
+      },
+      "runtime": {
+        "ultralytics": "8.2.50"
+      },
+      "legacy_modules": []
+    }
+  }
+}

@@ -23,7 +23,11 @@ CHECKS = [
 def main() -> int:
     for check in CHECKS:
         print(f"[verify_all] {check.relative_to(ROOT)}", flush=True)
-        subprocess.run([sys.executable, str(check)], cwd=ROOT, check=True)
+        subprocess.run(
+            [sys.executable, "training_project/run_verifier_safely.py", str(check)],
+            cwd=ROOT,
+            check=True,
+        )
     print(f"[verify_all] PASSED checks={len(CHECKS)}")
     return 0
 

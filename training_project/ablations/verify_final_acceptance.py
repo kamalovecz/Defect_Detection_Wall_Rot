@@ -17,7 +17,12 @@ EXPECTED_IDS = ["A0", "B1", "B2", "B3", "B4", "B5", "L1"]
 
 
 def run_check(name: str, arguments: list[str]) -> str:
-    process = subprocess.run([sys.executable, *arguments], cwd=ROOT, capture_output=True, text=True)
+    process = subprocess.run(
+        [sys.executable, "training_project/run_verifier_safely.py", *arguments],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
     if process.returncode:
         raise RuntimeError(
             f"Final acceptance check {name} failed ({process.returncode})\n"
@@ -177,6 +182,16 @@ def main() -> int:
     parser.add_argument("--onnx-manifest", type=Path)
     args = parser.parse_args()
 
+    missing = []
+    if not args.require_real_data:
+        missing.append("--require-real-data")
+    if args.smoke_state is None:
+        missing.append("--smoke-state")
+    if args.onnx_manifest is None:
+        missing.append("--onnx-manifest")
+    if missing:
+        parser.error(f"complete final acceptance requires: {', '.join(missing)}")
+
     entry_status = subprocess.check_output(
         ["git", "status", "--porcelain", "--untracked-files=all"], cwd=ROOT, text=True
     ).strip()
@@ -190,12 +205,8 @@ def main() -> int:
             "six_model_gate", ["training_project/ablations/verify_ablation_models.py", "--require-cuda"]
         ),
     }
-    dataset = validate_real_data() if args.require_real_data else {"status": "not_requested"}
-    smoke = (
-        validate_smoke_state((ROOT / args.smoke_state).resolve())
-        if args.smoke_state
-        else {"status": "not_requested"}
-    )
+    dataset = validate_real_data()
+    smoke = validate_smoke_state((ROOT / args.smoke_state).resolve())
     if args.onnx_manifest:
         declared_onnx_manifest = Path(args.onnx_manifest)
         if declared_onnx_manifest.is_absolute():

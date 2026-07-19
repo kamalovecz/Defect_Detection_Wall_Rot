@@ -51,7 +51,10 @@ def sha256(path: Path) -> str:
 
 def run_gate(name: str, arguments: list[str]) -> str:
     process = subprocess.run(
-        [sys.executable, *arguments], cwd=ROOT, capture_output=True, text=True
+        [sys.executable, "training_project/run_verifier_safely.py", *arguments],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
     )
     if process.returncode:
         raise RuntimeError(

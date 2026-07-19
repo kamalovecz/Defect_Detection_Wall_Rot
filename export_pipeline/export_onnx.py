@@ -16,6 +16,8 @@ for path in (ROOT, ULTRALYTICS_MAIN):
 KNOWN_CASE_C_SHA256 = "ba5cc233eea726226b3efced7200018f799cb702db4a7f688bd8b06212b71656"
 EXPECTED_PARAMETERS = 2_308_655
 EXPECTED_LAYERS = 25
+ARTIFACT_ID = "port_defect_smoke"
+LOCK_PATH = ROOT / "export_pipeline/canonical_artifacts.json"
 
 
 def sha256(path: Path) -> str:
@@ -48,15 +50,22 @@ def main() -> int:
     source_sha = sha256(source)
     reject_known_case_c(source_sha)
     run_manifest = json.loads(run_manifest_path.read_text(encoding="utf-8"))
+    lock = json.loads(LOCK_PATH.read_text(encoding="utf-8"))["artifacts"][ARTIFACT_ID]
     if run_manifest.get("status") != "completed":
         raise RuntimeError("Only checkpoints from a completed training run may be exported")
+    if source_sha != lock["source"]["checkpoint_sha256"]:
+        raise RuntimeError("Checkpoint is not the reviewed canonical source in the artifact lock")
+    if sha256(run_manifest_path) != lock["source"]["run_manifest_sha256"]:
+        raise RuntimeError("Run manifest is not the reviewed canonical source in the artifact lock")
+    if run_manifest.get("git_commit") != lock["source"]["git_commit"]:
+        raise RuntimeError("Run manifest commit differs from the artifact lock")
 
     output_dir = Path(args.output_dir).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     pt_path = output_dir / f"{args.name}.pt"
     yaml_path = output_dir / "model.yaml"
     shutil.copy2(source, pt_path)
-    shutil.copy2(Path(run_manifest["model_yaml"]), yaml_path)
+    shutil.copy2(ROOT / lock["canonical_model_yaml"], yaml_path)
 
     from defect_modules.integration import install
     from ultralytics import YOLO, __version__ as ultralytics_version
@@ -87,8 +96,10 @@ def main() -> int:
     onnx.checker.check_model(graph)
     manifest = {
         "schema_version": 1,
+        "artifact_id": ARTIFACT_ID,
         "status": "exported",
         "artifact_kind": "engineering-smoke",
+        "source": lock["source"],
         "files": {
             "pt": pt_path.name,
             "onnx": onnx_path.name,

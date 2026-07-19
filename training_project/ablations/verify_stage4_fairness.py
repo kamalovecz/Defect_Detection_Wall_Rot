@@ -315,11 +315,24 @@ def main() -> int:
         raise RuntimeError(f"Ablation configs contain non-portable legacy paths: {forbidden}")
 
     train_entrypoint = ROOT / "training_project/train.py"
-    subprocess.run([sys.executable, str(train_entrypoint), "--help"], cwd=ROOT, check=True, capture_output=True)
+    safe_runner = "training_project/run_verifier_safely.py"
+    subprocess.run(
+        [sys.executable, safe_runner, str(train_entrypoint), "--help"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+    )
     cli_checks = []
     for experiment_id in EXPECTED_IDS:
         process = subprocess.run(
-            [sys.executable, str(train_entrypoint), "--config", structure_entries[experiment_id]["config"], "--check-config"],
+            [
+                sys.executable,
+                safe_runner,
+                str(train_entrypoint),
+                "--config",
+                structure_entries[experiment_id]["config"],
+                "--check-config",
+            ],
             cwd=ROOT,
             check=True,
             capture_output=True,

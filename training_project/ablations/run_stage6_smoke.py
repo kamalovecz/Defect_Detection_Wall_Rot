@@ -170,6 +170,7 @@ def verify_run(run_dir: Path, expect_ruleloss: bool) -> dict:
     checkpoint = run_dir / "weights/last.pt"
     command = [
         sys.executable,
+        "training_project/run_verifier_safely.py",
         "training_project/verify_smoke_checkpoint.py",
         str(checkpoint),
         "--run-dir",
