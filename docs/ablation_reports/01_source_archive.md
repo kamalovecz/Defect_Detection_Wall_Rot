@@ -32,6 +32,8 @@ python training_project/ablations/verify_archive.py --check-source --check-git
 
 提交后完整性复查发现通用 YAML 行尾规则会把部分 CRLF 归档规范化为 LF；已增加归档专用 `-text` 规则、重新写入 Git blob，并将 HEAD blob 校验加入验证脚本。最终对抗性重审：PASSED；确认归档规则为 `text: unset`、HEAD blob 与外部历史源逐字节一致，无必须修复项。
 
+阶段 4 建立 canonical 哈希契约前再次审计发现，活动 B4 canonical 不在 source 通配保护范围内，其旧 HEAD blob 仍被规范化。已为该唯一活动历史同源文件增加精确 `-text` 规则、重写 blob，并把 B4 canonical HEAD 校验纳入 `--check-git`，防止新克隆中的行尾漂移。
+
 失败项：无（修复后完整重跑通过）。
 
 风险或残留：除 B4 外的 canonical 文件尚未生成；`source_root` 当前为 provenance 信息而逐项 `source_path` 是实际外部校验路径；source 归档、source SHA/bytes 和 `.gitattributes` 的 `-text` 保护规则在后续阶段禁止修改。

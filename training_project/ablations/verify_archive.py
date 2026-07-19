@@ -114,6 +114,16 @@ def main() -> int:
     canonical = (ROOT / b4["canonical_path"]).resolve()
     if sha256(canonical) != b4["source_sha256"]:
         raise RuntimeError("B4 canonical no longer matches the captured historical source")
+    if args.check_git:
+        repository_path = canonical.relative_to(ROOT).as_posix()
+        committed = subprocess.run(
+            ["git", "show", f"HEAD:{repository_path}"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
+        if hashlib.sha256(committed).hexdigest() != b4["source_sha256"] or len(committed) != b4["source_bytes"]:
+            raise RuntimeError("Committed B4 canonical blob no longer matches the captured historical source")
     weights = manifest["historical_weights"]["artifacts"]
     filenames = [item["filename"] for item in weights]
     if len(filenames) != len(set(filenames)):
