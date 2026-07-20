@@ -1,0 +1,9 @@
+extends: L1_B5_RuleLoss.yaml
+train:
+  epochs: 300
+  batch: 8
+  imgsz: 640
+  seed: 42
+  plots: true
+  project: training_project/runs/ruleloss_300ep_b8_seed42
+  name: L1_B5_RuleLoss_seed42_e300_b8
