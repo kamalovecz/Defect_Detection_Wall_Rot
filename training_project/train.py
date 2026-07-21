@@ -77,6 +77,10 @@ def semantic_sha256(value: dict) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
+def dataset_name(data_path: str | Path) -> str:
+    return Path(data_path).resolve().parent.name
+
+
 def git_commit() -> str | None:
     try:
         return subprocess.check_output(
@@ -139,7 +143,7 @@ def write_manifest(
         "model_yaml_sha256": sha256(Path(config["model"])),
         "data_yaml": stored_config["data"],
         "data_yaml_sha256": semantic_sha256(data_config),
-        "dataset": "Port_Defect",
+        "dataset": dataset_name(config["data"]),
         "class_names": data_config.get("names", {}),
         "seed": config["train"].get("seed"),
         "imgsz": config["train"].get("imgsz"),

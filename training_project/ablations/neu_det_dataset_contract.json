@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "dataset": "NEU-DET_YOLO",
+  "source": "D:\\defect_detection\\ultralytics-main\\dataset\\NEU-DET_YOLO",
+  "descriptor": "D:\\defect_detection\\ultralytics-main\\dataset\\NEU-DET_YOLO\\neu-det.yaml",
+  "descriptor_sha256": "bc7d42864f93408547d5c03487f5b619feeaf511478b6e35e5aaa41c6320f234",
+  "descriptor_semantic_sha256": "0a51d1d63b49d0529367e8211a57a7dace6bd468b208dd0c80c4dddbec339d2e",
+  "nc": 6,
+  "names": [
+    "crazing",
+    "inclusion",
+    "patches",
+    "pitted_surface",
+    "rolled-in_scale",
+    "scratches"
+  ],
+  "splits": {
+    "train": {
+      "images": 1259,
+      "labels": 1259,
+      "instances": 2872,
+      "content_fingerprint_sha256": "a8b2144963ea556dc37e20b4636bdb021df56b84f427494c26c4deccd90a7065"
+    },
+    "val": {
+      "images": 359,
+      "labels": 359,
+      "instances": 805,
+      "content_fingerprint_sha256": "03ca01709002734c00c1a5a82b6165c93597ba600ca9a8ec5338aaeb5c0d7939"
+    },
+    "test": {
+      "images": 181,
+      "labels": 181,
+      "instances": 425,
+      "content_fingerprint_sha256": "16006ad5931d8ab45f86ddb2aa180a84bf1ae901c275ab7fd01010443e418818"
+    }
+  },
+  "combined_content_fingerprint_sha256": "d200cddba499c32a1ce7ca22e3dbe3c1cbce00e90c1da579da8bb0d010d8bdeb",
+  "cross_split_duplicate_images": 0,
+  "validator": {
+    "script": "D:\\defect_detection\\ultralytics-main\\val.py",
+    "script_sha256": "c2aab95c65633147bbb74bd9dd1c7a6d89f061a2a45bd06a6a1e6c17d6539f26",
+    "python_tree_root": "D:\\defect_detection\\ultralytics-main\\ultralytics",
+    "python_tree_sha256": "eb89000c820162b833cb510859ff81cd49a61faa4856ad3f78c84523c822efe1"
+  },
+  "restart_policy": "new_project_only_no_resume_preserve_failed_evidence",
+  "formal_training_eligible": true
+}
