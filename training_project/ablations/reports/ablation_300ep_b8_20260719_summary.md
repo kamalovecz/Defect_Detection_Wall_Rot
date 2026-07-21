@@ -220,6 +220,9 @@ D:\defect_detection\repo_staging_ablation_300ep\training_project\runs\ruleloss_3
 
 L1 RuleLoss 独立 val：
 D:\defect_detection\repo_staging_ablation_300ep\training_project\runs\ruleloss_300ep_b8_seed42_val\L1_B5_RuleLoss_seed42_e300_b8_val
+
+L1 val/test 事后审计清单：
+D:\defect_detection\repo_staging_ablation_300ep\training_project\ablations\reports\l1_ruleloss_seed42_eval_manifest.json
 ```
 
 七个最佳 checkpoint 的 SHA-256：

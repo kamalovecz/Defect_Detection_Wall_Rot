@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "status": "posthoc_audited",
+  "created_on": "2026-07-21",
+  "evidence_class": "posthoc_reconstruction_from_observed_invocations_and_persisted_artifacts",
+  "limitations": [
+    "stdout and stderr were observed interactively but were not persisted as log files",
+    "exit codes and pre/post checkpoint hashes were observed during orchestration and recorded here after execution",
+    "artifact paths, current hashes, metrics, sample counts, Git anchors, and configuration are independently auditable"
+  ],
+  "experiment": {
+    "id": "L1",
+    "config": "training_project/configs/ablations/L1_B5_RuleLoss_seed42_e300_b8.yaml",
+    "training_git_commit": "489eacd4fc25f6c81804484d18aad202c519fa9d",
+    "training_manifest": "training_project/runs/ruleloss_300ep_b8_seed42/L1_B5_RuleLoss_seed42_e300_b8/run_manifest.json",
+    "training_manifest_sha256": "577537c2c9d094dc687514bc6725fc79ee0b9cc9ff00f8ca3007a2ecbabfd9e4",
+    "seed": 42,
+    "epochs": 300,
+    "rule_loss_enabled": true,
+    "criterion": "defect_modules.loss.v8DetectionLoss",
+    "lambda_rule_final": 1.0
+  },
+  "decision_protocol": {
+    "model_selection_source": "validation split before L1 test evaluation",
+    "pretest_validation_report": "training_project/ablations/reports/ablation_300ep_b8_20260719_summary.md",
+    "pretest_validation_report_git_commit": "761143650b2d879ba28da501e5429a0153988df8",
+    "pretest_validation_report_sha256": "4da0c91855e6c018b5e7b1f51fdb54f156d0d4f2f7f559f36d42cd75e6ccfeb8",
+    "locked_val_claim": "L1 minus B5 val mAP50-95 equals -0.0108",
+    "test_use": "measurement_only_no_ruleloss_tuning_or_checkpoint_selection",
+    "evidence_scope": "single_seed_screening"
+  },
+  "validator": {
+    "python": "D:\\Anaconda\\envs\\harpnet_acceptance\\python.exe",
+    "script": "D:\\defect_detection\\ultralytics-main\\val.py",
+    "script_sha256": "c2aab95c65633147bbb74bd9dd1c7a6d89f061a2a45bd06a6a1e6c17d6539f26",
+    "ultralytics_python_tree_sha256": "eb89000c820162b833cb510859ff81cd49a61faa4856ad3f78c84523c822efe1",
+    "pythonpath": [
+      "D:\\defect_detection\\repo_staging_ablation_300ep",
+      "D:\\defect_detection\\repo_staging_ablation_300ep\\ultralytics-main"
+    ]
+  },
+  "dataset": {
+    "name": "Port_Defect",
+    "data_yaml": "D:\\defect_detection\\repo_staging_ablation_300ep\\datasets\\Port_Defect\\data.yaml",
+    "data_yaml_sha256": "0e62a639b66019b12c578a915cebf0a062560170a2543e6f134e06973ccf6d2c",
+    "path_fingerprint_sha256": "9939ccfcee7c541482e4bfc1d084f423a1b36cfe68599a7c2abc5aa7a751bfa8",
+    "content_fingerprint_sha256": "4269dc8b69ccf97f4b8d9cb2742c0c578a1a7f28b1f3606807fba9f061cee0e4",
+    "cross_split_duplicate_images": 0
+  },
+  "checkpoint": {
+    "path": "training_project/runs/ruleloss_300ep_b8_seed42/L1_B5_RuleLoss_seed42_e300_b8/weights/best.pt",
+    "training_completion_observed_sha256": "df5c569ef20d6dc1106404e802e8d313d4f2454380ddd64730bdd855312be331",
+    "post_val_observed_sha256": "df5c569ef20d6dc1106404e802e8d313d4f2454380ddd64730bdd855312be331",
+    "post_test_current_sha256": "df5c569ef20d6dc1106404e802e8d313d4f2454380ddd64730bdd855312be331",
+    "hash_match": true,
+    "provenance": "posthoc record of orchestration observations; only the current hash is independently recomputable from persisted files"
+  },
+  "evaluations": [
+    {
+      "split": "val",
+      "git_commit_at_invocation": "489eacd4fc25f6c81804484d18aad202c519fa9d",
+      "imgsz": 640,
+      "batch": 8,
+      "images": 523,
+      "instances": 749,
+      "observed_exit_code": 0,
+      "exit_code_provenance": "interactive orchestration output; reconstructed posthoc",
+      "command": [
+        "D:\\Anaconda\\envs\\harpnet_acceptance\\python.exe",
+        "D:\\defect_detection\\ultralytics-main\\val.py",
+        "--model-path",
+        "D:\\defect_detection\\repo_staging_ablation_300ep\\training_project\\runs\\ruleloss_300ep_b8_seed42\\L1_B5_RuleLoss_seed42_e300_b8\\weights\\best.pt",
+        "--data",
+        "D:\\defect_detection\\repo_staging_ablation_300ep\\datasets\\Port_Defect\\data.yaml",
+        "--split",
+        "val",
+        "--imgsz",
+        "640",
+        "--batch",
+        "8",
+        "--project",
+        "D:\\defect_detection\\repo_staging_ablation_300ep\\training_project\\runs\\ruleloss_300ep_b8_seed42_val",
+        "--name",
+        "L1_B5_RuleLoss_seed42_e300_b8_val",
+        "--exist-ok"
+      ],
+      "output_dir": "training_project/runs/ruleloss_300ep_b8_seed42_val/L1_B5_RuleLoss_seed42_e300_b8_val",
+      "paper_data": "training_project/runs/ruleloss_300ep_b8_seed42_val/L1_B5_RuleLoss_seed42_e300_b8_val/paper_data.txt",
+      "paper_data_sha256": "bf01187cc72d7101f924cb9d30d60cc00365ff5777d3b62859d714b72d444921",
+      "overall": {
+        "precision": 0.7948,
+        "recall": 0.6925,
+        "f1": 0.7361,
+        "map50": 0.7775,
+        "map75": 0.5297,
+        "map50_95": 0.4920
+      }
+    },
+    {
+      "split": "test",
+      "git_commit_at_invocation": "761143650b2d879ba28da501e5429a0153988df8",
+      "imgsz": 640,
+      "batch": 8,
+      "images": 301,
+      "instances": 448,
+      "observed_exit_code": 0,
+      "exit_code_provenance": "interactive orchestration output; reconstructed posthoc",
+      "command": [
+        "D:\\Anaconda\\envs\\harpnet_acceptance\\python.exe",
+        "D:\\defect_detection\\ultralytics-main\\val.py",
+        "--model-path",
+        "D:\\defect_detection\\repo_staging_ablation_300ep\\training_project\\runs\\ruleloss_300ep_b8_seed42\\L1_B5_RuleLoss_seed42_e300_b8\\weights\\best.pt",
+        "--data",
+        "D:\\defect_detection\\repo_staging_ablation_300ep\\datasets\\Port_Defect\\data.yaml",
+        "--split",
+        "test",
+        "--imgsz",
+        "640",
+        "--batch",
+        "8",
+        "--project",
+        "D:\\defect_detection\\repo_staging_ablation_300ep\\training_project\\runs\\ruleloss_300ep_b8_seed42_test",
+        "--name",
+        "L1_B5_RuleLoss_seed42_e300_b8_test",
+        "--exist-ok"
+      ],
+      "output_dir": "training_project/runs/ruleloss_300ep_b8_seed42_test/L1_B5_RuleLoss_seed42_e300_b8_test",
+      "paper_data": "training_project/runs/ruleloss_300ep_b8_seed42_test/L1_B5_RuleLoss_seed42_e300_b8_test/paper_data.txt",
+      "paper_data_sha256": "ee6df96afffe9a16e0c8f364f7c2ffd5072b1a03dd92caf9776a9629e1436513",
+      "overall": {
+        "precision": 0.8017,
+        "recall": 0.7022,
+        "f1": 0.7463,
+        "map50": 0.7845,
+        "map75": 0.5529,
+        "map50_95": 0.4966
+      }
+    }
+  ]
+}
