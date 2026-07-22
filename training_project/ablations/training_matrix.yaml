@@ -67,6 +67,12 @@ structure_experiments:
   B5:
     config: training_project/configs/ablations/B5.yaml
     model_sha256: 1e6e7db8f0d36163eb040e1b81cef1e42dff9f95d9c5bc6b2ae49f811931dbac
+  B6:
+    config: training_project/configs/ablations/B6.yaml
+    model_sha256: fd7e4efaca7017ca363cd2713cb5e047c5731959bb4eb65e2380a558bd6cf7df
+  B7:
+    config: training_project/configs/ablations/B7.yaml
+    model_sha256: 470b330f4835dac7dc0784bd3f1cba320f0af36a3d6c3d2a244360dd633043f9
 loss_experiment:
   id: L1
   config: training_project/configs/ablations/L1_B5_RuleLoss.yaml

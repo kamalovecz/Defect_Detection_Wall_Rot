@@ -34,6 +34,8 @@ EXPERIMENTS = [
     ("B3", "training_project/configs/ablations/B3.yaml", "training_project/models/ablations/B3_A-GFPN.yaml"),
     ("B4", "training_project/configs/ablations/B4.yaml", "training_project/models/B4_A-GFPN_RepHFE_target.yaml"),
     ("B5", "training_project/configs/ablations/B5.yaml", "training_project/models/ablations/B5_Full.yaml"),
+    ("B6", "training_project/configs/ablations/B6.yaml", "training_project/models/ablations/B6_A-GFPN_SADH.yaml"),
+    ("B7", "training_project/configs/ablations/B7.yaml", "training_project/models/ablations/B7_RepHFE_SADH.yaml"),
 ]
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff"}
 

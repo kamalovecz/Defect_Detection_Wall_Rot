@@ -1,0 +1,4 @@
+extends: common.yaml
+model: training_project/models/ablations/B6_A-GFPN_SADH.yaml
+train:
+  name: B6_A-GFPN_SADH
