@@ -146,7 +146,13 @@ def main() -> int:
     parser.add_argument("--data", default=r"D:\defect_detection\ultralytics-main\dataset\NEU-DET_YOLO\neu-det.yaml")
     parser.add_argument("--val-script", default=r"D:\defect_detection\ultralytics-main\val.py")
     parser.add_argument("--device", default="0")
+    parser.add_argument("--start-at", choices=[item[0] for item in EXPERIMENTS], default="A0")
+    parser.add_argument("--patience", type=int, default=50)
     args = parser.parse_args()
+    if args.patience < 0:
+        raise ValueError("patience must be non-negative")
+    start_index = [item[0] for item in EXPERIMENTS].index(args.start_at)
+    selected_experiments = EXPERIMENTS[start_index:]
 
     project_relative = Path(args.project)
     validation_relative = Path(args.validation_project)
@@ -201,6 +207,8 @@ def main() -> int:
             "pretrained": False,
             "amp": False,
             "rule_loss": False,
+            "patience": args.patience,
+            "start_at": args.start_at,
             "device": args.device,
             "validation_split": "val",
             "validation_batch": 8,
@@ -212,15 +220,15 @@ def main() -> int:
             "external_ultralytics_python_tree_sha256": contract["validator"]["python_tree_sha256"],
             "restart_policy": contract["restart_policy"],
         },
-        "order": [item[0] for item in EXPERIMENTS],
+        "order": [item[0] for item in selected_experiments],
         "experiments": {},
     }
     write_state(state_path, state)
     try:
-        for experiment_id, config, model in EXPERIMENTS:
+        for experiment_id, config, model in selected_experiments:
             assert_git_identity(commit)
             validate_dataset_contract()
-            run_name = f"{experiment_id}_seed42_e300_b8_neu"
+            run_name = f"{experiment_id}_seed42_e300_b8_neu_p{args.patience}"
             run_dir = project / run_name
             validation_name = f"{run_name}_val"
             item = {
@@ -246,6 +254,7 @@ def main() -> int:
                 "--batch", "8",
                 "--imgsz", "640",
                 "--seed", "42",
+                "--patience", str(args.patience),
                 "--plots",
                 "--no-amp",
                 "--device", args.device,
@@ -269,6 +278,7 @@ def main() -> int:
             expected_train = {
                 "epochs": 300, "batch": 8, "imgsz": 640, "seed": 42,
                 "plots": True, "amp": False, "pretrained": False, "resume": False,
+                "patience": args.patience,
             }
             if (
                 manifest.get("status") != "completed"
