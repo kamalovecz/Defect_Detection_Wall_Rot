@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "dataset": "GC10_clean_final",
+  "source": "D:\\defect_detection\\ultralytics-main\\dataset\\processed\\GC10_clean_final",
+  "descriptor": "D:\\defect_detection\\ultralytics-main\\dataset\\processed\\GC10_clean_final\\data_yolo_clean.yaml",
+  "descriptor_sha256": "91d2a854ad74d6733109c60afc74014f434b18672f3505062d263925ee7fd1c0",
+  "descriptor_semantic_sha256": "175a77a84171363deea808b9d58736f3ed57b1296de8b98b1ecff439e0637d60",
+  "nc": 10,
+  "names": [
+    "crease",
+    "crescent_gap",
+    "inclusion",
+    "oil_spot",
+    "punching_hole",
+    "rolled_pit",
+    "silk_spot",
+    "waist_folding",
+    "water_spot",
+    "welding_line"
+  ],
+  "splits": {
+    "train": {
+      "images": 1628,
+      "labels": 1628,
+      "instances": 2561,
+      "content_fingerprint_sha256": "8dc2d86c7bfcaeb50ef838e833fdcfb963ebd98734e7fc3c7d4f8e2f271cd90f"
+    },
+    "val": {
+      "images": 456,
+      "labels": 456,
+      "instances": 687,
+      "content_fingerprint_sha256": "691b4b6c3370cf949049f461d50a4b2267e15eb950113f738a50a9329b783129"
+    },
+    "test": {
+      "images": 230,
+      "labels": 230,
+      "instances": 349,
+      "content_fingerprint_sha256": "537707eb5a030602467245a7e92633843d442b099aae01ccc263545768039ed6"
+    }
+  },
+  "combined_content_fingerprint_sha256": "424f78da498087a8a6ef3f526a5018895d69171ad61a962ae58dd54b33e0d42f",
+  "cross_split_duplicate_images": 0,
+  "validator": {
+    "script": "D:\\defect_detection\\ultralytics-main\\val.py",
+    "script_sha256": "c2aab95c65633147bbb74bd9dd1c7a6d89f061a2a45bd06a6a1e6c17d6539f26",
+    "python_tree_root": "D:\\defect_detection\\ultralytics-main\\ultralytics",
+    "python_tree_sha256": "eb89000c820162b833cb510859ff81cd49a61faa4856ad3f78c84523c822efe1"
+  },
+  "restart_policy": "new_project_only_no_resume_preserve_failed_evidence",
+  "formal_training_eligible": true
+}
